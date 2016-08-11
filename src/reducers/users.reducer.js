@@ -25,7 +25,11 @@ export default (state = usersMock, action) => {
         case 'DELETE_USER':
             return state.filter( user => user.id !== action.id );
         case 'CHOOSE_PLAYERS':
-            const chosen = choice(state.filter(user => user.selected).map(user => user.id), 4);
+            const selected = state.filter(user => user.selected);
+            if (selected.length < 4) {
+                throw new Error("Insufficient number of players selected.");
+            }
+            const chosen = choice(selected.map(user => user.id), 4);
             return state.map(user => {
                 if (chosen.indexOf(user.id) > -1) {
                     return userUpdate(user, { playing: true })

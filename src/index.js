@@ -5,11 +5,13 @@ import App from './App';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import userList from './reducers/users.reducer';
+import errorList from './reducers/error.reducer';
 import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
 
 const reducer = combineReducers({
-    userList
+    userList,
+    errorList
 });
 
 ReactDOM.render(

@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as UserActions from '../actions/user.actions';
+import * as ErrorActions from '../actions/error.actions';
 
 const mapStateToProps = state => ({...state});
-
 const mapDispatchToProps = (dispatch, props) => {
     return {
         handleNewUser: () => dispatch(UserActions.userNew("dummy")),
-        handlePlay: () => dispatch(UserActions.choosePlayersForMatch()),
+        handlePlay: () => {
+            try {
+                dispatch(UserActions.choosePlayersForMatch())
+            }
+            catch(err) {
+                dispatch(ErrorActions.raiseError(err.message));
+            }
+        },
+        raiseError: (msg) => dispatch(ErrorActions.raiseError(msg)),
     }
 };
 
