@@ -3,7 +3,7 @@ export function userDelete(id) {
         type: 'DELETE_USER',
         id
     };
-};
+}
 
 export function userIncreaseExp(user) {
     return {
@@ -11,7 +11,7 @@ export function userIncreaseExp(user) {
         id: user.id,
         exp: user.exp + 10,
     };
-};
+}
 
 export function userDecreaseExp(user) {
     return {
@@ -19,7 +19,7 @@ export function userDecreaseExp(user) {
         id: user.id,
         exp: user.exp - 10,
     };
-};
+}
 
 let lastUserId = 0;
 export function userNew(username) {
@@ -28,10 +28,8 @@ export function userNew(username) {
         id: lastUserId++,
         username,
         exp: 1000,
-        selected: false,
-        playing: false
     };
-};
+}
 
 export function userToggle(user) {
     return {

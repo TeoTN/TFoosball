@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import UserToolbar from './components/UserToolbar';
 import UserList from './components/UserList';
-import './App.css';
-
+import Header from './components/Header';
 
 class App extends Component {
     render() {
         return (
-            <div>
+            <main>
+                <Header />
                 <UserToolbar/>
                 <UserList/>
-            </div>
+            </main>
         );
     }
 }

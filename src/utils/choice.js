@@ -1,13 +1,5 @@
+import randy from 'randy';
+
 export default function choice(arr, n) {
-    var result = new Array(n),
-        len = arr.length,
-        taken = new Array(len);
-    if (n > len)
-        throw new RangeError("getRandom: more elements taken than available");
-    while (n--) {
-        var x = Math.floor(Math.random() * len);
-        result[n] = arr[x in taken ? taken[x] : x];
-        taken[x] = --len;
-    }
-    return result;
+    return randy.shuffle(arr.slice()).slice(0 - n);
 }

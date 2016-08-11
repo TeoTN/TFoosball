@@ -1,0 +1,24 @@
+.with-margin {
+    margin: 15px !important;
+}
+
+.with-padding {
+    padding: 15px !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.player {
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.player-selected {
+    background: rgb(63, 182, 24);
+}
