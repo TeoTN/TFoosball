@@ -29,6 +29,7 @@ export function userNew(username) {
         username,
         exp: 1000,
         selected: false,
+        playing: false
     };
 };
 
@@ -38,4 +39,10 @@ export function userToggle(user) {
         id: user.id,
         selected: !user.selected,
     }
+}
+
+export function choosePlayersForMatch() {
+    return {
+        type: 'CHOOSE_PLAYERS',
+    };
 }

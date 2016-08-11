@@ -18,11 +18,12 @@ export default class User extends Component {
     render() {
         const {user} = this.props;
         return (
-            <li key={user.id} onClick={() => this.props.select(user)}
-                style={{color: user.selected?'green':'black'}}
-                className="user"
-            >
-                {user.id}) {user.username} ({user.exp})&nbsp;
+            <li className="user">
+                { user.playing ? <span> + </span> : null }
+                <span key={user.id} onClick={() => this.props.select(user)}
+                    style={{background: user.selected?'green':'white'}}>
+                    {user.username} ({user.exp})&nbsp;
+                </span>
                 <a href="#" onClick={() => this.props.handleIncrease(user)}>[+10]</a>&nbsp;
                 <a href="#" onClick={() => this.props.handleDecrease(user)}>[-10]</a>&nbsp;
                 <a href="#" onClick={() => this.props.handleDeleteUser(user.id)}>[X]</a>&nbsp;
