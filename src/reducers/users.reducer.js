@@ -7,7 +7,13 @@ const userUpdate = (state, action) => {
     return updated;
 };
 
-export default (state = users, action) => {
+const compareUsersByExp = (userA, userB) => {
+    const propA = userA.exp;
+    const propB = userB.exp;
+    return propA > propB ? -1 : propA === propB ? 0 : 1;
+};
+
+export default (state = users.sort(compareUsersByExp), action) => {
     switch (action.type) {
         case 'ADD_USER':
             let user = {
@@ -30,14 +36,13 @@ export default (state = users, action) => {
                 throw new Error("Insufficient number of players selected.");
             }
             const chosen = choice(selected.map(user => user.id), 4);
-            return state.map(user => {
-                if (chosen.indexOf(user.id) > -1) {
-                    return userUpdate(user, { playing: true })
-                }
-                else {
-                    return userUpdate(user, { playing: false });
-                }
-            });
+            let team = 0;
+            return state.map(user =>
+                userUpdate(user, {
+                    playing: chosen.includes(user.id),
+                    team: (team++ < 2) ? 'red' : 'blue',
+                })
+            );
         default:
             return state;
     }

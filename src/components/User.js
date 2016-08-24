@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { ListGroupItem } from 'react-bootstrap';
 import * as UserActions from '../actions/user.actions';
 
 const mapDispatchToProps = (dispatch, props) => {
@@ -18,16 +19,15 @@ export default class User extends Component {
     render() {
         const {user} = this.props;
         return (
-            <li className="user">
-                { user.playing ? <span> + </span> : null }
-                <span key={user.id} onClick={() => this.props.select(user)}
-                    style={{background: user.selected?'green':'white'}}>
-                    {user.username} ({user.exp})&nbsp;
+            <ListGroupItem bsStyle={user.selected?'success':null}
+                           onClick={() => this.props.select(user)}>
+                <span key={user.id}>
+                    {user.username} ({user.exp}XP)&nbsp;
                 </span>
-                <a href="#" onClick={() => this.props.handleIncrease(user)}>[+10]</a>&nbsp;
-                <a href="#" onClick={() => this.props.handleDecrease(user)}>[-10]</a>&nbsp;
-                <a href="#" onClick={() => this.props.handleDeleteUser(user.id)}>[X]</a>&nbsp;
-            </li>
+                {/*<a href="#" onClick={() => this.props.handleIncrease(user)}>[+10]</a>&nbsp;*/}
+                {/*<a href="#" onClick={() => this.props.handleDecrease(user)}>[-10]</a>&nbsp;*/}
+                {/*<a href="#" onClick={() => this.props.handleDeleteUser(user.id)}>[X]</a>&nbsp;*/}
+            </ListGroupItem>
         );
     }
 }

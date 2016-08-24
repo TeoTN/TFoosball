@@ -8,7 +8,7 @@ class App extends Component {
             <div>
                 <Header />
                 <ErrorBar />
-                <main>
+                <main className="container">
                     {this.props.children}
                 </main>
             </div>

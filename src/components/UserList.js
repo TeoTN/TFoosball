@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import User from './User';
+import { ListGroup, Col } from 'react-bootstrap';
 
 const mapStateToProps = state => ({...state});
 
@@ -8,9 +9,11 @@ const mapStateToProps = state => ({...state});
 class UserList extends Component {
     render() {
         return (
-            <ul>
-                { this.props.userList.map(user => <User key={user.id} user={user}/>)}
-            </ul>
+            <Col xs={4}>
+                <ListGroup>
+                    { this.props.userList.map(user => <User key={user.id} user={user}/>)}
+                </ListGroup>
+            </Col>
         );
     }
 }
