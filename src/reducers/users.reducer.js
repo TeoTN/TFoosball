@@ -1,4 +1,4 @@
-import usersMock from '../mocks/users.mock';
+import users from '../mocks/users';
 import choice from '../utils/choice';
 
 const userUpdate = (state, action) => {
@@ -7,7 +7,7 @@ const userUpdate = (state, action) => {
     return updated;
 };
 
-export default (state = usersMock, action) => {
+export default (state = users, action) => {
     switch (action.type) {
         case 'ADD_USER':
             let user = {
