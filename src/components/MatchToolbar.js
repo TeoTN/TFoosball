@@ -22,16 +22,16 @@ const mapDispatchToProps = (dispatch, props) => {
 class MatchToolbar extends Component {
     render() {
         return (
-            <Col xs={4}>
+            <Col xs={12}>
                 <ButtonGroup justified>
                     <ButtonGroup>
-                        <Button bsStyle="primary" onClick={this.props.handlePlay}>Play!</Button>
+                        <Button bsStyle="primary" onClick={this.props.sortByName}>By name</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="info" onClick={this.props.sortByName}>Sort by name</Button>
+                        <Button bsStyle="primary" onClick={this.props.sortByExp}>By XP</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="info" onClick={this.props.sortByExp}>Sort by XP</Button>
+                        <Button bsStyle="success" onClick={this.props.handlePlay}>Play!</Button>
                     </ButtonGroup>
                 </ButtonGroup>
             </Col>

@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ListGroupItem } from 'react-bootstrap';
+import { ListGroupItem, Col } from 'react-bootstrap';
 import * as UserActions from '../actions/user.actions';
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        handleDeleteUser: (id) => {
-            dispatch(UserActions.userDelete(id))
-        },
-        handleIncrease: (user) => dispatch(UserActions.userIncreaseExp(user)),
-        handleDecrease: (user) => dispatch(UserActions.userDecreaseExp(user)),
         select: (user) => dispatch(UserActions.userToggle(user))
     };
 };
@@ -19,14 +14,14 @@ export default class User extends Component {
     render() {
         const {user} = this.props;
         return (
-            <ListGroupItem bsStyle={user.selected?'success':null}
+            <ListGroupItem bsStyle={user.selected?'success':null} key={user.id}
                            onClick={() => this.props.select(user)}>
-                <span key={user.id}>
-                    {user.username} ({user.exp}XP)&nbsp;
-                </span>
-                {/*<a href="#" onClick={() => this.props.handleIncrease(user)}>[+10]</a>&nbsp;*/}
-                {/*<a href="#" onClick={() => this.props.handleDecrease(user)}>[-10]</a>&nbsp;*/}
-                {/*<a href="#" onClick={() => this.props.handleDeleteUser(user.id)}>[X]</a>&nbsp;*/}
+                <Col xs={8}>
+                    {user.username}
+                </Col>
+                <Col xs={4}>
+                    {user.exp}XP
+                </Col>
             </ListGroupItem>
         );
     }

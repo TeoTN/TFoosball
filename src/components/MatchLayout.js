@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
-import UserToolbar from './MatchToolbar';
 import UserList from './UserList';
 import FoosballTable from './FoosballTable';
-import { Grid, Row } from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 class MatchLayout extends Component {
     render() {
         return (
-            <div>
-                <h1>New match</h1>
-                <Grid>
-                    <Row>
-                        <UserToolbar/>
-                    </Row>
-                    <Row>
-                        <UserList/>
-                        <FoosballTable />
-                    </Row>
-                </Grid>
-            </div>
+        <Grid>
+            <Row>
+                {/* Order of elements is reversed so that on mobile it fits nicely */}
+                <Col xs={12} sm={7} smPush={5} lg={6} lgPush={4}>
+                    <FoosballTable />
+                </Col>
+                <Col xs={12} sm={5} smPull={7} lg={4} lgPull={6}>
+                    <UserList/>
+                </Col>
+            </Row>
+        </Grid>
         );
     }
 }

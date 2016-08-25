@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as MatchActions from '../actions/match.actions';
 import * as ErrorActions from '../actions/error.actions';
-import { Button, Row } from 'react-bootstrap';
+import { Button, Row, Col, FormControl } from 'react-bootstrap';
 
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch, props) => {
@@ -15,10 +15,31 @@ const mapDispatchToProps = (dispatch, props) => {
 class MatchResult extends Component {
     render() {
         return (
-            <Row>
-                <h3>Result</h3>
-                <Button onClick={this.props.handleFinish({})} bsStyle={'danger'}>Send</Button>
-            </Row>
+        <Row>
+            <Col xs={12}>
+                <h3>Score</h3>
+            </Col>
+            <Col sm={4}>
+                <FormControl
+                    type="text"
+                    placeholder="Blue"
+                />
+            </Col>
+            <Col xsHidden sm={1}>
+                <h4>vs</h4>
+            </Col>
+            <Col sm={4}>
+                <FormControl
+                    type="text"
+                    placeholder="Red"
+                />
+            </Col>
+            <Col sm={3}>
+                <Button onClick={this.props.handleFinish} bsStyle={'success'} block>
+                    Send
+                </Button>
+            </Col>
+        </Row>
         );
     }
 }
