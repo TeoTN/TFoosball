@@ -21,8 +21,8 @@ export default (state = users.sort(compareUsersByExp), action) => {
                 type: undefined
             };
             return [
-                ...state,
-                user
+                user,
+                ...state
             ];
         case 'UPDATE_USER':
             return state.map(user =>
@@ -30,6 +30,10 @@ export default (state = users.sort(compareUsersByExp), action) => {
             );
         case 'DELETE_USER':
             return state.filter( user => user.id !== action.id );
+        case 'SORT_BY_EXP':
+            const newState = state.slice(0);
+            newState.sort(compareUsersByExp);
+            return newState;
         case 'CHOOSE_PLAYERS':
             const selected = state.filter(user => user.selected);
             if (selected.length < 4) {

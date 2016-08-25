@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import UserToolbar from './UserToolbar';
+import UserToolbar from './MatchToolbar';
 import UserList from './UserList';
 import FoosballTable from './FoosballTable';
 import { Grid, Row } from 'react-bootstrap';
@@ -9,8 +9,10 @@ class MatchLayout extends Component {
         return (
             <div>
                 <h1>New match</h1>
-                <UserToolbar/>
                 <Grid>
+                    <Row>
+                        <UserToolbar/>
+                    </Row>
                     <Row>
                         <UserList/>
                         <FoosballTable />

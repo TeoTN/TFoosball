@@ -44,3 +44,9 @@ export function choosePlayersForMatch() {
         type: 'CHOOSE_PLAYERS',
     };
 }
+
+export function sort() {
+    return {
+        type: 'SORT_BY_EXP',
+    }
+}
