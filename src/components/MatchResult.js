@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as MatchActions from '../actions/match.actions';
-import * as ErrorActions from '../actions/error.actions';
 import { Button, Row, Col, FormControl } from 'react-bootstrap';
 
 const mapStateToProps = state => ({...state});

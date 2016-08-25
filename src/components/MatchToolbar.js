@@ -7,12 +7,10 @@ import { Button, ButtonGroup, Col } from 'react-bootstrap';
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        handleNewUser: () => dispatch(UserActions.userNew("dummy")),
         handlePlay: () => {
             try { dispatch(UserActions.choosePlayersForMatch()) }
             catch(err) { dispatch(ErrorActions.raiseError(err.message)); }
-            const pos = document.querySelector('#foosball-table').getBoundingClientRect();
-            window.scrollTo(pos.left, pos.top);
+            window.scrollTo(0, 0);
         },
         raiseError: (msg) => dispatch(ErrorActions.raiseError(msg)),
         sortByExp: () => dispatch(UserActions.sortByExp()),

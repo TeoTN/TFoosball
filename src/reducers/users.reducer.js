@@ -1,5 +1,6 @@
 import users from '../mocks/users';
 import choice from '../utils/choice';
+import getRoles from '../utils/roles';
 
 const userUpdate = (state, action) => {
     let updated = Object.assign({...state}, {...action});
@@ -34,17 +35,19 @@ export default (state = users.sort(compareByProp('exp', -1)), action) => {
             return state.slice(0).sort(compareByProp('username', 1));
         case 'CHOOSE_PLAYERS':
             const selected = state.filter(user => user.selected);
-            if (selected.length < 4) {
+            if (selected.length < 4) { //TODO Feature request 1-1 matches
                 throw new Error("Insufficient number of players selected.");
             }
-            const chosen = choice(selected.map(user => user.id), 4);
-            let team = 0;
-            return state.map(user =>
-                userUpdate(user, {
-                    playing: chosen.includes(user.id),
-                    team: (team++ < 2) ? 'red' : 'blue',
+            const chosen = choice(selected, 4);
+            const roles = getRoles(chosen);
+            return state.map(user => {
+                const playing = chosen.map(user => user.id).includes(user.id);
+                return userUpdate(user, {
+                    playing: playing,
+                    team: playing ? roles[user.username].team : undefined,
+                    role: playing ? roles[user.username].role : undefined,
                 })
-            );
+            });
         default:
             return state;
     }

@@ -9,15 +9,19 @@ const mapStateToProps = state => ({...state});
 @connect(mapStateToProps, null)
 class FoosballTable extends Component {
     render() {
-        const players = this.props.userList.filter(user => user.playing);
+        const { userList } = this.props;
+        const redAtt = userList.find(u => u.playing && u.team === 'red' && u.role === 'att'),
+              redDef = userList.find(u => u.playing && u.team === 'red' && u.role === 'def'),
+              blueAtt = userList.find(u => u.playing && u.team === 'blue' && u.role === 'att'),
+              blueDef = userList.find(u => u.playing && u.team === 'blue' && u.role === 'def');
         return (
         <Well>
             <Row>
                 <Col xs={12}><h3>Squad</h3></Col>
                 <Col smOffset={3} sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'blue'} pos={'def'} player={players[0]}/>
-                        <UserPicker team={'blue'} pos={'att'} player={players[1]}/>
+                        <UserPicker team={'blue'} role={'att'} player={blueAtt}/>
+                        <UserPicker team={'blue'} role={'def'} player={blueDef}/>
                     </ButtonGroup>
                 </Col>
                 <Col xs={12}>
@@ -25,8 +29,8 @@ class FoosballTable extends Component {
                 </Col>
                 <Col sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'red'} pos={'def'} player={players[2]}/>
-                        <UserPicker team={'red'} pos={'att'} player={players[3]}/>
+                        <UserPicker team={'red'} role={'def'} player={redDef}/>
+                        <UserPicker team={'red'} role={'att'} player={redAtt}/>
                     </ButtonGroup>
                 </Col>
             </Row>
