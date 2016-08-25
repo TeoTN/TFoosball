@@ -1,7 +1,7 @@
 # TFoosball
 
 ## Teaser
-![Screenshot](https://raw.githubusercontent.com/TeoTN/TFoosball/master/teaser.png)
+![Screenshot 1](/teaser.jpg?raw=true "Screenshot 1")
 
 ## Available Scripts
 
