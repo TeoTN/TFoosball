@@ -11,6 +11,8 @@ const mapDispatchToProps = (dispatch, props) => {
         handlePlay: () => {
             try { dispatch(UserActions.choosePlayersForMatch()) }
             catch(err) { dispatch(ErrorActions.raiseError(err.message)); }
+            const pos = document.querySelector('#foosball-table').getBoundingClientRect();
+            window.scrollTo(pos.left, pos.top);
         },
         raiseError: (msg) => dispatch(ErrorActions.raiseError(msg)),
         sortByExp: () => dispatch(UserActions.sortByExp()),

@@ -14,7 +14,7 @@ class FoosballTable extends Component {
         <Well>
             <Row>
                 <Col xs={12}><h3>Squad</h3></Col>
-                <Col xsOffset={3} xs={9}>
+                <Col smOffset={3} sm={9} xs={12}>
                     <ButtonGroup justified>
                         <UserPicker team={'blue'} pos={'def'} player={players[0]}/>
                         <UserPicker team={'blue'} pos={'att'} player={players[1]}/>
@@ -23,7 +23,7 @@ class FoosballTable extends Component {
                 <Col xs={12}>
                     <Image src="/src/assets/img/table.jpg" rounded responsive thumbnail />
                 </Col>
-                <Col xs={9}>
+                <Col sm={9} xs={12}>
                     <ButtonGroup justified>
                         <UserPicker team={'red'} pos={'def'} player={players[2]}/>
                         <UserPicker team={'red'} pos={'att'} player={players[3]}/>
