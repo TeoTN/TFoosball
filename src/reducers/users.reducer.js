@@ -7,13 +7,11 @@ const userUpdate = (state, action) => {
     return updated;
 };
 
-const compareUsersByExp = (userA, userB) => {
-    const propA = userA.exp;
-    const propB = userB.exp;
-    return propA > propB ? -1 : propA === propB ? 0 : 1;
+const compareByProp = (prop, dir) => (a, b) => {
+    return a[prop] > b[prop] ? dir : a[prop] === b[prop] ? 0 : -dir;
 };
 
-export default (state = users.sort(compareUsersByExp), action) => {
+export default (state = users.sort(compareByProp('exp', -1)), action) => {
     switch (action.type) {
         case 'ADD_USER':
             let user = {
@@ -31,9 +29,9 @@ export default (state = users.sort(compareUsersByExp), action) => {
         case 'DELETE_USER':
             return state.filter( user => user.id !== action.id );
         case 'SORT_BY_EXP':
-            const newState = state.slice(0);
-            newState.sort(compareUsersByExp);
-            return newState;
+            return state.slice(0).sort(compareByProp('exp', -1));
+        case 'SORT_BY_NAME':
+            return state.slice(0).sort(compareByProp('username', 1));
         case 'CHOOSE_PLAYERS':
             const selected = state.filter(user => user.selected);
             if (selected.length < 4) {
