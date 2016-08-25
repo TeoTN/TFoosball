@@ -3,6 +3,7 @@ import { Row, Col, ButtonGroup, Image, Well } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import UserPicker from './UserPicker';
 import MatchResult from './MatchResult';
+import MatchStats from './MatchStats';
 
 const mapStateToProps = state => ({...state});
 
@@ -35,6 +36,7 @@ class FoosballTable extends Component {
                 </Col>
             </Row>
             <MatchResult />
+            <MatchStats />
         </Well>
         );
     }
