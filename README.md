@@ -1,6 +1,7 @@
 # TFoosball
 
 ## Teaser
+![Screenshot](https://raw.githubusercontent.com/TeoTN/TFoosball/master/teaser.png)
 
 ## Available Scripts
 
