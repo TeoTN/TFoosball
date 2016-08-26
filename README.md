@@ -1,6 +1,7 @@
 # TFoosball
 
 ## Teaser
+![Screenshot 1](/teaser.png?raw=true "Screenshot 1")
 
 ## Available Scripts
 
