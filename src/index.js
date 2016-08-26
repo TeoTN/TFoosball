@@ -12,7 +12,7 @@ import userList from './reducers/users.reducer';
 import errorList from './reducers/error.reducer';
 import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
-
+import './utils/object';
 const reducer = combineReducers({
     userList,
     errorList

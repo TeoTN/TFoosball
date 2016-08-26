@@ -33,6 +33,7 @@ class MatchToolbar extends Component {
                     <ButtonGroup>
                         <Button bsStyle="success" onClick={this.props.handlePlay}>Play!</Button>
                     </ButtonGroup>
+                    {/*TODO Add clear game*/}
                 </ButtonGroup>
             </Col>
         );

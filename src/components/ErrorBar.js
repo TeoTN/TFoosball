@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ErrorActions from '../actions/error.actions';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch, props) => {
@@ -14,20 +15,16 @@ const mapDispatchToProps = (dispatch, props) => {
 export default class ErrorBar extends Component {
     render() {
         return (
-        <div>
-            <ul>
-                {
-                    this.props.errorList.map(
-                        error => (
-                            <li key={error.id} className="text-danger"
-                                     onClick={() => this.props.handleError(error.id)}>
-                            { error.msg }
-                            </li>
-                        )
-                    )
-                }
-            </ul>
-        </div>
+            <ListGroup className="container">
+                {this.props.errorList.map(error => (
+                    <ListGroupItem header="Oh snap!"
+                                   onClick={() => this.props.handleError(error.id)} key={error.id}>
+                        <span className="text-danger">
+                            { error.msg } <small>(Click to dismiss)</small>
+                        </span>
+                    </ListGroupItem>
+                    ))}
+            </ListGroup>
         );
     }
 }

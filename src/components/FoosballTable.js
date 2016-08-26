@@ -11,18 +11,25 @@ const mapStateToProps = state => ({...state});
 class FoosballTable extends Component {
     render() {
         const { userList } = this.props;
-        const redAtt = userList.find(u => u.playing && u.team === 'red' && u.role === 'att'),
-              redDef = userList.find(u => u.playing && u.team === 'red' && u.role === 'def'),
-              blueAtt = userList.find(u => u.playing && u.team === 'blue' && u.role === 'att'),
-              blueDef = userList.find(u => u.playing && u.team === 'blue' && u.role === 'def');
+        const playing = userList.filter(u => u.playing);
+        let players = {};
+        if (playing) {
+            players = {
+                redAtt: playing.find(u => u.team === 'red' && u.role === 'att'),
+                redDef: playing.find(u => u.team === 'red' && u.role === 'def'),
+                blueAtt: playing.find(u => u.team === 'blue' && u.role === 'att'),
+                blueDef: playing.find(u => u.team === 'blue' && u.role === 'def'),
+            };
+        }
+             
         return (
         <Well>
             <Row>
                 <Col xs={12}><h3>Squad</h3></Col>
                 <Col smOffset={3} sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'blue'} role={'att'} player={blueAtt}/>
-                        <UserPicker team={'blue'} role={'def'} player={blueDef}/>
+                        <UserPicker team={'blue'} role={'att'} player={players.blueAtt}/>
+                        <UserPicker team={'blue'} role={'def'} player={players.blueDef}/>
                     </ButtonGroup>
                 </Col>
                 <Col xs={12}>
@@ -30,13 +37,13 @@ class FoosballTable extends Component {
                 </Col>
                 <Col sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'red'} role={'def'} player={redDef}/>
-                        <UserPicker team={'red'} role={'att'} player={redAtt}/>
+                        <UserPicker team={'red'} role={'def'} player={players.redDef}/>
+                        <UserPicker team={'red'} role={'att'} player={players.redAtt}/>
                     </ButtonGroup>
                 </Col>
             </Row>
             <MatchResult />
-            <MatchStats />
+            { ( playing.length >= 4 ) ? <MatchStats players={players} /> : null }
         </Well>
         );
     }
