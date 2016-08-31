@@ -4,10 +4,10 @@ export default function getRoles(chosen) {
     const isBlueAtt = Math.random() < 0.5 + players[2].att - players[3].att;
     players[0].team = players[1].team = 'red';
     players[2].team = players[3].team = 'blue';
-    players[0].role = isRedAtt ? 'att' : 'def';
-    players[1].role = isRedAtt ? 'def' : 'att';
-    players[2].role = isBlueAtt ? 'att' : 'def';
-    players[3].role = isBlueAtt ? 'def' : 'att';
+    players[0].position = isRedAtt ? 'att' : 'def';
+    players[1].position = isRedAtt ? 'def' : 'att';
+    players[2].position = isBlueAtt ? 'att' : 'def';
+    players[3].position = isBlueAtt ? 'def' : 'att';
     return {
         [players[0].username]: players[0],
         [players[1].username]: players[1],

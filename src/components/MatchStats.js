@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, FormControl } from 'react-bootstrap';
+import { Row, Col, Panel } from 'react-bootstrap';
+import Widget from './Widget';
 
 const mapStateToProps = state => ({...state});
 
 @connect(mapStateToProps, null)
 class MatchStats extends Component {
     getPlayerStats() {
-        return Object.entries(this.props.players).map(([role, player], index) => (
+        return Object.entries(this.props.players).map(([position, player], index) => (
         <Row key={index}>
             <Col xs={2}>
-                <strong>{ role }</strong>
+                <strong>{ position }</strong>
             </Col>
             <Col xs={3}>
                 { player.username }
@@ -31,22 +32,12 @@ class MatchStats extends Component {
                 <Col xs={12}>
                     <h3>Statistics</h3>
                 </Col>
-                <Col xs={4}>
-                    <strong className="h4">Max blue pts</strong>
-                </Col>
-                <Col xs={2}>
-                    <span className="h4">83</span>
-                </Col>
-                <Col xs={4}>
-                    <strong className="h4">Max red pts</strong>
-                </Col>
-                <Col xs={2}>
-                    <span className="h4">31</span>
-                </Col>
+                <Widget label="Max blue pts" value={87}/>
+                <Widget label="Max red pts" value={31}/>
             </Row>
-            <div style={{'border': '1px solid #999', 'border-radius': '4px', 'margin': '5px 0', 'padding': '10px'}}>
+            <Panel>
                 { this.getPlayerStats() }
-            </div>
+            </Panel>
         </div>
         );
     }

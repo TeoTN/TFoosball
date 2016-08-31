@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import * as UserActions from '../actions/user.actions';
+// import * as UserActions from '../actions/user.actions';
 
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch, props) => {
@@ -29,10 +29,10 @@ class UserPicker extends Component {
     getColor = () => this.props.team === 'blue' ? 'info' : 'danger';
 
     render() {
-        const {team, role} = this.props;
+        const {team, position} = this.props;
         return (
             <DropdownButton bsStyle={this.getColor()} title={this.getTitle()}
-                            id={`player-${team}-${role}`} onSelect={this.props.handleChange}>
+                            id={`player-${team}-${position}`} onSelect={this.props.handleChange}>
                 {this.getUsersOptions()}
             </DropdownButton>
         );

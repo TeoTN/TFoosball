@@ -14,11 +14,12 @@
     margin: 0 !important;
 }
 
-.player {
-    cursor: pointer;
-    padding: 10px 0;
+.inline-block {
+    display: inline-block;
 }
 
-.player-selected {
-    background: rgb(63, 182, 24);
+.widget {
+    margin-left: 15px;
+    width: 45%;
+    cursor: pointer;
 }

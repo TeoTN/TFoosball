@@ -15,7 +15,7 @@ export default class Header extends Component {
                     <LinkContainer to={{ pathname: '/'}}>
                         <NavItem eventKey={1} href="#">New match</NavItem>
                     </LinkContainer>
-                    <LinkContainer to={{ pathname: '/profile/1'}}>
+                    <LinkContainer to={{ pathname: '/profile/cschmidt1w'}}>
                         <NavItem eventKey={2} href="#">Profile</NavItem>
                     </LinkContainer>
                     <LinkContainer to={{ pathname: '/ranking'}}>

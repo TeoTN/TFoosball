@@ -15,21 +15,21 @@ class FoosballTable extends Component {
         let players = {};
         if (playing) {
             players = {
-                redAtt: playing.find(u => u.team === 'red' && u.role === 'att'),
-                redDef: playing.find(u => u.team === 'red' && u.role === 'def'),
-                blueAtt: playing.find(u => u.team === 'blue' && u.role === 'att'),
-                blueDef: playing.find(u => u.team === 'blue' && u.role === 'def'),
+                redAtt: playing.find(u => u.team === 'red' && u.position === 'att'),
+                redDef: playing.find(u => u.team === 'red' && u.position === 'def'),
+                blueAtt: playing.find(u => u.team === 'blue' && u.position === 'att'),
+                blueDef: playing.find(u => u.team === 'blue' && u.position === 'def'),
             };
         }
-             
+
         return (
         <Well>
             <Row>
                 <Col xs={12}><h3>Squad</h3></Col>
                 <Col smOffset={3} sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'blue'} role={'att'} player={players.blueAtt}/>
-                        <UserPicker team={'blue'} role={'def'} player={players.blueDef}/>
+                        <UserPicker team={'blue'} position={'att'} player={players.blueAtt}/>
+                        <UserPicker team={'blue'} position={'def'} player={players.blueDef}/>
                     </ButtonGroup>
                 </Col>
                 <Col xs={12}>
@@ -37,8 +37,8 @@ class FoosballTable extends Component {
                 </Col>
                 <Col sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'red'} role={'def'} player={players.redDef}/>
-                        <UserPicker team={'red'} role={'att'} player={players.redAtt}/>
+                        <UserPicker team={'red'} position={'def'} player={players.redDef}/>
+                        <UserPicker team={'red'} position={'att'} player={players.redAtt}/>
                     </ButtonGroup>
                 </Col>
             </Row>
