@@ -20,7 +20,7 @@ ReactDOM.render(
                 <Route path="/" component={MatchLayout} />
                 <Route path="profile/(:username)" component={ProfileLayout} />
                 <Route path="ranking" component={RankingLayout} />
-                <Route path="tournament" component={TournamentLayout} />
+                <Route path="tournament/(:tid)" component={TournamentLayout} />
             </Route>
         </Router>
     </Provider>,

@@ -1,0 +1,80 @@
+[{
+  "name": "Grand Tournament",
+  "rounds": [
+    {
+      "matches": [
+        {
+          "result": {
+            "red": 10,
+            "blue": 7
+            },
+          "red": [77, 78],
+          "blue": [73, 79],
+          "pts": 43
+        },
+        {
+          "result": {
+            "red": 3,
+            "blue": 10
+          },
+          "red": [76, 70],
+          "blue": [69, 72],
+          "pts": 27
+        },
+        {
+          "result": {
+            "red": 6,
+            "blue": 10
+          },
+          "red": [1, 2],
+          "blue": [3, 4],
+          "pts": 31
+        },
+        {
+          "result": {
+            "red": 10,
+            "blue": 9
+          },
+          "red": [5, 6],
+          "blue": [7, 8],
+          "pts": 49
+        }
+      ]
+    },
+    {
+      "matches": [
+        {
+          "result": {
+            "red": 10,
+            "blue": 7
+          },
+          "red": [77, 78],
+          "blue": [69, 72],
+          "pts": 114
+        },
+        {
+          "result": {
+            "red": 10,
+            "blue": 7
+          },
+          "red": [3, 4],
+          "blue": [5, 6],
+          "pts": 105
+        }
+      ]
+    },
+    {
+      "matches": [
+        {
+          "result": {
+            "red": 2,
+            "blue": 10
+          },
+          "red": [77, 78],
+          "blue": [3, 4],
+          "pts": 178
+        }
+      ]
+    }
+  ]
+}]
