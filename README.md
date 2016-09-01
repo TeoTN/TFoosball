@@ -2,7 +2,9 @@
 
 ## Teaser
 ![Screenshot 1](/teaser.png?raw=true "Screenshot 1")
-
+<img src="/teaser2.png?raw=true" width="128">
+<img src="/teaser3.png?raw=true" width="128">
+<img src="/teaser4.png?raw=true" width="128">
 ## Available Scripts
 
 In the project directory, you can run:
