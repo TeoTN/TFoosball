@@ -14,7 +14,7 @@ class MatchLayout extends Component {
                     <FoosballTable />
                 </Col>
                 <Col xs={12} sm={5} smPull={7} lg={4} lgPull={6}>
-                    <UserList/>
+                    <UserList />
                 </Col>
             </Row>
         </Grid>

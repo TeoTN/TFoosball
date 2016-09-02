@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Well, ProgressBar } from 'react-bootstrap';
+import { Well, Row, Col, ProgressBar } from 'react-bootstrap';
 import Widget from './Widget';
 
 const mapStateToProps = state => ({...state});
@@ -16,21 +16,33 @@ export default class ProfileStats extends Component {
             <Well>
                 <h4>User statistics</h4>
                 <span>
-                    Win rate
+                    <h5>Win rate</h5>
                     <ProgressBar bsStyle="success" now={win} label={`${win}%`} />
                 </span>
                 <span>
-                    Offence win rate
+                    <h5>Offence win rate</h5>
                     <ProgressBar bsStyle="danger" now={att} label={`${att}%`} />
                 </span>
                 <span>
-                    Defence win rate
+                    <h5>Defence win rate</h5>
                     <ProgressBar bsStyle="info" now={def} label={`${def}%`} />
                 </span>
-                <Widget label="Winning streak" value={win_streak} />
-                <Widget label="Highest EXP" value={hi} />
-                <Widget label="Losing streak" value={lost_streak} />
-                <Widget label="Lowest EXP" value={lo} />
+                <Row>
+                    <Col xs={6}>
+                        <Widget label="Winning streak" value={win_streak} />
+                    </Col>
+                    <Col xs={6}>
+                        <Widget label="Highest EXP" value={hi} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={6}>
+                        <Widget label="Losing streak" value={lost_streak} />
+                    </Col>
+                    <Col xs={6}>
+                        <Widget label="Lowest EXP" value={lo} />
+                    </Col>
+                </Row>
             </Well>
         );
     }

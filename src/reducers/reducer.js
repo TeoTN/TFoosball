@@ -1,11 +1,11 @@
-import userList from './users.reducer';
+import users from './users.reducer';
 import errorList from './error.reducer';
 import profile from './profile.reducer';
 import tournaments from './tournaments.reducer'
 import { combineReducers } from 'redux';
 
 const reducer = combineReducers({
-    userList,
+    users,
     errorList,
     profile,
     tournaments,

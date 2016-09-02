@@ -4,7 +4,11 @@ import User from './User';
 import UserToolbar from './MatchToolbar';
 import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
 
-const mapStateToProps = state => ({...state});
+const mapStateToProps = (state) => {
+    return {
+        users: state.users
+    }
+};
 
 @connect(mapStateToProps, null)
 class UserList extends Component {
@@ -23,7 +27,7 @@ class UserList extends Component {
                             <strong> Experience </strong>
                         </Col>
                     </ListGroupItem>
-                    { this.props.userList.map(user => <User key={user.id} user={user}/>)}
+                    { this.props.users.map(user => <User key={user.id} user={user}/>)}
                 </ListGroup>
             </div>
         );

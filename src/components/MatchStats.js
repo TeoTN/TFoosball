@@ -8,7 +8,7 @@ const mapStateToProps = state => ({...state});
 @connect(mapStateToProps, null)
 class MatchStats extends Component {
     getPlayerStats() {
-        return Object.entries(this.props.players).map(([position, player], index) => (
+        return Object.entries(this.props.players).map(([position, player], index) => player?(
         <Row key={index}>
             <Col xs={2}>
                 <strong>{ position }</strong>
@@ -23,7 +23,7 @@ class MatchStats extends Component {
                 <span><strong>Att:</strong>&nbsp;{ Math.round(player.att*100) }%</span>
             </Col>
         </Row>
-        ));
+        ):null);
     }
     render() {
         return (

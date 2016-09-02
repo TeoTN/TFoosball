@@ -10,8 +10,8 @@ const mapStateToProps = state => ({...state});
 @connect(mapStateToProps, null)
 class FoosballTable extends Component {
     render() {
-        const { userList } = this.props;
-        const playing = userList.filter(u => u.playing);
+        const { users } = this.props;
+        const playing = users.filter(u => u.playing);
         let players = {};
         if (playing) {
             players = {
@@ -43,7 +43,7 @@ class FoosballTable extends Component {
                 </Col>
             </Row>
             <MatchResult />
-            { ( playing.length >= 4 ) ? <MatchStats players={players} /> : null }
+            { ( playing.length == 4 && players ) ? <MatchStats players={players} /> : null }
         </Well>
         );
     }

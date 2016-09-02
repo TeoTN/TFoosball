@@ -35,8 +35,10 @@ export function userToggle(user) {
     return {
         type: 'UPDATE_USER',
         id: user.id,
-        selected: !user.selected,
-    }
+        userData: {
+            selected: !user.selected,
+        }
+    };
 }
 
 export function choosePlayersForMatch() {
@@ -47,12 +49,12 @@ export function choosePlayersForMatch() {
 
 export function sortByExp() {
     return {
-        type: 'SORT_BY_EXP',
-    }
+        type: 'USER::SORT::EXP',
+    };
 }
 
 export function sortByName() {
     return {
-        type: 'SORT_BY_NAME',
-    }
+        type: 'USER::SORT::NAME',
+    };
 }

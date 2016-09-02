@@ -9,7 +9,7 @@ const mapStateToProps = state => ({...state});
 export default class ProfileLayout extends Component {
     render() {
         const { username } = this.props.params;
-        const user = this.props.userList.find(user => user.username === username);
+        const user = this.props.users.find(user => user.username === username);
 
         return (
             <div>

@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch, props) => {
 @connect(mapStateToProps, mapDispatchToProps)
 class UserPicker extends Component {
     getUsersOptions = () => {
-        return this.props.userList.map(
+        return this.props.users.map(
             (user, index) => (
                 <MenuItem eventKey={user.id} active={user.playing} key={index}>
                     {user.username}
