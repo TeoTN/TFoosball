@@ -1,60 +1,36 @@
-export function userDelete(id) {
-    return {
-        type: 'DELETE_USER',
-        id
-    };
-}
+import * as types from './user.types';
 
-export function userIncreaseExp(user) {
-    return {
-        type: 'UPDATE_USER',
-        id: user.id,
-        exp: user.exp + 10,
-    };
-}
-
-export function userDecreaseExp(user) {
-    return {
-        type: 'UPDATE_USER',
-        id: user.id,
-        exp: user.exp - 10,
-    };
-}
+export const userDelete = (id) => ({
+    type: types.DELETE,
+    id
+});
 
 let lastUserId = 0;
-export function userNew(username) {
-    return {
-        type: 'ADD_USER',
+export const userNew = (username) => ({
+    type: types.ADD,
+    userData: {
         id: lastUserId++,
         username,
         exp: 1000,
-    };
-}
+    },
+});
 
-export function userToggle(user) {
-    return {
-        type: 'UPDATE_USER',
-        id: user.id,
-        userData: {
-            selected: !user.selected,
-        }
-    };
-}
+export const userToggle = (user) => ({
+    type: types.UPDATE,
+    id: user.id,
+    userData: {
+        selected: !user.selected,
+    }
+});
 
-export function choosePlayersForMatch() {
-    return {
-        type: 'CHOOSE_PLAYERS',
-    };
-}
+export const choosePlayersForMatch = () => ({
+    type: types.CHOOSE
+});
 
-export function sortByExp() {
-    return {
-        type: 'USER::SORT::EXP',
-    };
-}
+export const sortByExp = () => ({
+    type: types.SORT_EXP
+});
 
-export function sortByName() {
-    return {
-        type: 'USER::SORT::NAME',
-    };
-}
+export const sortByName = () => ({
+    type: types.SORT_NAME
+});

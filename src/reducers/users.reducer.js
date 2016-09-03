@@ -1,15 +1,17 @@
+import * as types from '../actions/user.types';
 import users from '../mocks/users';
 import choice from '../utils/choice';
 import getRoles from '../utils/roles';
+import 'babel-polyfill';
 
 const user = (state, action) => {
     switch (action.type) {
-        case 'ADD_USER':
+        case types.ADD:
             return {
                 ...action.userData
             };
-        case 'CHOOSE_PLAYERS':
-        case 'UPDATE_USER':
+        case types.CHOOSE:
+        case types.UPDATE:
             if (state.id !== action.id) return state;
             return Object.assign({...state}, {...action.userData});
         default:
@@ -23,38 +25,26 @@ const compareByProp = (prop, dir) => (a, b) => {
 
 export default (state = users.sort(compareByProp('exp', -1)), action) => {
     switch (action.type) {
-        case 'ADD_USER':
+        case types.ADD:
             return [
                 user(undefined, action),
                 ...state
             ];
-        case 'UPDATE_USER':
+        case types.UPDATE:
             return state.map(u => user(u, action));
-        case 'DELETE_USER':
+        case types.DELETE:
             return state.filter( user => user.id !== action.id );
-        case 'CHOOSE_PLAYERS':
+        case types.CHOOSE:
             const selected = state.filter(u => u.selected);
             if (selected.length < 4) { //TODO Feature request 1-1 matches
                 throw new Error("Insufficient number of players selected.");
             }
             const chosen = choice(selected, 4);
-            const roles = getRoles(chosen);
-            const newState = state.map(u => {
-                const playing = chosen.map(u => u.id).includes(u.id);
-                return user(u, {
-                    type: action.type,
-                    id: u.id,
-                    userData: {
-                        playing: playing,
-                        team: playing ? roles[u.username].team : undefined,
-                        role: playing ? roles[u.username].role : undefined,
-                    }
-                })
-            });
-            return newState;
-        case 'USER::SORT::EXP':
+            const playing = getRoles(chosen);
+            return state.map(u => (playing[u.username]) ? playing[u.username] : u);
+        case types.SORT_EXP:
             return getSortedUsers(state, 'exp');
-        case 'USER::SORT::NAME':
+        case types.SORT_NAME:
             return getSortedUsers(state, 'username');
         default:
             return state;

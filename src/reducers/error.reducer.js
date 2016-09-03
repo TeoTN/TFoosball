@@ -1,15 +1,17 @@
+import * as types from '../actions/error.types';
+
 let lastErrorId = 0;
 export default (state = [], {type, id, msg}) => {
     switch (type) {
-        case 'RAISE_ERROR':
+        case types.RAISE:
             return [
-                ...state,
                 {
                     id: lastErrorId++,
                     msg
-                }
+                },
+                ...state
             ];
-        case 'HANDLE_ERROR':
+        case types.HANDLE:
             return state.filter(error => error.id !== id );
         default:
             return state;

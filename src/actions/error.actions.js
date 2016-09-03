@@ -1,13 +1,11 @@
-export function raiseError(msg) {
-    return {
-        type: 'RAISE_ERROR',
-        msg
-    };
-}
+import * as types from './error.types';
 
-export function handleError(id) {
-    return {
-        type: 'HANDLE_ERROR',
+export const raiseError = (msg) => ({
+        type: types.RAISE,
+        msg
+});
+
+export const handleError = (id) => ({
+        type: types.HANDLE,
         id
-    };
-}
+});
