@@ -34,3 +34,8 @@ export const sortByExp = () => ({
 export const sortByName = () => ({
     type: types.SORT_NAME
 });
+
+export const receiveUsers = (response) => ({
+    type: types.RECEIVE_LIST,
+    response
+});

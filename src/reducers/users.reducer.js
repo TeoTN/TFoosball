@@ -1,5 +1,4 @@
 import * as types from '../actions/user.types';
-import users from '../mocks/users';
 import choice from '../utils/choice';
 import getRoles from '../utils/roles';
 import 'babel-polyfill';
@@ -23,7 +22,18 @@ const compareByProp = (prop, dir) => (a, b) => {
     return a[prop] > b[prop] ? dir : a[prop] === b[prop] ? 0 : -dir;
 };
 
-export default (state = users.sort(compareByProp('exp', -1)), action) => {
+export const getSortedUsers = (state, prop) => {
+    switch (prop) {
+        case 'username':
+            return state.slice(0).sort(compareByProp('username', 1));
+        case 'exp':
+            return  state.slice(0).sort(compareByProp('exp', -1));
+        default:
+            return state;
+    }
+};
+
+export default (state = [], action) => {
     switch (action.type) {
         case types.ADD:
             return [
@@ -46,17 +56,8 @@ export default (state = users.sort(compareByProp('exp', -1)), action) => {
             return getSortedUsers(state, 'exp');
         case types.SORT_NAME:
             return getSortedUsers(state, 'username');
-        default:
-            return state;
-    }
-};
-
-export const getSortedUsers = (state, prop) => {
-    switch (prop) {
-        case 'username':
-            return state.slice(0).sort(compareByProp('username', 1));
-        case 'exp':
-            return  state.slice(0).sort(compareByProp('exp', -1));
+        case types.RECEIVE_LIST:
+            return getSortedUsers(action.response, 'exp');
         default:
             return state;
     }

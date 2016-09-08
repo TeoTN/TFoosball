@@ -43,7 +43,7 @@ class FoosballTable extends Component {
                 </Col>
             </Row>
             <MatchResult />
-            { ( playing.length == 4 && players ) ? <MatchStats players={players} /> : null }
+            { ( playing.length === 4 && players ) ? <MatchStats players={players} /> : null }
         </Well>
         );
     }
