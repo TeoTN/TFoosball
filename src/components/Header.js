@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import SignInButton from './SignInButton';
 
 export default class Header extends Component {
     render() {
@@ -24,6 +25,9 @@ export default class Header extends Component {
                     <LinkContainer to={{ pathname: '/tournament/0'}}>
                         <NavItem eventKey={4} href="#">Tournament</NavItem>
                     </LinkContainer>
+                </Nav>
+                <Nav pullRight>
+                    <SignInButton />
                 </Nav>
             </Navbar>
         );
