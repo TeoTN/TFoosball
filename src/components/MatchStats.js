@@ -9,8 +9,8 @@ const mapStateToProps = state => ({...state});
 class MatchStats extends Component {
     renderUserStats = (player, index) => (
         <Row key={index}>
-            <Col xs={2}>
-                <strong>{ player.position }</strong>
+            <Col xs={3}>
+                <strong>{ player.team.toUpperCase() } { player.position.toUpperCase() }</strong>
             </Col>
             <Col xs={3}>
                 { player.username }
