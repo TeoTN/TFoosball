@@ -12,7 +12,7 @@ const selectedColor = 'success';
 @connect(null, mapDispatchToProps)
 export default class User extends Component {
     toggle = () => this.props.select(this.props.user);
-    
+
     render() {
         const {user} = this.props;
         return (

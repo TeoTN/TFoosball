@@ -1,37 +1,27 @@
 import React, { Component } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
-// import * as UserActions from '../actions/user.actions';
 
 const mapStateToProps = state => ({...state});
-const mapDispatchToProps = (dispatch, props) => {
-    return {
-        handleChange: (eventKey, event) => {
-            // dispatch(UserActions.userToggle(prev));
-            // dispatch(UserActions.userToggle(next));
-        }
-    }
-};
-@connect(mapStateToProps, mapDispatchToProps)
+
+@connect(mapStateToProps, null)
 class UserPicker extends Component {
-    getUsersOptions = () => {
-        return this.props.users.map(
-            (user, index) => (
-                <MenuItem eventKey={user.id} active={user.playing} key={index}>
-                    {user.username}
-                </MenuItem>
-            )
-        );
-    };
+    getUsersOptions = () => this.props.users.map(
+        (user, index) => (
+            <MenuItem eventKey={user.id} key={index}> {user.username} </MenuItem>
+        )
+    );
 
-    getTitle = () => (this.props.player)?this.props.player.username:'-----';
+    getTitle = user => user ? user.username : '-----';
 
-    getColor = () => this.props.team === 'blue' ? 'info' : 'danger';
+    getColor = team => team === 'blue' ? 'info' : 'danger';
 
     render() {
-        const {team, position} = this.props;
+        const { team, position, users } = this.props;
+        const user = users.find(u => u.team === team && u.position === position);
+
         return (
-            <DropdownButton bsStyle={this.getColor()} title={this.getTitle()}
+            <DropdownButton bsStyle={this.getColor(team)} title={this.getTitle(user)}
                             id={`player-${team}-${position}`} onSelect={this.props.handleChange}>
                 {this.getUsersOptions()}
             </DropdownButton>

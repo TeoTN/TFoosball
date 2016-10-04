@@ -36,15 +36,12 @@ export const getSortedUsers = (state, prop) => {
 const clean = (state = [], action) => {
     switch (action.type) {
         case types.CHOOSE:
-            const actionUpdate = {
-                type: types.UPDATE,
-                userData: {
-                    playing: false,
-                    team: undefined,
-                    position: undefined,
-                }
-            };
-            return state.map(u => user(u, actionUpdate));
+            return state.map(u => ({
+                ...u,
+                playing: false,
+                team: undefined,
+                position: undefined,
+            }));
         default:
             return state;
     }
