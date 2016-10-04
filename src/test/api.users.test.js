@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { fetchUsers } from '../api/users';
+import { fetchUsers } from '../api/connectors';
 
 chai.use(chaiAsPromised);
 

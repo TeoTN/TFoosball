@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
 import { Row, Col } from 'react-bootstrap';
-import { fetchUsers } from '../api/users';
+import { fetchUsers } from '../api/connectors';
 import { receiveUsers } from '../actions/user.actions';
 
 const mapStateToProps = state => ({...state});
@@ -24,8 +24,8 @@ export default class ProfileLayout extends Component {
     render() {
         const { username } = this.props.params;
         console.log(this.props.users);
-        const user = this.props.users.find(user => user.username === username);
-
+        //const user = this.props.users.find(user => user.username === username);
+        // TODO Fetch user from API
         return (
             <div>
                 <h1>Profile <small>{ username }</small></h1>

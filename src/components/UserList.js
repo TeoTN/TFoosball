@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
 import User from './User';
 import UserToolbar from './MatchToolbar';
-import { fetchUsers } from '../api/users';
+import { fetchUsers } from '../api/connectors';
 import { receiveUsers } from '../actions/user.actions';
 
 const mapStateToProps = (state) => ({...state});

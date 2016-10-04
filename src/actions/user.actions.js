@@ -23,6 +23,12 @@ export const userToggle = (user) => ({
     }
 });
 
+export const userUpdate = (id, userData) => ({
+    type: types.UPDATE,
+    id,
+    userData,
+});
+
 export const choosePlayersForMatch = () => ({
     type: types.CHOOSE
 });

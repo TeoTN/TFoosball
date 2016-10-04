@@ -1,6 +1,6 @@
-export function finish(result) {
-    return {
-        type: 'FINISH_MATCH',
-        result
-    };
-}
+import * as types from './match.types';
+
+export const send = (response) => ({
+    type: types.SENT,
+    response,
+});
