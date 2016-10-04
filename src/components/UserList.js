@@ -6,11 +6,7 @@ import UserToolbar from './MatchToolbar';
 import { fetchUsers } from '../api/users';
 import { receiveUsers } from '../actions/user.actions';
 
-const mapStateToProps = (state) => {
-    return {
-        users: state.users
-    }
-};
+const mapStateToProps = (state) => ({...state});
 
 const mapDispatchToProps = (dispatch, props) => ({
     receiveUsers: (response) => dispatch(receiveUsers(response)),
@@ -42,7 +38,7 @@ class UserList extends Component {
                             <strong> Experience </strong>
                         </Col>
                     </ListGroupItem>
-                    { this.props.users.map(user => <User key={user.id} user={user}/>)}
+                    { this.props.users.map(user => <User key={user.id} user={user} />)}
                 </ListGroup>
             </div>
         );

@@ -11,18 +11,13 @@ const selectedColor = 'success';
 
 @connect(null, mapDispatchToProps)
 export default class User extends Component {
-    constructor(props) {
-        super(props);
-
-        this.toggle = () => {
-            this.props.select(this.props.user);
-        };
-    }
+    toggle = () => this.props.select(this.props.user);
+    
     render() {
         const {user} = this.props;
         return (
-            <ListGroupItem bsStyle={(user.selected || user.playing)?selectedColor:null}
-                           onClick={this.toggle}>
+            <ListGroupItem bsStyle={ user.selected ? selectedColor : null }
+                           onClick={ this.toggle }>
                 <Col xs={8}>
                     {user.username}
                 </Col>

@@ -17,10 +17,10 @@ class MatchStats extends Component {
                 { player.username }
             </Col>
             <Col xs={2}>
-                <span><strong>Def:</strong>&nbsp;{ Math.round(player.def*100) }%</span>
+                <span><strong>Def:</strong>&nbsp;{ Math.round(player.def_ratio*100) }%</span>
             </Col>
             <Col xs={2}>
-                <span><strong>Att:</strong>&nbsp;{ Math.round(player.att*100) }%</span>
+                <span><strong>Att:</strong>&nbsp;{ Math.round(player.att_ratio*100) }%</span>
             </Col>
         </Row>
         ):null);
