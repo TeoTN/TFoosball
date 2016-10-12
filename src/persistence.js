@@ -5,8 +5,7 @@ const loadData = (key) => () => {
             return undefined;
         }
         return JSON.parse(serializedData);
-    }
-    catch (err) {
+    } catch (err) {
         return undefined;
     }
 };
@@ -15,11 +14,19 @@ const saveData = (key) => (data) => {
     try {
         const serializedData = JSON.stringify(data);
         localStorage.setItem(key, serializedData);
+    } catch (err) {
+        console.error(err);
     }
-    catch(err) {
+};
+
+const removeData = (key) => () => {
+    try {
+        localStorage.removeItem(key);
+    } catch (err) {
         console.error(err);
     }
 };
 
 export const loadAuthState = loadData('auth');
 export const saveAuthState = saveData('auth');
+export const removeAuthState = removeData('auth');

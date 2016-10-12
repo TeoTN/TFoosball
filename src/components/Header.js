@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import SignInButton from './SignInButton';
+import SignOutButton from './SignOutButton';
+import { loadAuthState } from '../persistence';
 
+//TODO make it function
 export default class Header extends Component {
     render() {
+        const auth = loadAuthState() || {};
         return (
             <Navbar staticTop>
                 <Navbar.Header>
@@ -27,7 +31,7 @@ export default class Header extends Component {
                     </LinkContainer>
                 </Nav>
                 <Nav pullRight>
-                    <SignInButton />
+                    { auth.hasOwnProperty('token') ? <SignOutButton /> : <SignInButton /> }
                 </Nav>
             </Navbar>
         );
