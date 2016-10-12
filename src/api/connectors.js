@@ -6,6 +6,7 @@ import { API_ROOT } from './config';
 const requests = {
     users: `${API_ROOT}/users/`,
     matches: `${API_ROOT}/matches/`,
+    logout: `${API_ROOT}/rest-auth/logout/`,
 };
 
 export const fetchUsers = () => ajax.get(requests.users);

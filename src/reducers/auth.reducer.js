@@ -1,6 +1,7 @@
 import * as types from '../actions/auth.types';
+import { loadAuthState } from '../persistence';
 
-const auth = (state = {}, action) => {
+const auth = (state = loadAuthState('auth') || {}, action) => {
     switch (action.type) {
         case types.SET_TOKEN:
             return {

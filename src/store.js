@@ -1,5 +1,6 @@
 import { createStore } from 'redux';
 import reducer from './reducers/reducer'
+import { saveAuthState } from './persistence';
 
 const createLoggingDispatch = (store) => {
     const rawDispatch = store.dispatch;
@@ -18,6 +19,16 @@ const createLoggingDispatch = (store) => {
 };
 
 const store = createStore(reducer);
+let currentAuthState;
+store.subscribe(() => {
+    let previousAuthState = currentAuthState;
+    currentAuthState = store.getState().auth;
+
+    if (previousAuthState !== currentAuthState) {
+        saveAuthState(currentAuthState);
+    }
+});
+
 if (process.env.NODE_ENV !== 'production') {
     store.dispatch = createLoggingDispatch(store);
 }
