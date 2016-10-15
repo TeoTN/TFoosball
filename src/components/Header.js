@@ -3,9 +3,13 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import SignInButton from './SignInButton';
 import SignOutButton from './SignOutButton';
-import { loadAuthState } from '../persistence';
+import { connect } from 'react-redux';
 
-export default () =>
+const mapStateToProps = ({auth}) => ({
+    auth,
+});
+
+const Header = (props) => (
     <Navbar staticTop>
         <Navbar.Header>
             <Navbar.Brand>
@@ -28,9 +32,12 @@ export default () =>
         </Nav>
         <Nav pullRight>
             {
-                (loadAuthState() || {}).hasOwnProperty('token') ?
+                (props.auth).hasOwnProperty('token') ?
                     <SignOutButton /> :
                     <SignInButton />
             }
         </Nav>
     </Navbar>
+);
+
+export default connect(mapStateToProps, null)(Header);

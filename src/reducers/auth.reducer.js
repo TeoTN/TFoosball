@@ -4,19 +4,17 @@ import { loadAuthState, removeAuthState } from '../persistence';
 const auth = (state = loadAuthState('auth') || {}, action) => {
     switch (action.type) {
         case types.SET_TOKEN:
-            location.reload(); //TODO
             return {
                 ...state,
                 token: action.token,
             };
-        case types.SET_USER:
+        case types.FETCH_PROFILE:
             return {
                 ...state,
-                user: action.user,
+                profile: action.response,
             };
         case types.SIGN_OUT:
             removeAuthState();
-            location.reload(); //TODO
             return {};
         default:
             return state;

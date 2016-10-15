@@ -5,11 +5,11 @@ export const setToken = (token) => ({
     token
 });
 
-export const setUser = (user) => ({
-    type: types.SET_USER,
-    user
+export const fetchProfile = (response) => ({
+    type: types.FETCH_PROFILE,
+    response
 });
 
-export const signOut = () => ({
+export const signedOut = () => ({
     type: types.SIGN_OUT,
 });

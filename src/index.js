@@ -13,11 +13,21 @@ import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
 import './utils/object';
 
+function noIntroWhileAuth(nextState, replace) {
+    if (!!localStorage.auth) {
+        replace({
+            pathname: '/match',
+            state: { nextPathname: nextState.location.pathname }
+        })
+    }
+}
+
+//TODO Redirect when unauthorized
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route component={App}>
-                <Route path="/" component={IntroLayout} />
+                <Route path="/" component={IntroLayout} onEnter={noIntroWhileAuth} />
                 <Route path="match" component={MatchLayout} />
                 <Route path="profile/(:username)" component={ProfileLayout} />
                 <Route path="ranking" component={RankingLayout} />
