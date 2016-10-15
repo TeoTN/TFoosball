@@ -1,27 +1,24 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { signOut } from '../actions/auth.actions';
+import { signedOut } from '../actions/auth.actions';
 import { fetchLogout } from '../api/connectors';
 import { raiseError } from '../actions/error.actions';
+import { ensureSuccessOr } from '../api/utils';
 
 const mapDispatchToProps = dispatch => ({
-    dispatchSignOut: () => dispatch(signOut()),
-    raiseFailure: () => dispatch(raiseError('Failed to sign out properly.')),
+    signedOut: () => dispatch(signedOut()),
+    raiseError: (msg) => dispatch(raiseError(msg)),
 });
 
 @connect(null, mapDispatchToProps)
 export default class SignInButton extends Component {
     signOut = () => {
+        const { signedOut, raiseError } = this.props;
         fetchLogout()
-            .then(this.onSignOutDone);
-    };
-
-    onSignOutDone = (response) => {
-        if (response.status === 200) {
-            return this.props.dispatchSignOut();
-        }
-        return this.props.raiseFailure();
+            .then(ensureSuccessOr('Failed to sign out properly'))
+            .then(signedOut)
+            .catch(raiseError);
     };
 
     render() {

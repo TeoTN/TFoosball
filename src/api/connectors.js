@@ -6,6 +6,7 @@ import { loadAuthState } from '../persistence';
 const url = {
     users: `${API_ROOT}/users/`,
     matches: `${API_ROOT}/matches/`,
+    profile: `${URL_ROOT}/rest-auth/user/`,
     logout: `${URL_ROOT}/rest-auth/logout/`,
 };
 
@@ -17,6 +18,14 @@ const getDefaultHeaders = () => {
         headers.append('Authorization', `Token ${auth.token}`);
     }
     return headers;
+};
+
+export const fetchProfile = () => {
+    const request = new Request(url.profile, {
+        method: 'GET',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request);
 };
 
 export const fetchUsers = () => {
