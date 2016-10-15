@@ -24,7 +24,7 @@ store.subscribe(() => {
     let previousAuthState = currentAuthState;
     currentAuthState = store.getState().auth;
 
-    if (previousAuthState !== currentAuthState) {
+    if (previousAuthState !== currentAuthState && !Object.isEmpty(currentAuthState)) {
         saveAuthState(currentAuthState);
     }
 });
