@@ -1,13 +1,53 @@
 // import { delay } from '../utils/delay';
 // import users from '../mocks/users.json';
-import ajax from 'ajax-promise';
-import { API_ROOT } from './config';
+import { URL_ROOT, API_ROOT } from './config';
+import { loadAuthState } from '../persistence';
 
-const requests = {
+const url = {
     users: `${API_ROOT}/users/`,
     matches: `${API_ROOT}/matches/`,
+    logout: `${URL_ROOT}/rest-auth/logout/`,
 };
 
-export const fetchUsers = () => ajax.get(requests.users);
-export const fetchMatches = () => ajax.get(requests.matches);
-export const publishMatch = (match) => ajax.post(requests.matches, match);
+const getDefaultHeaders = () => {
+    const auth = loadAuthState();
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    if (auth) {
+        headers.append('Authorization', `Token ${auth.token}`);
+    }
+    return headers;
+};
+
+export const fetchUsers = () => {
+    const request = new Request(url.users, {
+        method: 'GET',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request);
+};
+
+export const fetchLogout = () => {
+    const request = new Request(url.logout, {
+        method: 'GET',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request);
+};
+
+export const fetchMatches = () => {
+    const request = new Request(url.matches, {
+        method: 'GET',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request);
+};
+
+export const publishMatch = (match) => {
+    const request = new Request(url.matches, {
+        method: 'POST',
+        headers: getDefaultHeaders(),
+        body: JSON.stringify(match)
+    });
+    return fetch(request);
+};

@@ -5,11 +5,14 @@ import User from './User';
 import UserToolbar from './MatchToolbar';
 import { fetchUsers } from '../api/connectors';
 import { receiveUsers } from '../actions/user.actions';
+import { raiseError } from '../actions/error.actions';
 
 const mapStateToProps = (state) => ({...state});
 
 const mapDispatchToProps = (dispatch, props) => ({
-    receiveUsers: (response) => dispatch(receiveUsers(response)),
+    receiveUsers: (data) => dispatch(receiveUsers(data)),
+    raiseUnauthorized: () => dispatch(raiseError("Unauthorized - please log in.")),
+    raiseUnexpected: () => dispatch(raiseError("Unexpected error while fetching user list")),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -20,8 +23,21 @@ class UserList extends Component {
 
     fetchData() {
         fetchUsers()
+            .then(this.onFetchDone)
             .then(this.props.receiveUsers);
     }
+
+    onFetchDone = (response) => {
+        if (response.status === 200) {
+            return response.json();
+        }
+        else if (response.status === 401) {
+            this.props.raiseUnauthorized();
+        }
+        else {
+            this.props.raiseUnexpected();
+        }
+    };
 
     render() {
         return (

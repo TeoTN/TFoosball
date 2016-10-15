@@ -72,7 +72,8 @@ export default (state = [], action) => {
         case types.SORT_NAME:
             return getSortedUsers(state, 'username');
         case types.RECEIVE_LIST:
-            return getSortedUsers(action.response, 'exp');
+            const data = Array.isArray(action.response) ? action.response : [];
+            return getSortedUsers(data, 'exp');
         default:
             return state;
     }
