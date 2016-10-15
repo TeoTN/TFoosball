@@ -13,7 +13,7 @@ export default () =>
             </Navbar.Brand>
         </Navbar.Header>
         <Nav>
-            <LinkContainer to={{ pathname: '/'}}>
+            <LinkContainer to={{ pathname: '/match'}}>
                 <NavItem eventKey={1} href="#">New match</NavItem>
             </LinkContainer>
             <LinkContainer to={{ pathname: '/profile/cschmidt1w'}}>

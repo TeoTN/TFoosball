@@ -1,5 +1,5 @@
 import * as types from '../actions/auth.types';
-import { loadAuthState, removeAuthState, saveAuthState } from '../persistence';
+import { loadAuthState, removeAuthState } from '../persistence';
 
 const auth = (state = loadAuthState('auth') || {}, action) => {
     switch (action.type) {
