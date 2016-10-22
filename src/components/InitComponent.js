@@ -13,19 +13,28 @@ import { updateProfile } from '../api/connectors';
 import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 import { browserHistory } from 'react-router'
 
-
+const mapStateToProps = ({profile}) => ({
+    username: profile.username,
+});
 const mapDispatchToProps = (dispatch) => ({
     update: (userNewData) => dispatch(actions.profileUpdate(userNewData)),
     raiseError: (msg) => dispatch(raiseError(msg)),
 });
 
-@connect(null, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 export default class InitComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             newUsername: ''
         };
+    }
+
+    componentDidUpdate() {
+        const { username } = this.props;
+        if (username) {
+            browserHistory.push('/');
+        }
     }
 
     handleChange = (e) => {
@@ -35,9 +44,14 @@ export default class InitComponent extends Component {
     register = (e) => {
         e.preventDefault();
         const { update, raiseError } = this.props;
+        const { newUsername } = this.state;
+
+        if (newUsername.length < 3) {
+            raiseError('Username must consist of at least 3 characters.');
+        }
 
         const data = {
-            username: this.state.newUsername,
+            username: newUsername,
         };
 
         updateProfile(data)
