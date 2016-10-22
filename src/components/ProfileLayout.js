@@ -6,10 +6,14 @@ import { Row, Col } from 'react-bootstrap';
 import { fetchUsers } from '../api/connectors';
 import { receiveUsers } from '../actions/user.actions';
 
-const mapStateToProps = state => ({...state});
+const mapStateToProps = ({profile}) => ({
+    profile,
+});
+
 const mapDispatchToProps = (dispatch, props) => ({
     receiveUsers: (response) => dispatch(receiveUsers(response)),
 });
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ProfileLayout extends Component {
     componentDidMount() {
@@ -23,8 +27,7 @@ export default class ProfileLayout extends Component {
 
     render() {
         const { username } = this.props.params;
-        console.log(this.props.users);
-        //const user = this.props.users.find(user => user.username === username);
+
         // TODO Fetch user from API
         return (
             <div>
