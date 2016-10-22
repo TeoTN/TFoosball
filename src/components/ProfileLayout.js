@@ -37,7 +37,7 @@ export default class ProfileLayout extends Component {
                         <ProfileStats />
                     </Col>
                     <Col sm={7}>
-                        <ProfileChart />
+                        {/*<ProfileChart />*/}
                     </Col>
                 </Row>
                 {this.props.children}
