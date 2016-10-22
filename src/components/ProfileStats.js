@@ -3,14 +3,17 @@ import { connect } from 'react-redux';
 import { Well, Row, Col, ProgressBar } from 'react-bootstrap';
 import Widget from './Widget';
 
-const mapStateToProps = state => ({...state});
+const mapStateToProps = ({profile}) => ({
+    profile,
+});
 @connect(mapStateToProps, null)
 export default class ProfileStats extends Component {
     render() {
-        const def = Math.round(this.props.profile.def * 100);
-        const att = Math.round(this.props.profile.att * 100);
-        const win = Math.round(this.props.profile.win * 100);
-        const { win_streak, lost_streak, hi, lo } = this.props.profile;
+        const { profile } = this.props;
+        const def = Math.round(profile.def * 100);
+        const att = Math.round(profile.att * 100);
+        const win = Math.round(profile.win * 100);
+        const { win_streak, lost_streak, hi, lo } = profile;
 
         return (
             <Well>

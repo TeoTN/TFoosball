@@ -8,11 +8,6 @@ const auth = (state = loadAuthState('auth') || {}, action) => {
                 ...state,
                 token: action.token,
             };
-        case types.FETCH_PROFILE:
-            return {
-                ...state,
-                profile: action.response,
-            };
         case types.SIGN_OUT:
             removeAuthState();
             return {};

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { signedOut } from '../actions/auth.actions';
 import { fetchLogout } from '../api/connectors';
 import { raiseError } from '../actions/error.actions';
-import { ensureSuccessOr } from '../api/utils';
+import { ensureSuccessOr } from '../api/helpers';
 
 const mapDispatchToProps = dispatch => ({
     signedOut: () => dispatch(signedOut()),

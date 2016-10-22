@@ -60,3 +60,12 @@ export const publishMatch = (match) => {
     });
     return fetch(request);
 };
+
+export const updateProfile = (partialData) => {
+    const request = new Request(url.profile, {
+        method: 'PATCH',
+        headers: getDefaultHeaders(),
+        body: JSON.stringify(partialData)
+    });
+    return fetch(request);
+};

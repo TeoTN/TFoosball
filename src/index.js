@@ -9,16 +9,21 @@ import ProfileLayout from './components/ProfileLayout';
 import RankingLayout from './components/RankingLayout';
 import TournamentLayout from './components/TournamentLayout';
 import IntroLayout from './components/IntroLayout';
+import InitComponent from './components/InitComponent';
 import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
 import './utils/object';
+import { loadAuthState } from './persistence';
 
 function noIntroWhileAuth(nextState, replace) {
-    if (!!localStorage.auth) {
+    const auth = loadAuthState();
+    const { profile } = store.getState();
+    if (auth && !!profile) {
+        const target = (!profile.username) ? '/init' : '/match';
         replace({
-            pathname: '/match',
+            pathname: target,
             state: { nextPathname: nextState.location.pathname }
-        })
+        });
     }
 }
 
@@ -28,6 +33,7 @@ ReactDOM.render(
         <Router history={browserHistory}>
             <Route component={App}>
                 <Route path="/" component={IntroLayout} onEnter={noIntroWhileAuth} />
+                <Route path="init" component={InitComponent} />
                 <Route path="match" component={MatchLayout} />
                 <Route path="profile/(:username)" component={ProfileLayout} />
                 <Route path="ranking" component={RankingLayout} />

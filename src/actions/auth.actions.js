@@ -5,11 +5,6 @@ export const setToken = (token) => ({
     token
 });
 
-export const fetchProfile = (response) => ({
-    type: types.FETCH_PROFILE,
-    response
-});
-
 export const signedOut = () => ({
     type: types.SIGN_OUT,
 });

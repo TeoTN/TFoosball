@@ -4,13 +4,14 @@ import PromiseWindow from 'promise-window';
 import serialize from '../utils/serialize';
 import { connect } from 'react-redux';
 import { raiseError } from '../actions/error.actions';
-import * as actions from '../actions/auth.actions';
+import * as authActions from '../actions/auth.actions';
+import * as profileActions from '../actions/profile.actions';
 import { fetchProfile } from '../api/connectors';
-import { ensureJSON, ensureSuccessOr } from '../api/utils';
+import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 
 const mapDispatchToProps = (dispatch) => ({
-    loadProfile: (response) => dispatch(actions.fetchProfile(response)),
-    setToken: ({token}) => dispatch(actions.setToken(token)),
+    loadProfile: (response) => dispatch(profileActions.fetchProfile(response)),
+    setToken: ({token}) => dispatch(authActions.setToken(token)),
     raiseError: (msg) => dispatch(raiseError(msg)),
 });
 
