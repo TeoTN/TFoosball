@@ -8,6 +8,7 @@ import * as authActions from '../actions/auth.actions';
 import * as profileActions from '../actions/profile.actions';
 import { fetchProfile } from '../api/connectors';
 import { ensureJSON, ensureSuccessOr } from '../api/helpers';
+import { browserHistory } from 'react-router'
 
 const mapDispatchToProps = (dispatch) => ({
     loadProfile: (response) => dispatch(profileActions.fetchProfile(response)),
@@ -45,6 +46,7 @@ export default class SignInButton extends Component {
             .then(ensureSuccessOr('Failed to fetch profile'))
             .then(ensureJSON)
             .then(loadProfile)
+            .then(() => browserHistory.push('/match'))
             .catch(this.handleError);
     };
 
