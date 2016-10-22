@@ -5,7 +5,7 @@ export default (state = [], action) => {
         case types.SENT:
             return [
                 ...state,
-                action.response.data,
+                action.response,
             ];
         default:
             return state;
