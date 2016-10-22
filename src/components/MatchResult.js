@@ -40,6 +40,7 @@ class MatchResult extends Component {
             red_score: this.state.red,
             blue_score: this.state.blue,
         };
+
         publishMatch(requestData)
             .then(ensureSuccessOr('Failed to publish match results'))
             .then(ensureJSON)
