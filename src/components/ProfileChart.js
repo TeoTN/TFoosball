@@ -3,15 +3,22 @@ import Chart from 'chart.js';
 
 export default class ProfileChart extends Component {
     componentDidMount() {
+        this.setUpChart();
+    }
+
+    componentDidUpdate() {
+        this.setUpChart();
+    }
+
+    setUpChart() {
         const chartOptions =  {};
-        const ctx = document.getElementById("profileChart");
-        const { profile } = this.props;
-        console.log(profile);
-        if (profile) {
+        const ctx = this.chartDOM;
+        const { exp_history } = this.props;
+        if (exp_history && ctx) {
             new Chart(ctx, {
                 type: 'line',
                 options: chartOptions,
-                data: this.parseExpHistory(profile.exp_history),
+                data: this.parseExpHistory(exp_history),
             });
         }
     }
@@ -31,8 +38,9 @@ export default class ProfileChart extends Component {
     });
 
     render() {
-        return (
-            <canvas id="profileChart" />
-        );
+        const { exp_history } = this.props;
+        return exp_history ?
+            <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
+            <p>Sorry, user has no experience points history.</p>
     }
 }
