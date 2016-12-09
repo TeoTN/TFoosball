@@ -5,10 +5,7 @@ import SignInButton from './SignInButton';
 import SignOutButton from './SignOutButton';
 import { connect } from 'react-redux';
 
-const mapStateToProps = ({auth, profile}) => ({
-    auth,
-    profile
-});
+const mapStateToProps = ({auth}) => ({auth});
 
 const navigation = (username) => (
     <Nav>
@@ -28,7 +25,7 @@ const navigation = (username) => (
 );
 
 const Header = (props) => {
-    const { profile, auth } = props;
+    const { auth: { token, profile, } } = props;
     return (
         <Navbar staticTop>
             <Navbar.Header>
@@ -36,10 +33,10 @@ const Header = (props) => {
                     <a href="/">TFoosball</a>
                 </Navbar.Brand>
             </Navbar.Header>
-            { profile.username ? navigation(profile.username) : null }
+            { profile && profile.hasOwnProperty('username') ? navigation(profile.username) : null }
             <Nav pullRight>
                 {
-                    auth.hasOwnProperty('token') ?
+                    token ?
                         <SignOutButton /> :
                         <SignInButton />
                 }

@@ -1,2 +1,2 @@
 export const UPDATE = 'PROFILE::UPDATE';
-export const FETCH_PROFILE = 'PROFILE::FETCH';
+export const RECEIVE_PROFILE = 'PROFILE::RECEIVE';

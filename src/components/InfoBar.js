@@ -13,7 +13,7 @@ const InfoBar = connect(mapStateToProps, mapDispatchToProps)(
     <ListGroup className="container">
         {infoList.map(info => (
             <ListGroupItem
-                header="Oh snap!"
+                header="Hey you!"
                 onClick={() => handleMsg(info.id)}
                 key={info.id}>
                 <span className="text-success">

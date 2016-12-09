@@ -11,6 +11,11 @@ const auth = (state = loadAuthState('auth') || {}, action) => {
         case types.SIGN_OUT:
             removeAuthState();
             return {};
+        case types.SET_PROFILE:
+            return {
+                ...state,
+                profile: action.response
+            };
         default:
             return state;
     }

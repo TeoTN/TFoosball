@@ -2,7 +2,12 @@ import * as types from './auth.types';
 
 export const setToken = (token) => ({
     type: types.SET_TOKEN,
-    token
+    token,
+});
+
+export const setProfile = (response) => ({
+    type: types.SET_PROFILE,
+    response,
 });
 
 export const signedOut = () => ({

@@ -5,6 +5,7 @@ import { signedOut } from '../actions/auth.actions';
 import { fetchLogout } from '../api/connectors';
 import { raiseError } from '../actions/error.actions';
 import { ensureSuccessOr } from '../api/helpers';
+import { browserHistory } from 'react-router'
 
 const mapDispatchToProps = dispatch => ({
     signedOut: () => dispatch(signedOut()),
@@ -18,6 +19,7 @@ export default class SignInButton extends Component {
         fetchLogout()
             .then(ensureSuccessOr('Failed to sign out properly'))
             .then(signedOut)
+            .then(() => browserHistory.push('/'))
             .catch(raiseError);
     };
 

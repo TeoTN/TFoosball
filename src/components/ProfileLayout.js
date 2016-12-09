@@ -3,22 +3,16 @@ import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
 import { Row, Col } from 'react-bootstrap';
-import { fetchUsers } from '../api/connectors';
-import { receiveUsers } from '../actions/user.actions';
+import { fetchProfile } from '../api/connectors';
+import { receiveProfile } from '../actions/profile.actions';
 import { withRouter } from 'react-router';
 import { ensureSuccessOr, ensureJSON } from '../api/helpers';
 import { raiseError } from '../actions/error.actions';
 
 
-const getUserProfile = (state, username) => state.find(user => user.username === username);
-
-const mapStateToProps = (state, {params}) => ({
-    profile: getUserProfile(state.users, params.username || ''),
-    users: state.users,
-});
-
+const mapStateToProps = ({users}) => ({users,});
 const mapDispatchToProps = dispatch => ({
-    receiveUsers: (data) => dispatch(receiveUsers(data)),
+    receiveProfile: (response) => dispatch(receiveProfile(response)),
     raiseError: (msg) => dispatch(raiseError(msg)),
 });
 
@@ -30,17 +24,16 @@ export default class ProfileLayout extends Component {
     }
 
     fetchData() {
-        const {receiveUsers, raiseError} = this.props;
-        fetchUsers()
-            .then(ensureSuccessOr('Failed to get user'))
+        const {receiveProfile, raiseError, params: {username}} = this.props;
+        fetchProfile(username)
+            .then(ensureSuccessOr('Failed to get user profile'))
             .then(ensureJSON)
-            .then(receiveUsers)
+            .then(receiveProfile)
             .catch(raiseError);
     }
 
     render() {
-        const { username } = this.props.params;
-        console.log(this.props.users);
+        const { children, profile, params: {username}} = this.props;
         return (
             <div>
                 <h1>Profile <small>{ username }</small></h1>
@@ -49,10 +42,10 @@ export default class ProfileLayout extends Component {
                         <ProfileStats />
                     </Col>
                     <Col sm={7}>
-                        <ProfileChart profile={this.props.profile} />
+                        <ProfileChart profile={profile} />
                     </Col>
                 </Row>
-                {this.props.children}
+                {children}
             </div>
         );
     }

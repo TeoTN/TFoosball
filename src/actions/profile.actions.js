@@ -5,7 +5,7 @@ export const profileUpdate = (response) => ({
     response
 });
 
-export const fetchProfile = (response) => ({
-    type: types.FETCH_PROFILE,
+export const receiveProfile = (response) => ({
+    type: types.RECEIVE_PROFILE,
     response
 });

@@ -3,7 +3,7 @@ import Header from './components/Header';
 import InfoBar from './components/InfoBar';
 import ErrorBar from './components/ErrorBar';
 import { fetchProfile } from './api/connectors';
-import * as profileActions from './actions/profile.actions';
+import * as authActions from './actions/auth.actions';
 import * as errorActions from './actions/error.actions';
 import store from './store';
 import { ensureSuccessOr, ensureJSON } from './api/helpers';
@@ -16,20 +16,15 @@ export default class App extends Component {
             return;
         }
         fetchProfile()
-            .then(ensureSuccessOr('Failed to initialize profile'))
+            .then(ensureSuccessOr('Failed to get your data from the server'))
             .then(ensureJSON)
-            .then(
-                (response) => store.dispatch(profileActions.fetchProfile(response)),
-            )
-            .catch(
-                (error) => store.dispatch(errorActions.raiseError('Failed to initialize profile'))
-            )
+            .then(response => store.dispatch(authActions.setProfile(response)))
+            .catch(error => store.dispatch(errorActions.raiseError('Failed to initialize profile')))
             .then(this.ensureUsernameIsPresent);
     }
 
     ensureUsernameIsPresent = () => {
-        const state = store.getState();
-        const { username } = state.profile;
+        const { auth: {profile: {username}} } = store.getState();
         if (!username) {
             browserHistory.push('/welcome');
         }
