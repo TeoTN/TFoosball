@@ -41,7 +41,7 @@ export default class SignInButton extends Component {
         promptPromise
             .open()
             .then(setToken)
-            .then((...args) => fetchProfile())
+            .then(() => fetchProfile())
             .then(ensureSuccessOr('Failed to fetch profile'))
             .then(ensureJSON)
             .then(loadProfile)

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
 import User from './User';
-import UserToolbar from './MatchToolbar';
+import MatchToolbar from './MatchToolbar';
 import { fetchUsers } from '../api/connectors';
 import { receiveUsers } from '../actions/user.actions';
 import { raiseError } from '../actions/error.actions';
@@ -43,7 +43,7 @@ class UserList extends Component {
         return (
             <div>
                 <Row>
-                    <UserToolbar/>
+                    <MatchToolbar/>
                 </Row>
                 <ListGroup>
                     <ListGroupItem onClick={()=>{}}>

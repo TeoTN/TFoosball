@@ -2,13 +2,12 @@
 // import users from '../mocks/users.json';
 import { URL_ROOT, API_ROOT } from './config';
 import { loadAuthState } from '../persistence';
-import url from 'url';
 
 const urls = {
-    users: url.resolve(API_ROOT, 'users/'),
-    matches: url.resolve(API_ROOT, 'matches/'),
-    profile: url.resolve(URL_ROOT, 'rest-auth/user/'),
-    logout: url.resolve(URL_ROOT, 'rest-auth/logout/'),
+    users: `${API_ROOT}users/`,
+    matches: `${API_ROOT}matches/`,
+    profile: `${URL_ROOT}rest-auth/user/`,
+    logout: `${URL_ROOT}rest-auth/logout/`,
 };
 
 const getDefaultHeaders = () => {
