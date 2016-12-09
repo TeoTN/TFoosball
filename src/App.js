@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
+import InfoBar from './components/InfoBar';
 import ErrorBar from './components/ErrorBar';
 import { fetchProfile } from './api/connectors';
 import * as profileActions from './actions/profile.actions';
@@ -39,6 +40,7 @@ export default class App extends Component {
         return (
             <div>
                 <Header />
+                <InfoBar />
                 <ErrorBar />
                 <main className="container">
                     {children}

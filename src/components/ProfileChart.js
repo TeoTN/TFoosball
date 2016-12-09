@@ -6,7 +6,7 @@ export default class ProfileChart extends Component {
         const chartOptions =  {};
         const ctx = document.getElementById("profileChart");
         const { profile } = this.props;
-        console.log(profile)
+        console.log(profile);
         if (profile) {
             new Chart(ctx, {
                 type: 'line',
