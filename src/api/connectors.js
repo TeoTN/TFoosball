@@ -2,12 +2,13 @@
 // import users from '../mocks/users.json';
 import { URL_ROOT, API_ROOT } from './config';
 import { loadAuthState } from '../persistence';
+import url from 'url';
 
-const url = {
-    users: `${API_ROOT}/users/`,
-    matches: `${API_ROOT}/matches/`,
-    profile: `${URL_ROOT}/rest-auth/user/`,
-    logout: `${URL_ROOT}/rest-auth/logout/`,
+const urls = {
+    users: url.resolve(API_ROOT, 'users/'),
+    matches: url.resolve(API_ROOT, 'matches/'),
+    profile: url.resolve(URL_ROOT, 'rest-auth/user/'),
+    logout: url.resolve(URL_ROOT, 'rest-auth/logout/'),
 };
 
 const getDefaultHeaders = () => {
@@ -20,8 +21,9 @@ const getDefaultHeaders = () => {
     return headers;
 };
 
-export const fetchProfile = () => {
-    const request = new Request(url.profile, {
+export const fetchProfile = (username) => {
+    const target = username ? `${urls.users}${username}/` : urls.profile;
+    const request = new Request(target, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
@@ -29,7 +31,7 @@ export const fetchProfile = () => {
 };
 
 export const fetchUsers = () => {
-    const request = new Request(url.users, {
+    const request = new Request(urls.users, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
@@ -37,7 +39,7 @@ export const fetchUsers = () => {
 };
 
 export const fetchLogout = () => {
-    const request = new Request(url.logout, {
+    const request = new Request(urls.logout, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
@@ -45,7 +47,7 @@ export const fetchLogout = () => {
 };
 
 export const fetchMatches = () => {
-    const request = new Request(url.matches, {
+    const request = new Request(urls.matches, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
@@ -53,7 +55,7 @@ export const fetchMatches = () => {
 };
 
 export const publishMatch = (match) => {
-    const request = new Request(url.matches, {
+    const request = new Request(urls.matches, {
         method: 'POST',
         headers: getDefaultHeaders(),
         body: JSON.stringify(match)
@@ -62,7 +64,7 @@ export const publishMatch = (match) => {
 };
 
 export const updateProfile = (partialData) => {
-    const request = new Request(url.profile, {
+    const request = new Request(urls.profile, {
         method: 'PATCH',
         headers: getDefaultHeaders(),
         body: JSON.stringify(partialData)

@@ -5,13 +5,12 @@ import serialize from '../utils/serialize';
 import { connect } from 'react-redux';
 import { raiseError } from '../actions/error.actions';
 import * as authActions from '../actions/auth.actions';
-import * as profileActions from '../actions/profile.actions';
 import { fetchProfile } from '../api/connectors';
 import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 import { browserHistory } from 'react-router'
 
 const mapDispatchToProps = (dispatch) => ({
-    loadProfile: (response) => dispatch(profileActions.fetchProfile(response)),
+    loadProfile: (response) => dispatch(authActions.setProfile(response)),
     setToken: ({token}) => dispatch(authActions.setToken(token)),
     raiseError: (msg) => dispatch(raiseError(msg)),
 });
@@ -42,7 +41,7 @@ export default class SignInButton extends Component {
         promptPromise
             .open()
             .then(setToken)
-            .then(fetchProfile)
+            .then((...args) => fetchProfile())
             .then(ensureSuccessOr('Failed to fetch profile'))
             .then(ensureJSON)
             .then(loadProfile)
@@ -55,7 +54,7 @@ export default class SignInButton extends Component {
         switch(error) {
             case 'blocked':
             case 'closed':
-                raiseError('Failed to start authenticating.');
+                raiseError('Failed to start authenticating. Please, try again.');
                 break;
             case 'failure':
                 raiseError('Failed to log in.');

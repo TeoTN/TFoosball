@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as MatchActions from '../actions/match.actions';
 import * as ErrorActions from '../actions/error.actions';
+import * as InfoBarActions from '../actions/infobar.actions';
 import { Button, Row, Col, FormControl } from 'react-bootstrap';
 import { publishMatch } from '../api/connectors';
 import { ensureJSON, ensureSuccessOr } from '../api/helpers';
@@ -13,7 +14,10 @@ const mapDispatchToProps = (dispatch) => {
         handleFailure: (error) => {
             console.error(error);
             dispatch(ErrorActions.raiseError('Failed to send match to server.'));
-        }
+        },
+        displayInfo: (msg) => {
+            dispatch(InfoBarActions.displayInfo(msg));
+        },
     }
 };
 
@@ -30,7 +34,7 @@ class MatchResult extends Component {
     onInputChange = (team) => (event) => this.setState({ [team]: event.target.value });
 
     handleFinish = () => {
-        const { sendResults, handleFailure, users } = this.props;
+        const { sendResults, handleFailure, displayInfo, users } = this.props;
         const players = users.filter(u => u.playing);
         const requestData = {
             red_att: players.find(u => u.team === 'red' && u.position === 'att').id,
@@ -45,8 +49,12 @@ class MatchResult extends Component {
             .then(ensureSuccessOr('Failed to publish match results'))
             .then(ensureJSON)
             .then(sendResults)
-            .catch(handleFailure);
+            .then(() => displayInfo('Match successfully saved.'))
+            .catch(handleFailure)
+            .then(this.clear);
     };
+
+    clear = () => this.setState({ blue: 0, red: 0, });
 
     render() {
         return (
@@ -59,6 +67,7 @@ class MatchResult extends Component {
                     type="text"
                     placeholder="Blue"
                     onChange={this.onInputChange('blue')}
+                    value={this.state.blue}
                 />
             </Col>
             <Col xsHidden sm={1}>
@@ -69,6 +78,7 @@ class MatchResult extends Component {
                     type="text"
                     placeholder="Red"
                     onChange={this.onInputChange('red')}
+                    value={this.state.red}
                 />
             </Col>
             <Col sm={3}>

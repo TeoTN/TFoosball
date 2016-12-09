@@ -1,4 +1,5 @@
 import * as types from '../actions/user.types';
+import * as match_types from '../actions/match.types';
 import choice from '../utils/choice';
 import getRoles from '../utils/roles';
 import 'babel-polyfill';
@@ -13,6 +14,10 @@ const user = (state, action) => {
         case types.UPDATE:
             if (state.id !== action.id) return state;
             return Object.assign({}, {...state}, {...action.userData});
+        case match_types.SENT:
+            // eslint-disable-next-line
+            const {position, team, selected, playing, ...newState} = state;
+            return newState;
         default:
             return state;
     }
@@ -55,6 +60,7 @@ export default (state = [], action) => {
                 ...state
             ];
         case types.UPDATE:
+        case match_types.SENT:
             return state.map(u => user(u, action));
         case types.DELETE:
             return state.filter( user => user.id !== action.id );
