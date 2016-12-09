@@ -4,6 +4,7 @@ import * as MatchActions from '../actions/match.actions';
 import * as ErrorActions from '../actions/error.actions';
 import { Button, Row, Col, FormControl } from 'react-bootstrap';
 import { publishMatch } from '../api/connectors';
+import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch) => {
@@ -39,8 +40,12 @@ class MatchResult extends Component {
             red_score: this.state.red,
             blue_score: this.state.blue,
         };
+
         publishMatch(requestData)
-            .then(sendResults, handleFailure);
+            .then(ensureSuccessOr('Failed to publish match results'))
+            .then(ensureJSON)
+            .then(sendResults)
+            .catch(handleFailure);
     };
 
     render() {
