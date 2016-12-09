@@ -8,6 +8,7 @@ import * as authActions from '../actions/auth.actions';
 import { fetchProfile } from '../api/connectors';
 import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 import { browserHistory } from 'react-router'
+import { AUTH_REDIR_URL } from '../api/config';
 
 const mapDispatchToProps = (dispatch) => ({
     loadProfile: (response) => dispatch(authActions.setProfile(response)),
@@ -23,7 +24,7 @@ export default class SignInButton extends Component {
         const auth_request_data = serialize({
             response_type: 'token',
             client_id: '907377379670-suvgso3siks409qfqgmqvfk2c18g4buh.apps.googleusercontent.com',
-            redirect_uri: 'http://localhost:8000/auth/callback', //TODO
+            redirect_uri: AUTH_REDIR_URL,
             scope: 'email',
         });
         this.url = `${google_endpoint}?${auth_request_data}`;
