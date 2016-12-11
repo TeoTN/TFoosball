@@ -2,7 +2,6 @@ import * as types from '../actions/user.types';
 import * as match_types from '../actions/match.types';
 import choice from '../utils/choice';
 import getRoles from '../utils/roles';
-import 'babel-polyfill';
 
 const user = (state, action) => {
     switch (action.type) {
@@ -13,7 +12,7 @@ const user = (state, action) => {
         case types.CHOOSE:
         case types.UPDATE:
             if (state.id !== action.id) return state;
-            return Object.assign({}, {...state}, {...action.userData});
+            return Object.assign({}, state, action.userData);
         case match_types.SENT:
             // eslint-disable-next-line
             const {position, team, selected, playing, ...newState} = state;
@@ -32,7 +31,7 @@ export const getSortedUsers = (state, prop) => {
         case 'username':
             return state.slice(0).sort(compareByProp('username', 1));
         case 'exp':
-            return  state.slice(0).sort(compareByProp('exp', -1));
+            return state.slice(0).sort(compareByProp('exp', -1));
         default:
             return state;
     }

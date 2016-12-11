@@ -5,7 +5,8 @@ export default function getRoles(chosen) {
         blue: Math.random() < 0.5 + players[2].att - players[3].att,
     };
     const getUpdatedUser = (user, team, isSecond) => ({
-        ...user, team,
+        ...user,
+        team,
         playing: true,
         position: isAtt[team] ^ isSecond ? 'att' : 'def',
     });
