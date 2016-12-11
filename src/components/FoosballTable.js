@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import UserPicker from './UserPicker';
 import MatchResult from './MatchResult';
 import MatchStats from './MatchStats';
+import table from '../assets/img/table.jpg';
 
 const mapStateToProps = state => ({...state});
 
@@ -24,7 +25,7 @@ class FoosballTable extends Component {
                     </ButtonGroup>
                 </Col>
                 <Col xs={12}>
-                    <Image src="/src/assets/img/table.jpg" rounded responsive thumbnail />
+                    <Image src={table} rounded responsive thumbnail />
                 </Col>
                 <Col sm={9} xs={12}>
                     <ButtonGroup justified>

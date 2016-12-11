@@ -8,7 +8,7 @@ import { receiveProfile } from '../actions/profile.actions';
 import { withRouter } from 'react-router';
 import { ensureSuccessOr, ensureJSON } from '../api/helpers';
 import { raiseError } from '../actions/error.actions';
-
+import spinner from '../assets/img/loading.gif';
 
 const mapStateToProps = ({profile}) => ({profile});
 const mapDispatchToProps = dispatch => ({
@@ -60,7 +60,7 @@ export default class ProfileLayout extends Component {
                     <Col sm={7}>
                         {
                             loading ?
-                                <Image src="/src/assets/img/loading.gif" responsive /> :
+                                <Image src={spinner} responsive /> :
                                 <ProfileChart exp_history={profile.exp_history}/>
                         }
                     </Col>
