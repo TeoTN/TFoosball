@@ -5,7 +5,7 @@ export default class TournamentMatch extends Component {
     render() {
         const {blue, red, pts, result} = this.props.data;
         return (
-            <Panel style={{ 'min-height': '100px'}}>
+            <Panel style={{ 'minHeight': '100px'}}>
                 <span className="text-primary h4">{pts}</span>
                 <Row>
                     <Col xs={9}>

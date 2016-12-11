@@ -5,7 +5,7 @@ export default (state = {}, action) => {
     switch (action.type) {
         case types.RECEIVE_PROFILE:
         case types.UPDATE:
-            return Object.assign({}, {...state}, {...action.response});
+            return Object.assign({}, state, action.response);
         case authTypes.SIGN_OUT:
             return {};
         default:
