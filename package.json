@@ -58,6 +58,7 @@
     "chart.js": "^2.2.2",
     "deep-freeze": "0.0.1",
     "filesize": "^3.3.0",
+    "gzip-size": "^3.0.0",
     "node-uuid": "^1.4.7",
     "opn": "4.0.2",
     "promise-window": "^1.1.0",
@@ -66,6 +67,7 @@
     "react-dom": "^15.2.1",
     "react-router": "^2.8.1",
     "react-router-bootstrap": "^0.23.1",
+    "rimraf": "^2.5.4",
     "webpack": "^1.13.1",
     "webpack-dev-server": "1.14.1"
   },
