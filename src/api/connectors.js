@@ -1,13 +1,13 @@
 // import { delay } from '../utils/delay';
 // import users from '../mocks/users.json';
-import { URL_ROOT, API_ROOT } from './config';
+import { API_SERVER, API_ROOT } from './config';
 import { loadAuthState } from '../persistence';
 
 const urls = {
     users: `${API_ROOT}users/`,
     matches: `${API_ROOT}matches/`,
-    profile: `${URL_ROOT}rest-auth/user/`,
-    logout: `${URL_ROOT}rest-auth/logout/`,
+    profile: `${API_SERVER}rest-auth/user/`,
+    logout: `${API_SERVER}rest-auth/logout/`,
 };
 
 const getDefaultHeaders = () => {
