@@ -9,3 +9,4 @@ export const receiveProfile = (response) => ({
     type: types.RECEIVE_PROFILE,
     response
 });
+

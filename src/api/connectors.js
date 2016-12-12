@@ -70,3 +70,12 @@ export const updateProfile = (partialData) => {
     });
     return fetch(request);
 };
+
+export const fetchMatchPoints = (players) => {
+    const params = Object.entries(players).map(([k, v]) => `${k}=${v}`).join('&');
+    const request = new Request(`${urls.matches}count-points/?${params}`, {
+        method: 'GET',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request);
+};
