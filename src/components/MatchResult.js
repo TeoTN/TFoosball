@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as MatchActions from '../actions/match.actions';
+import * as UsersActions from '../actions/user.actions';
 import * as ErrorActions from '../actions/error.actions';
 import * as InfoBarActions from '../actions/infobar.actions';
 import { Button, Row, Col, FormControl } from 'react-bootstrap';
-import { publishMatch } from '../api/connectors';
+import { publishMatch, fetchUsers } from '../api/connectors';
 import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch) => {
     return {
         sendResults: (response) => dispatch(MatchActions.send(response)),
+        receiveUsers: (response) => dispatch(UsersActions.receiveUsers(response)),
         handleFailure: (error) => {
             console.error(error);
             dispatch(ErrorActions.raiseError('Failed to send match to server.'));
@@ -34,7 +36,7 @@ class MatchResult extends Component {
     onInputChange = (team) => (event) => this.setState({ [team]: event.target.value });
 
     handleFinish = () => {
-        const { sendResults, handleFailure, displayInfo, users } = this.props;
+        const { sendResults, handleFailure, displayInfo, users, receiveUsers } = this.props;
         const players = users.filter(u => u.playing);
         const requestData = {
             red_att: players.find(u => u.team === 'red' && u.position === 'att').id,
@@ -44,12 +46,17 @@ class MatchResult extends Component {
             red_score: this.state.red,
             blue_score: this.state.blue,
         };
+        const success_msg = points => `Match successfully saved. Red: ${points}, blue: ${-points}`;
 
         publishMatch(requestData)
             .then(ensureSuccessOr('Failed to publish match results'))
             .then(ensureJSON)
             .then(sendResults)
-            .then(() => displayInfo('Match successfully saved.'))
+            .then(({response: {points}}) => displayInfo(success_msg(points)))
+            .then(fetchUsers)
+            .then(ensureSuccessOr('Failed to refresh user data'))
+            .then(ensureJSON)
+            .then(receiveUsers)
             .catch(handleFailure)
             .then(this.clear);
     };
@@ -64,6 +71,7 @@ class MatchResult extends Component {
             </Col>
             <Col sm={4}>
                 <FormControl
+                    style={{'border-color': '#3498db'}}
                     type="text"
                     placeholder="Blue"
                     onChange={this.onInputChange('blue')}
@@ -75,6 +83,7 @@ class MatchResult extends Component {
             </Col>
             <Col sm={4}>
                 <FormControl
+                    style={{'border-color': '#e74c3c'}}
                     type="text"
                     placeholder="Red"
                     onChange={this.onInputChange('red')}
