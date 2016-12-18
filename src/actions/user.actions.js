@@ -41,6 +41,12 @@ export const sortByName = () => ({
     type: types.SORT_NAME
 });
 
+export const sortBy = (column, isAscendingOrder = true) => ({
+    type: types.SORT,
+    column,
+    isAscendingOrder
+});
+
 export const receiveUsers = (response) => ({
     type: types.RECEIVE_LIST,
     response

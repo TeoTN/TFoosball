@@ -1,4 +1,5 @@
 import * as types from '../actions/ranking.types';
+import checkMobile from "../utils/checkMobile";
 
 const model = {
     "id": "ID",
@@ -21,7 +22,7 @@ export default (state = {}, action) => {
                 ...state,
                 sorting: {
                     column: action.column,
-                    ascendingOrder: action.order
+                    isAscendingOrder: action.isAscendingOrder
                 }
             };
         default:
@@ -29,9 +30,10 @@ export default (state = {}, action) => {
                 ...state,
                 sorting: {
                     column: "id",
-                    ascendingOrder: true
+                    isAscendingOrder: true
                 },
-                model
+                model,
+                isMobile: checkMobile()
             };
     }
 }

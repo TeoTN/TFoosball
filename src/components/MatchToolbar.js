@@ -13,8 +13,8 @@ const mapDispatchToProps = (dispatch, props) => {
             window.scrollTo(0, 0);
         },
         raiseError: (msg) => dispatch(ErrorActions.raiseError(msg)),
-        sortByExp: () => dispatch(UserActions.sortByExp()),
-        sortByName: () => dispatch(UserActions.sortByName()),
+        sortByExp: () => dispatch(UserActions.sortBy("exp", false)),
+        sortByName: () => dispatch(UserActions.sortBy("username")),
     }
 };
 
