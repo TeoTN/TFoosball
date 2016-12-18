@@ -1,0 +1,1 @@
+export const SORT = 'RANKING::SORT';
