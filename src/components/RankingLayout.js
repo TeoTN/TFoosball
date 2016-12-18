@@ -1,12 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
+import {Grid, Row, Col} from 'react-bootstrap';
+import RankingList from './RankingList';
 
-export default class RankingLayout extends Component {
-    render() {
-        return (
-            <div>
+const RankingLayout = () => (
+    <Grid>
+        <Row>
+            <Col>
                 <h1>Ranking</h1>
-                {this.props.children}
-            </div>
-        );
-    }
-}
+            </Col>
+        </Row>
+        <Row>
+            <Col>
+                <RankingList />
+            </Col>
+        </Row>
+    </Grid>
+);
+
+export default RankingLayout;
