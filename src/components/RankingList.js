@@ -50,7 +50,7 @@ export default class RankingList extends Component {
                 <tbody>
                 {
                     this.props.users.map(user => (
-                        <RankingItem key={user.id} user={user}
+                        <RankingItem key={user.id} user={user} isMobile={this.props.ranking.isMobile}
                                      highlight={user.id === this.props.auth.profile.id}
                         />
                     ))

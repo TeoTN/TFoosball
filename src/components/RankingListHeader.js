@@ -41,12 +41,16 @@ export default class RankingListHeader extends Component {
     }
 
     render() {
+        const model = (this.props.ranking.isMobile)
+            ? (({id, username, exp}) => ({id, username, exp}))(this.props.ranking.model)
+            : this.props.ranking.model;
+
         return (
             <thead>
             <tr>
                 {
                     Object
-                        .entries(this.props.ranking.model)
+                        .entries(model)
                         .map(this.getHeader.bind(this))
                 }
             </tr>

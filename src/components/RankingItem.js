@@ -1,11 +1,15 @@
 import React from 'react';
 
-const RankingItem = ({user, highlight}) => {
+const RankingItem = ({user, highlight, isMobile}) => {
+    const filteredUser = (isMobile && user)
+        ? (({id, username, exp}) => ({id, username, exp}))(user)
+        : user;
+
     return (
         <tr className={highlight ? 'selected' : ''}>
             {
-                Object.entries(user).map(
-                    ([key, label]) => <td key={key}>{user[key]}</td>
+                Object.entries(filteredUser).map(
+                    ([key, label]) => <td key={key}>{filteredUser[key]}</td>
                 )
             }
         </tr>
