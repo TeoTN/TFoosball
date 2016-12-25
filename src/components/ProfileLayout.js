@@ -54,10 +54,10 @@ export default class ProfileLayout extends Component {
                 <Panel>
                     <ButtonGroup>
                         <LinkContainer to={{ pathname: `/profile/${username}`}}>
-                            <Button eventKey={9} bsSize="xsmall" bsStyle="info">Profile stats</Button>
+                            <Button bsSize="xsmall" bsStyle="info">Profile stats</Button>
                         </LinkContainer>
                         <LinkContainer to={{ pathname: `/profile/${username}/matches`}}>
-                            <Button eventKey={8} bsSize="xsmall" bsStyle="info">Profile matches</Button>
+                            <Button bsSize="xsmall" bsStyle="info">Profile matches</Button>
                         </LinkContainer>
                     </ButtonGroup>
                 </Panel>

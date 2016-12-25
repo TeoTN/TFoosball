@@ -38,7 +38,7 @@ ReactDOM.render(
                 <Route path="welcome" component={InitComponent} />
                 <Route path="match" component={MatchLayout} />
                 <Route path="profile/(:username)" component={ProfileLayout}>
-                    <Route path="matches" component={ProfileMatches}/>
+                    <Route path="matches" component={ProfileMatches} />
                 </Route>
                 <Route path="ranking" component={RankingLayout} />
                 <Route path="tournament/(:tid)" component={TournamentLayout} />
