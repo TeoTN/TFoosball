@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
-import { Row, Col, Image } from 'react-bootstrap';
+import { Row, Button, Panel, ButtonGroup } from 'react-bootstrap';
 import { fetchProfile } from '../api/connectors';
 import { receiveProfile } from '../actions/profile.actions';
 import { withRouter } from 'react-router';
 import { raiseError } from '../actions/error.actions';
-import spinner from '../assets/img/loading.gif';
+import { LinkContainer } from 'react-router-bootstrap';
+
 
 const mapStateToProps = ({profile}) => ({profile});
 const mapDispatchToProps = dispatch => ({
@@ -49,20 +50,27 @@ export default class ProfileLayout extends Component {
         const { loading } = this.state;
         return (
             <div>
-                <h1>Profile <small>{ username }</small></h1>
-                <Row>
-                    <Col sm={5}>
-                        <ProfileStats profile={profile} />
-                    </Col>
-                    <Col sm={7}>
-                        {
-                            loading ?
-                                <Image src={spinner} responsive /> :
-                                <ProfileChart exp_history={profile.exp_history}/>
-                        }
-                    </Col>
-                </Row>
-                {children}
+                <h1>Profile &nbsp;<small>{ username }</small></h1>
+                <Panel>
+                    <ButtonGroup>
+                        <LinkContainer to={{ pathname: `/profile/${username}`}}>
+                            <Button eventKey={9} bsSize="xsmall" bsStyle="info">Profile stats</Button>
+                        </LinkContainer>
+                        <LinkContainer to={{ pathname: `/profile/${username}/matches`}}>
+                            <Button eventKey={8} bsSize="xsmall" bsStyle="info">Profile matches</Button>
+                        </LinkContainer>
+                    </ButtonGroup>
+                </Panel>
+                { children ?
+                    children :
+                    <Row>
+                        <ProfileStats profile={profile}/>
+                        <ProfileChart
+                            exp_history={profile.exp_history}
+                            loading={loading}
+                        />
+                    </Row>
+                }
             </div>
         );
     }

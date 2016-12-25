@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Chart from 'chart.js';
+import { Panel, Col, Image } from 'react-bootstrap';
+import spinner from '../assets/img/loading.gif';
 
 export default class ProfileChart extends Component {
     componentDidMount() {
@@ -23,7 +25,7 @@ export default class ProfileChart extends Component {
         }
     }
 
-    parseExpHistory = (raw_data) => ({
+    parseExpHistory = (raw_data=[]) => ({
         labels: raw_data.map(point => point.date),
         "datasets": [
             {
@@ -38,9 +40,20 @@ export default class ProfileChart extends Component {
     });
 
     render() {
-        const { exp_history } = this.props;
-        return exp_history ?
-            <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
-            <p>Sorry, user has no experience points history.</p>
+        const { exp_history, loading } = this.props;
+        return (
+            <Col sm={7}>
+                <Panel>
+                    <h4>Exp history</h4>
+                    {
+                        loading ?
+                            <Image src={spinner} responsive /> :
+                            exp_history ?
+                                <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
+                                <p>Sorry, user has no experience points history.</p>
+                    }
+                </Panel>
+            </Col>
+        );
     }
 }
