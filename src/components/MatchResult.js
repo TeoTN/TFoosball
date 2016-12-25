@@ -6,7 +6,6 @@ import * as ErrorActions from '../actions/error.actions';
 import * as InfoBarActions from '../actions/infobar.actions';
 import { Button, Row, Col, FormControl } from 'react-bootstrap';
 import { publishMatch, fetchUsers } from '../api/connectors';
-import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch) => {
@@ -49,13 +48,9 @@ class MatchResult extends Component {
         const success_msg = points => `Match successfully saved. Red: ${points}, blue: ${-points}`;
 
         publishMatch(requestData)
-            .then(ensureSuccessOr('Failed to publish match results'))
-            .then(ensureJSON)
             .then(sendResults)
             .then(({response: {points}}) => displayInfo(success_msg(points)))
             .then(fetchUsers)
-            .then(ensureSuccessOr('Failed to refresh user data'))
-            .then(ensureJSON)
             .then(receiveUsers)
             .catch(handleFailure)
             .then(this.clear);
@@ -71,7 +66,7 @@ class MatchResult extends Component {
             </Col>
             <Col sm={4}>
                 <FormControl
-                    style={{'border-color': '#3498db'}}
+                    style={{ borderColor: '#3498db' }}
                     type="text"
                     placeholder="Blue"
                     onChange={this.onInputChange('blue')}
@@ -83,7 +78,7 @@ class MatchResult extends Component {
             </Col>
             <Col sm={4}>
                 <FormControl
-                    style={{'border-color': '#e74c3c'}}
+                    style={{ borderColor: '#e74c3c' }}
                     type="text"
                     placeholder="Red"
                     onChange={this.onInputChange('red')}

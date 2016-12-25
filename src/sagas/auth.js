@@ -41,7 +41,7 @@ export function* loginFlow() {
             browserHistory.push('/match');
             yield take(SIGN_OUT);
             yield call(fetchLogout);
-            yield put(signedOut);
+            yield put(signedOut());
             browserHistory.push('/');
         } catch (error) {
             yield put(raiseError(error));

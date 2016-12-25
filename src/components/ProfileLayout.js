@@ -6,7 +6,6 @@ import { Row, Col, Image } from 'react-bootstrap';
 import { fetchProfile } from '../api/connectors';
 import { receiveProfile } from '../actions/profile.actions';
 import { withRouter } from 'react-router';
-import { ensureSuccessOr, ensureJSON } from '../api/helpers';
 import { raiseError } from '../actions/error.actions';
 import spinner from '../assets/img/loading.gif';
 
@@ -40,8 +39,6 @@ export default class ProfileLayout extends Component {
         const {receiveProfile, raiseError, params: {username}} = this.props;
         this.setState({ loading: true });
         fetchProfile(username)
-            .then(ensureSuccessOr('Failed to get user profile'))
-            .then(ensureJSON)
             .then(receiveProfile)
             .then(() => this.setState({ loading: false }))
             .catch(raiseError);

@@ -6,7 +6,6 @@ import { fetchProfile } from './api/connectors';
 import * as authActions from './actions/auth.actions';
 import * as errorActions from './actions/error.actions';
 import store from './store';
-import { ensureSuccessOr, ensureJSON } from './api/helpers';
 import { browserHistory } from 'react-router'
 
 export default class App extends React.Component {
@@ -16,10 +15,10 @@ export default class App extends React.Component {
             return;
         }
         fetchProfile()
-            .then(ensureSuccessOr('Failed to get your data from the server'))
-            .then(ensureJSON)
             .then(response => store.dispatch(authActions.setProfile(response)))
-            .catch(error => store.dispatch(errorActions.raiseError('Failed to initialize profile')))
+            .catch(error => store.dispatch(
+                errorActions.raiseError('Failed to initialize App with profile'))
+            )
             .then(this.ensureUsernameIsPresent);
     }
 
