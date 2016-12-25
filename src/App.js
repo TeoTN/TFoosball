@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Header from './components/Header';
 import InfoBar from './components/InfoBar';
 import ErrorBar from './components/ErrorBar';
@@ -9,7 +9,7 @@ import store from './store';
 import { ensureSuccessOr, ensureJSON } from './api/helpers';
 import { browserHistory } from 'react-router'
 
-export default class App extends Component {
+export default class App extends React.Component {
     componentWillMount() {
         const state = store.getState();
         if (!state.auth.hasOwnProperty('token')) {

@@ -11,5 +11,13 @@ export const setProfile = (response) => ({
 });
 
 export const signedOut = () => ({
+    type: types.SIGNED_OUT,
+});
+
+export const signIn = () => ({
+    type: types.SIGN_IN,
+});
+
+export const signOut = () => ({
     type: types.SIGN_OUT,
 });

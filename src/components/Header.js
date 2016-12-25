@@ -1,4 +1,5 @@
 import React from 'react';
+import { signIn, signOut } from '../actions/auth.actions';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import SignInButton from './SignInButton';
@@ -6,6 +7,10 @@ import SignOutButton from './SignOutButton';
 import { connect } from 'react-redux';
 
 const mapStateToProps = ({auth}) => ({auth});
+const mapDispatchToProps = dispatch => ({
+    signIn: () => dispatch(signIn()),
+    signOut: () => dispatch(signOut()),
+});
 
 const navigation = (username) => (
     <Nav>
@@ -24,31 +29,28 @@ const navigation = (username) => (
     </Nav>
 );
 
-const Header = (props) => {
-    const { auth: { token, profile, } } = props;
-    return (
-        <Navbar staticTop>
-            <Navbar.Header>
-                <Navbar.Brand>
-                    <a href="/">TFoosball</a>
-                </Navbar.Brand>
-            </Navbar.Header>
-            { profile && profile.hasOwnProperty('username') ? navigation(profile.username) : null }
-            <Nav pullRight>
-                {
-                    token ?
-                        <SignOutButton /> :
-                        <SignInButton />
-                }
-            </Nav>
-            { profile ?
-                <Navbar.Text pullRight>
-                    { profile.first_name } {profile.last_name} <i>{ profile.username }</i>&nbsp;
-                </Navbar.Text>
-                : null
+const Header = ({ auth: { token, profile, }, signIn, signOut }) => (
+    <Navbar staticTop>
+        <Navbar.Header>
+            <Navbar.Brand>
+                <a href="/">TFoosball</a>
+            </Navbar.Brand>
+        </Navbar.Header>
+        { profile && profile.hasOwnProperty('username') ? navigation(profile.username) : null }
+        <Nav pullRight>
+            {
+                token ?
+                    <SignOutButton signOut={signOut} /> :
+                    <SignInButton signIn={signIn} />
             }
-        </Navbar>
-    );
-};
+        </Nav>
+        { profile ?
+            <Navbar.Text pullRight>
+                { profile.first_name } {profile.last_name} <i>{ profile.username }</i>&nbsp;
+            </Navbar.Text>
+            : null
+        }
+    </Navbar>
+);
 
-export default connect(mapStateToProps, null)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

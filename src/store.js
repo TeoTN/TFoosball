@@ -1,4 +1,6 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './sagas/index';
 import reducer from './reducers/reducer'
 import { saveAuthState } from './persistence';
 
@@ -18,7 +20,10 @@ const createLoggingDispatch = (store) => {
     };
 };
 
-const store = createStore(reducer);
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(rootSaga);
+
 let currentAuthState;
 store.subscribe(() => {
     let previousAuthState = currentAuthState;
