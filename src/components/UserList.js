@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
 import User from './User';
 import MatchToolbar from './MatchToolbar';
+import Loading from './Loading';
 import { fetchUsers } from '../api/connectors';
 import { receiveUsers } from '../actions/user.actions';
 import { raiseError } from '../actions/error.actions';
@@ -27,6 +28,7 @@ class UserList extends Component {
     }
 
     render() {
+        const { users } = this.props;
         return (
             <div>
                 <Row>
@@ -41,7 +43,13 @@ class UserList extends Component {
                             <strong> Experience </strong>
                         </Col>
                     </ListGroupItem>
-                    { this.props.users.map(user => <User key={user.id} user={user} />)}
+                    {
+                        users.length > 0 ?
+                            users.map(user => <User key={user.id} user={user} />) :
+                            <ListGroupItem>
+                                <Loading/>
+                            </ListGroupItem>
+                    }
                 </ListGroup>
             </div>
         );
