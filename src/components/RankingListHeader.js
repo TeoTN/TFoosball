@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Glyphicon} from 'react-bootstrap';
-import * as RankingActions from '../actions/ranking.actions';
 import * as UserActions from '../actions/user.actions';
 
 const mapStateToProps = (state) => ({
@@ -10,10 +9,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    sortBy: (column, order) => {
-        dispatch(UserActions.sortBy(column, order));
-        dispatch(RankingActions.sortBy(column, order));
-    },
+    sortBy: (column, order) => dispatch(UserActions.sortBy(column, order))
 });
 
 

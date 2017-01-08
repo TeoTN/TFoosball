@@ -1,4 +1,4 @@
-import * as types from '../actions/ranking.types';
+import * as types from '../actions/user.types';
 import checkMobile from "../utils/checkMobile";
 
 const model = {
@@ -27,7 +27,6 @@ export default (state = {}, action) => {
             };
         default:
             return {
-                ...state,
                 sorting: {
                     column: "id",
                     isAscendingOrder: true
