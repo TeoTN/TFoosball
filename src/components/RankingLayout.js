@@ -13,12 +13,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
     receiveUsers: (data) => dispatch(receiveUsers(data)),
-    sortById: () => dispatch(sortBy("id")),
+    sortBy: (column, order) => dispatch(sortBy(column, order))
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class RankingLayout extends Component {
-
     componentDidMount() {
         this.fetchData();
     }
@@ -27,7 +26,7 @@ export default class RankingLayout extends Component {
         fetchUsers()
             .then(ensureJSON)
             .then(this.props.receiveUsers)
-            .then(this.props.sortById)
+            .then(() => this.props.sortBy("id"))
             .catch(raiseError);
     }
 
@@ -41,7 +40,9 @@ export default class RankingLayout extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <RankingList users={this.props.users} userId={this.props.auth.profile.id}/>
+                        <RankingList users={this.props.users} userId={this.props.auth.profile.id}
+                                     sortBy={this.props.sortBy} ranking={this.props.ranking}
+                        />
                     </Col>
                 </Row>
             </Grid>

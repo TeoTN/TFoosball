@@ -3,10 +3,10 @@ import {Table} from 'react-bootstrap';
 import RankingItem from './RankingItem';
 import RankingListHeader from './RankingListHeader';
 
-const RankingList = ({users, userId}) => {
+const RankingList = ({users, userId, sortBy, ranking}) => {
     return (
         <Table striped hover>
-            <RankingListHeader/>
+            <RankingListHeader sortBy={sortBy} ranking={ranking}/>
             <tbody>
             {
                 users.map(user => (

@@ -1,53 +1,34 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {Glyphicon} from 'react-bootstrap';
-import * as UserActions from '../actions/user.actions';
 
-const mapStateToProps = (state) => ({
-    sorting: state.ranking.sorting,
-    ...state
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    sortBy: (column, order) => dispatch(UserActions.sortBy(column, order))
-});
-
-
-@connect(mapStateToProps, mapDispatchToProps)
 export default class RankingListHeader extends Component {
-    getHeader([key, label]) {
-        const {sortBy, sorting} = this.props;
+    getHeader = ([key, label]) => {
+        const {sortBy, ranking} = this.props;
         return (
             <th key={key} onClick={() => sortBy(key, this.getDirection(key))} style={{cursor: 'pointer'}}>
                 {label}&nbsp;
                 {
-                    sorting.column === key
-                        ? <Glyphicon glyph={`sort-by-attributes${sorting.isAscendingOrder ? '' : '-alt'}`}/>
+                    ranking.sorting.column === key
+                        ? <Glyphicon glyph={`sort-by-attributes${ranking.sorting.isAscendingOrder ? '' : '-alt'}`}/>
                         : null
                 }
             </th>
         )
-    }
+    };
 
-    getDirection(key) {
-        const {sorting} = this.props;
-        return sorting.column !== key
-            ? true
-            : !sorting.isAscendingOrder
-    }
+    getDirection = (key) => {
+        const {sorting} = this.props.ranking;
+        return sorting.column !== key || !sorting.isAscendingOrder
+    };
 
     render() {
-        const model = (this.props.ranking.isMobile)
-            ? (({id, username, exp}) => ({id, username, exp}))(this.props.ranking.model)
-            : this.props.ranking.model;
-
         return (
             <thead>
             <tr>
                 {
                     Object
-                        .entries(model)
-                        .map(this.getHeader.bind(this))
+                        .entries(this.props.ranking.model)
+                        .map(this.getHeader)
                 }
             </tr>
             </thead>

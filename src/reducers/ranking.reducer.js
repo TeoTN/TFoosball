@@ -1,5 +1,4 @@
 import * as types from '../actions/user.types';
-import checkMobile from "../utils/checkMobile";
 
 const model = {
     "id": "ID",
@@ -19,7 +18,7 @@ export default (state = {}, action) => {
     switch (action.type) {
         case types.SORT:
             return {
-                ...state,
+                model,
                 sorting: {
                     column: action.column,
                     isAscendingOrder: action.isAscendingOrder
@@ -31,8 +30,7 @@ export default (state = {}, action) => {
                     column: "id",
                     isAscendingOrder: true
                 },
-                model,
-                isMobile: checkMobile()
+                model
             };
     }
 }
