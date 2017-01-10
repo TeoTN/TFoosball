@@ -1,5 +1,5 @@
 import { call, put, take } from 'redux-saga/effects';
-import { publishMatch as api_publishMatch} from '../api/connectors';
+import * as API from '../api/connectors';
 import * as MatchActions from '../actions/match.actions';
 import * as MatchTypes from '../actions/match.types';
 import * as InfoBarActions from '../actions/infobar.actions';
@@ -35,7 +35,7 @@ describe('Publish a match - success scenario', () => {
 
     it('should call api to publish match', () => {
         const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
-        expect(iter).toEqual(call(api_publishMatch, matchData));
+        expect(iter).toEqual(call(API.publishMatch, matchData));
     });
 
     it('should put an action with server response', () => {
