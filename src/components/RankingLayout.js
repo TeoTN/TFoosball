@@ -4,7 +4,6 @@ import {receiveUsers, sortBy} from '../actions/user.actions';
 import {connect} from 'react-redux';
 import {fetchUsers} from '../api/connectors';
 import {raiseError} from '../actions/error.actions';
-import {ensureJSON, ensureSuccessOr} from '../api/helpers';
 import RankingList from './RankingList';
 
 const mapStateToProps = (state) => ({
@@ -27,8 +26,6 @@ export default class RankingLayout extends Component {
         const {raiseError} = this.props;
 
         fetchUsers()
-            .then(ensureSuccessOr('Ranking data unavailable'))
-            .then(ensureJSON)
             .then(this.props.receiveUsers)
             .then(() => this.props.sortBy("id"))
             .catch(raiseError);
