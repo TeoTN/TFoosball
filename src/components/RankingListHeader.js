@@ -27,7 +27,7 @@ export default class RankingListHeader extends Component {
             <tr>
                 {
                     Object
-                        .entries(this.props.ranking.model)
+                        .entries(this.props.model)
                         .map(this.getHeader)
                 }
             </tr>

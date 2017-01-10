@@ -4,7 +4,7 @@ import {receiveUsers, sortBy} from '../actions/user.actions';
 import {connect} from 'react-redux';
 import {fetchUsers} from '../api/connectors';
 import {raiseError} from '../actions/error.actions';
-import {ensureJSON} from '../api/helpers';
+import {ensureJSON, ensureSuccessOr} from '../api/helpers';
 import RankingList from './RankingList';
 
 const mapStateToProps = (state) => ({
@@ -13,7 +13,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, props) => ({
     receiveUsers: (data) => dispatch(receiveUsers(data)),
-    sortBy: (column, order) => dispatch(sortBy(column, order))
+    sortBy: (column, order) => dispatch(sortBy(column, order)),
+    raiseError: (msg) => dispatch(raiseError(msg)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -23,7 +24,10 @@ export default class RankingLayout extends Component {
     }
 
     fetchData() {
+        const {raiseError} = this.props;
+
         fetchUsers()
+            .then(ensureSuccessOr('Ranking data unavailable'))
             .then(ensureJSON)
             .then(this.props.receiveUsers)
             .then(() => this.props.sortBy("id"))
@@ -31,6 +35,9 @@ export default class RankingLayout extends Component {
     }
 
     render() {
+        const {users, sortBy, ranking, auth} = this.props;
+        const profile = auth.profile || {};
+
         return (
             <Grid>
                 <Row>
@@ -40,9 +47,7 @@ export default class RankingLayout extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <RankingList users={this.props.users} userId={this.props.auth.profile.id}
-                                     sortBy={this.props.sortBy} ranking={this.props.ranking}
-                        />
+                        <RankingList users={users} authId={profile.id} sortBy={sortBy} ranking={ranking}/>
                     </Col>
                 </Row>
             </Grid>

@@ -1,11 +1,11 @@
 import React from 'react';
 
-const RankingItem = ({user, highlight}) => {
+const RankingItem = ({user, highlight, model}) => {
     return (
         <tr className={highlight ? 'selected' : ''}>
             {
-                Object.entries(user).map(
-                    ([key, label]) => <td key={key}>{JSON.stringify(user[key])}</td>
+                Object.entries(model).map(
+                    ([key, label]) => <td key={key}>{user[key]}</td>
                 )
             }
         </tr>
