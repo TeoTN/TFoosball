@@ -4,7 +4,6 @@ import Widget from './Widget';
 import { connect } from 'react-redux';
 import { raiseError } from '../actions/error.actions';
 import { fetchMatchPoints } from '../api/connectors';
-import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 
 const mapDispatchToProps = (dispatch) => ({
     raiseError: (msg) => dispatch(raiseError(msg)),
@@ -30,8 +29,6 @@ class MatchStats extends Component {
             {}
         );
         fetchMatchPoints(data)
-            .then(ensureSuccessOr('Failed to fetch match statistics'))
-            .then(ensureJSON)
             .then(results => this.setState(results))
             .catch(raiseError);
     }

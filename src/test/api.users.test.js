@@ -1,7 +1,7 @@
-import chai, { expect } from 'chai';
+import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { fetchUsers } from '../api/connectors';
-
+const { expect } = chai;
 chai.use(chaiAsPromised);
 
 describe('Users API', function() {

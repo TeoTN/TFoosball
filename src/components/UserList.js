@@ -23,21 +23,8 @@ class UserList extends Component {
 
     fetchData() {
         fetchUsers()
-            .then(this.onFetchDone)
             .then(this.props.receiveUsers);
     }
-
-    onFetchDone = (response) => {
-        if (response.status === 200) {
-            return response.json();
-        }
-        else if (response.status === 401) {
-            this.props.raiseUnauthorized();
-        }
-        else {
-            this.props.raiseUnexpected();
-        }
-    };
 
     render() {
         return (
