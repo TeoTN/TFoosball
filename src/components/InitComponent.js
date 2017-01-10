@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/profile.actions';
 import { raiseError } from '../actions/error.actions';
 import { updateProfile } from '../api/connectors';
-import { ensureJSON, ensureSuccessOr } from '../api/helpers';
 import { browserHistory } from 'react-router'
 
 const mapStateToProps = ({profile}) => ({
@@ -55,8 +54,6 @@ export default class InitComponent extends Component {
         };
 
         updateProfile(data)
-            .then(ensureSuccessOr('Failed to update the profile.'))
-            .then(ensureJSON)
             .then(update)
             .catch(raiseError)
             .then(r => browserHistory.push('/'));

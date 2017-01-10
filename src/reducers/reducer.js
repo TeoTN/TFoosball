@@ -4,7 +4,8 @@ import infoList from './infobar.reducer';
 import profile from './profile.reducer';
 import tournaments from './tournaments.reducer';
 import auth from './auth.reducer';
-import { combineReducers } from 'redux';
+import ranking from './ranking.reducer';
+import {combineReducers} from 'redux';
 
 const reducer = combineReducers({
     users,          // Current users list from API general view
@@ -13,5 +14,7 @@ const reducer = combineReducers({
     profile,        // Currently viewed profile (NOT a current user profile!)
     tournaments,    // Tournaments
     auth,           // Auth state, including current user profile (NOT a viewed one)
+    ranking,        // Ranking metadata
 });
+
 export default reducer;

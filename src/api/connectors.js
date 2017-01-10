@@ -1,7 +1,6 @@
-// import { delay } from '../utils/delay';
-// import users from '../mocks/users.json';
 import { API_SERVER, API_ROOT } from './config';
 import { loadAuthState } from '../persistence';
+import { ensureJSON, ensureSuccessOr } from './helpers';
 
 const urls = {
     users: `${API_ROOT}users/`,
@@ -26,7 +25,9 @@ export const fetchProfile = (username) => {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
-    return fetch(request);
+    return fetch(request)
+        .then(ensureSuccessOr('Unable to fetch profile'))
+        .then(ensureJSON);
 };
 
 export const fetchUsers = () => {
@@ -34,7 +35,9 @@ export const fetchUsers = () => {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
-    return fetch(request);
+    return fetch(request)
+        .then(ensureSuccessOr('Unable to fetch user list'))
+        .then(ensureJSON);
 };
 
 export const fetchLogout = () => {
@@ -42,7 +45,8 @@ export const fetchLogout = () => {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
-    return fetch(request);
+    return fetch(request)
+        .then(ensureSuccessOr('Unable to sign out'));
 };
 
 export const fetchMatches = () => {
@@ -50,7 +54,9 @@ export const fetchMatches = () => {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
-    return fetch(request);
+    return fetch(request)
+        .then(ensureSuccessOr('Unable to fetch match list'))
+        .then(ensureJSON);
 };
 
 export const publishMatch = (match) => {
@@ -59,7 +65,9 @@ export const publishMatch = (match) => {
         headers: getDefaultHeaders(),
         body: JSON.stringify(match)
     });
-    return fetch(request);
+    return fetch(request)
+        .then(ensureSuccessOr('Failed to publish match'))
+        .then(ensureJSON);
 };
 
 export const updateProfile = (partialData) => {
@@ -68,7 +76,9 @@ export const updateProfile = (partialData) => {
         headers: getDefaultHeaders(),
         body: JSON.stringify(partialData)
     });
-    return fetch(request);
+    return fetch(request)
+        .then(ensureSuccessOr('Failed to update profile'))
+        .then(ensureJSON);
 };
 
 export const fetchMatchPoints = (players) => {
@@ -77,5 +87,7 @@ export const fetchMatchPoints = (players) => {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
-    return fetch(request);
+    return fetch(request)
+        .then(ensureSuccessOr('Unable to fetch match potential score'))
+        .then(ensureJSON);
 };
