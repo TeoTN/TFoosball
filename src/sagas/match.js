@@ -28,7 +28,7 @@ export function* remove() {
     while (true) {
         const action = yield take(DELETE);
         try {
-            const response = yield call(removeMatch, action.id);
+            yield call(removeMatch, action.id);
             yield put(removed(action.id));
         } catch (error) {
             yield put(raiseError(error));

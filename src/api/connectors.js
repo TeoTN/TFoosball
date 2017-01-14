@@ -71,7 +71,7 @@ export const publishMatch = (match) => {
 };
 
 export const removeMatch = (id) => {
-    const request = new Request(`${url.matches}/${id}`, {
+    const request = new Request(`${urls.matches}/${id}`, {
         method: 'DELETE',
         headers: getDefaultHeaders(),
     });
