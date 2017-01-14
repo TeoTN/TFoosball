@@ -4,7 +4,7 @@ import * as MatchActions from '../actions/match.actions';
 import * as MatchTypes from '../actions/match.types';
 import * as InfoBarActions from '../actions/infobar.actions';
 import { raiseError } from '../actions/error.actions';
-import { publish, remove } from '../sagas/match';
+import { publish, removeMatch } from '../sagas/match';
 import { fetchUsers } from '../sagas/users';
 
 describe('Publish a match - success scenario', () => {
@@ -86,7 +86,7 @@ describe('Publish a match - API failure scenario', () => {
 });
 
 describe('Remove a match - success scenario', () => {
-    const iterator = remove();
+    const iterator = removeMatch();
     const matchID = 0;
 
     it('should wait for DELETE action to be dispatched', () => {
@@ -106,7 +106,7 @@ describe('Remove a match - success scenario', () => {
 });
 
 describe('Remove a match - failure scenario', () => {
-    const iterator = remove();
+    const iterator = removeMatch();
     const matchID = 0;
 
     it('should wait for DELETE action to be dispatched', () => {

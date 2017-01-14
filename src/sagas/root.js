@@ -1,7 +1,7 @@
 import { loginFlow } from './auth';
 import { logger } from './logger';
 import { routerSaga } from './routes';
-import { publish } from './match';
+import { publish, removeMatch } from './match';
 
 export default function* rootSaga() {
     yield [
@@ -9,5 +9,6 @@ export default function* rootSaga() {
         loginFlow(),
         routerSaga(),
         publish(),
+        removeMatch(),
     ];
 }

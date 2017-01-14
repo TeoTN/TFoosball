@@ -4,19 +4,19 @@ import { receiveUserMatches, receiveProfile } from '../actions/profile.actions';
 import { raiseError } from '../actions/error.actions';
 
 export function* profileMatches({username}) {
-    const matches = yield call(fetchUserMatches, username);
-    if (matches) {
+    try {
+        const matches = yield call(fetchUserMatches, username);
         yield put(receiveUserMatches(matches));
-    } else {
+    } catch (error) {
         yield put(raiseError('Unable to get latest matches.'));
     }
 }
 
 export function* profileStats({username}) {
-    const profile = yield call(fetchProfile, username);
-    if (profile) {
+    try {
+        const profile = yield call(fetchProfile, username);
         yield put(receiveProfile(profile));
-    } else {
+    } catch (error) {
         yield put(raiseError(`Failed to get ${username} profile.`))
     }
 }

@@ -35,11 +35,13 @@ class MatchStats extends Component {
 
     renderUserStats = (player, index) => (
         <Row key={index}>
-            <Col xs={3}>
-                <strong>{ player.team.toUpperCase() } { player.position.toUpperCase() }</strong>
-            </Col>
-            <Col xs={3}>
+            <Col xs={4}>
                 { player.username }
+            </Col>
+            <Col xs={2}>
+                <strong className={player.team==='red'?'text-danger':'text-info'}>
+                    { player.position.toUpperCase() }
+                </strong>
             </Col>
             <Col xs={2}>
                 <span><strong>Def:</strong>&nbsp;{ Math.round(player.def_ratio*100) }%</span>
@@ -60,8 +62,8 @@ class MatchStats extends Component {
                     <Col xs={12}>
                         <h3>Statistics</h3>
                     </Col>
-                    <Widget label="Max blue pts" value={blue}/>
-                    <Widget label="Max red pts" value={red}/>
+                    <Widget label="Max blue XP gain" value={blue}/>
+                    <Widget label="Max red XP gain" value={red}/>
                 </Row>
                 <Panel>
                     { this.getPlayerStats() }
