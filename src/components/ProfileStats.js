@@ -12,45 +12,35 @@ const ProfileStats = ({
     const att = Math.round(att_ratio * 100);
     const win = Math.round(win_ratio * 100);
     return (
+        <Col sm={5}>
         <Well>
             <h4>User statistics</h4>
             <span>
-                    <h5>Win rate</h5>
-                    <ProgressBar bsStyle="success" now={win} label={`${win}%`} />
-                </span>
+                <h5>Win rate</h5>
+                <ProgressBar bsStyle="success" now={win} label={`${win}%`} />
+            </span>
             <span>
-                    <h5>Offence win rate</h5>
-                    <ProgressBar bsStyle="danger" now={att} label={`${att}%`} />
-                </span>
+                <h5>Offence win rate</h5>
+                <ProgressBar bsStyle="danger" now={att} label={`${att}%`} />
+            </span>
             <span>
-                    <h5>Defence win rate</h5>
-                    <ProgressBar bsStyle="info" now={def} label={`${def}%`} />
-                </span>
+                <h5>Defence win rate</h5>
+                <ProgressBar bsStyle="info" now={def} label={`${def}%`} />
+            </span>
             <Row>
-                <Col xs={6}>
-                    <Widget label="Longest winning streak" value={win_streak} />
-                </Col>
-                <Col xs={6}>
-                    <Widget label="Longest losing streak" value={lose_streak} />
-                </Col>
+                <Widget label="Longest winning streak" value={win_streak} />
+                <Widget label="Longest losing streak" value={lose_streak} />
             </Row>
             <Row>
-                <Col xs={6}>
-                    <Widget label="Winning streak" value={curr_win_streak} />
-                </Col>
-                <Col xs={6}>
-                    <Widget label="Losing streak" value={curr_lose_streak} />
-                </Col>
+                <Widget label="Winning streak" value={curr_win_streak} />
+                <Widget label="Losing streak" value={curr_lose_streak} />
             </Row>
             <Row>
-                <Col xs={6}>
-                    <Widget label="Highest EXP" value={highest_exp} />
-                </Col>
-                <Col xs={6}>
-                    <Widget label="Lowest EXP" value={lowest_exp} />
-                </Col>
+                <Widget label="Highest EXP" value={highest_exp} />
+                <Widget label="Lowest EXP" value={lowest_exp} />
             </Row>
         </Well>
+        </Col>
     );
 };
 

@@ -49,13 +49,13 @@ export const fetchLogout = () => {
         .then(ensureSuccessOr('Unable to sign out'));
 };
 
-export const fetchMatches = () => {
-    const request = new Request(urls.matches, {
+export const fetchUserMatches = (username) => {
+    const request = new Request(`${urls.users}${username}/matches/`, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
     return fetch(request)
-        .then(ensureSuccessOr('Unable to fetch match list'))
+        .then(ensureSuccessOr('Unable to fetch user matches list'))
         .then(ensureJSON);
 };
 

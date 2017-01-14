@@ -20,7 +20,7 @@ const model = {
     }
 };
 
-export default (state = {sorting: {column: "id", isAscendingOrder: true}, model}, action) => {
+export default (state = {sorting: {column: "exp", isAscendingOrder: true}, model}, action) => {
     switch (action.type) {
         case types.SORT:
             return {
