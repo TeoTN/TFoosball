@@ -3,9 +3,11 @@ import {Table} from 'react-bootstrap';
 import RankingItem from './RankingItem';
 import RankingListHeader from './RankingListHeader';
 import {IS_MOBILE} from '../api/config';
+import { browserHistory } from 'react-router';
 
 const RankingList = ({users, authId, sortBy, ranking}) => {
     const model = (IS_MOBILE) ? ranking.model.mobile : ranking.model.desktop;
+    const showProfile = (username) => () => { browserHistory.push(`/profile/${username}/stats`) };
 
     return (
         <Table striped hover>
@@ -13,7 +15,13 @@ const RankingList = ({users, authId, sortBy, ranking}) => {
             <tbody>
             {
                 users.map(user =>
-                    <RankingItem key={user.id} user={user} model={model} highlight={user.id === authId}/>
+                    <RankingItem
+                        key={user.id}
+                        user={user}
+                        model={model}
+                        highlight={user.id === authId}
+                        onClick={showProfile(user.username)}
+                    />
                 )
             }
             </tbody>

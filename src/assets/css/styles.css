@@ -31,3 +31,7 @@
 tr.selected {
     background: #fffda4 !important;
 }
+
+.clickable {
+    cursor: pointer;
+}
