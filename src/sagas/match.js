@@ -1,7 +1,8 @@
 import { call, take, put } from 'redux-saga/effects';
-import { PUBLISH } from '../actions/match.types';
+import { PUBLISH, DELETE } from '../actions/match.types';
 import { sent } from '../actions/match.actions';
-import { publishMatch } from '../api/connectors';
+import { publishMatch, removeMatch } from '../api/connectors';
+import { removed } from '../actions/match.actions';
 import { raiseError } from '../actions/error.actions';
 import { displayInfo } from '../actions/infobar.actions';
 import { fetchUsers } from './users';
@@ -15,7 +16,7 @@ export function* publish() {
             const response = yield call(publishMatch, action.match_data);
             yield put(sent(response));
             yield put(displayInfo(success_msg(response.points)));
-            yield fetchUsers();
+            yield call(fetchUsers);
             yield call(action.callback);
         } catch (error) {
             yield put(raiseError(error));
@@ -23,3 +24,14 @@ export function* publish() {
     }
 }
 
+export function* remove() {
+    while (true) {
+        const action = yield take(DELETE);
+        try {
+            const response = yield call(removeMatch, action.id);
+            yield put(removed(action.id));
+        } catch (error) {
+            yield put(raiseError(error));
+        }
+    }
+}

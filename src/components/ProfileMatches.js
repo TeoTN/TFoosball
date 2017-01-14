@@ -20,7 +20,7 @@ const Match = ({red_att, red_def, blue_att, blue_def, red_score, blue_score, poi
         </Col>
         <Col xs={2}>
             <Button bsSize="xs" bsStyle="danger">
-                <Glyphicon glyph="trash"/>
+                <Glyphicon glyph="trash" />
             </Button>
         </Col>
     </ListGroupItem>

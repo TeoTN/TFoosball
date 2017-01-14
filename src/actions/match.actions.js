@@ -10,3 +10,13 @@ export const sent = (response) => ({
     type: types.SENT,
     response,
 });
+
+export const remove = (id) => ({
+    type: types.DELETE,
+    id
+});
+
+export const removed = (id) => ({
+    type: types.DELETED,
+    id
+});

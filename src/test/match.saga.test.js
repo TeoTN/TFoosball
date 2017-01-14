@@ -4,7 +4,8 @@ import * as MatchActions from '../actions/match.actions';
 import * as MatchTypes from '../actions/match.types';
 import * as InfoBarActions from '../actions/infobar.actions';
 import { raiseError } from '../actions/error.actions';
-import { publish } from '../sagas/match';
+import { publish, remove } from '../sagas/match';
+import { fetchUsers } from '../sagas/users';
 
 describe('Publish a match - success scenario', () => {
     const iterator = publish();
@@ -47,7 +48,79 @@ describe('Publish a match - success scenario', () => {
         expect(iterator.next(response).value).toEqual(put(InfoBarActions.displayInfo(success_msg(response.points))));
     });
 
+    it('should call to refresh users', () => {
+        expect(iterator.next().value).toEqual(call(fetchUsers));
+    });
+
     it('should call the callback', () => {
         expect(iterator.next().value).toEqual(call(callback));
+    });
+});
+
+describe('Publish a match - API failure scenario', () => {
+    const iterator = publish();
+    const matchData = {
+        red_def: 'agappe1',
+        red_att: 'barthy2',
+        blue_def: 'celine3',
+        blue_att: 'doughnut4',
+        red_score: 3,
+        blue_score: 10,
+    };
+
+    const callback = () => {};
+
+    it('should wait for PUBLISH action to be dispatched', () => {
+        const iter = iterator.next().value;
+        expect(iter).toEqual(take(MatchTypes.PUBLISH));
+    });
+
+    it('should call api to publish match', () => {
+        const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
+        expect(iter).toEqual(call(API.publishMatch, matchData));
+    });
+
+    it('should put ERROR when API fails', () => {
+        expect(iterator.throw('Failed to publish match').value).toEqual(put(raiseError('Failed to publish match')));
+    });
+});
+
+describe('Remove a match - success scenario', () => {
+    const iterator = remove();
+    const matchID = 0;
+
+    it('should wait for DELETE action to be dispatched', () => {
+        const iter = iterator.next().value;
+        expect(iter).toEqual(take(MatchTypes.DELETE));
+    });
+
+    it('should call API to remove match', () => {
+        const iter = iterator.next(MatchActions.remove(matchID)).value;
+        expect(iter).toEqual(call(API.removeMatch, matchID));
+    });
+
+    it('should put action match DELETED', () => {
+        const iter = iterator.next().value;
+        expect(iter).toEqual(put(MatchActions.removed(matchID)));
+    });
+});
+
+describe('Remove a match - failure scenario', () => {
+    const iterator = remove();
+    const matchID = 0;
+
+    it('should wait for DELETE action to be dispatched', () => {
+        const iter = iterator.next().value;
+        expect(iter).toEqual(take(MatchTypes.DELETE));
+    });
+
+    it('should call API to remove match', () => {
+        const iter = iterator.next(MatchActions.remove(matchID)).value;
+        expect(iter).toEqual(call(API.removeMatch, matchID));
+    });
+
+    it('should handle API response error', () => {
+        const iter = iterator.throw(`Failed to delete match of id#${matchID}`).value;
+        expect(iter).toEqual(put(raiseError(`Failed to delete match of id#${matchID}`)));
     });
 });

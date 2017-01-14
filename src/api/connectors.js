@@ -70,6 +70,16 @@ export const publishMatch = (match) => {
         .then(ensureJSON);
 };
 
+export const removeMatch = (id) => {
+    const request = new Request(`${url.matches}/${id}`, {
+        method: 'DELETE',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request)
+        .then(ensureSuccessOr(`Failed to delete match of id#${id}`))
+        .then(ensureJSON);
+};
+
 export const updateProfile = (partialData) => {
     const request = new Request(urls.profile, {
         method: 'PATCH',
