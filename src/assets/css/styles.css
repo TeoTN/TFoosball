@@ -35,3 +35,11 @@ tr.selected {
 .clickable {
     cursor: pointer;
 }
+
+.align-r {
+    text-align: right;
+}
+
+.progress {
+    background: #fff !important;
+}

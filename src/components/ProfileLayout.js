@@ -19,10 +19,10 @@ export default class ProfileLayout extends Component {
                 <Panel>
                     <ButtonGroup>
                         <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
-                            <Button bsSize="xsmall" bsStyle="info">Profile stats</Button>
+                            <Button bsSize="small" bsStyle="info">Profile stats</Button>
                         </LinkContainer>
                         <LinkContainer to={{ pathname: `/profile/${username}/matches`}}>
-                            <Button bsSize="xsmall" bsStyle="info">Profile matches</Button>
+                            <Button bsSize="small" bsStyle="info">Profile matches</Button>
                         </LinkContainer>
                     </ButtonGroup>
                 </Panel>
