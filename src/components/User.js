@@ -1,30 +1,19 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import { ListGroupItem, Col } from 'react-bootstrap';
-import * as UserActions from '../actions/user.actions';
-
-const mapDispatchToProps = (dispatch, props) => ({
-    select: (user) => dispatch(UserActions.userToggle(user))
-});
 
 const selectedColor = 'success';
 
-@connect(null, mapDispatchToProps)
-export default class User extends Component {
-    toggle = () => this.props.select(this.props.user);
+const User = ({user, onSelect}) => (
+    <ListGroupItem
+        bsStyle={ user.selected ? selectedColor : null }
+        onClick={ () => onSelect(user) }>
+            <Col xs={8}>
+                {user.username}
+            </Col>
+            <Col xs={4}>
+                {user.exp}XP
+            </Col>
+    </ListGroupItem>
+);
 
-    render() {
-        const {user} = this.props;
-        return (
-            <ListGroupItem bsStyle={ user.selected ? selectedColor : null }
-                           onClick={ this.toggle }>
-                <Col xs={8}>
-                    {user.username}
-                </Col>
-                <Col xs={4}>
-                    {user.exp}XP
-                </Col>
-            </ListGroupItem>
-        );
-    }
-}
+export default User;

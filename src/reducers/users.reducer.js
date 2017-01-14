@@ -23,7 +23,10 @@ const user = (state, action) => {
 };
 
 export const getSortedUsers = (state, column, isAscendingOrder) =>
-    state.sort((a, b) => !(isAscendingOrder ^ a[column] > b[column]));
+    state.slice().sort((a, b) => {
+        const comparison = a[column] > b[column] ? 1 : a[column] < b[column] ? -1 : 0;
+        return isAscendingOrder ? comparison : -comparison;
+    });
 
 const clean = (state = [], action) => {
     switch (action.type) {

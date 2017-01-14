@@ -17,7 +17,7 @@ const navigation = (username) => (
         <LinkContainer to={{ pathname: '/match'}}>
             <NavItem eventKey={1} href="#">New match</NavItem>
         </LinkContainer>
-        <LinkContainer to={{ pathname: `/profile/${username}`}}>
+        <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
             <NavItem eventKey={2} href="#">Profile</NavItem>
         </LinkContainer>
         <LinkContainer to={{ pathname: '/ranking'}}>

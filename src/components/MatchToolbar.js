@@ -21,19 +21,19 @@ const mapDispatchToProps = (dispatch, props) => {
 @connect(mapStateToProps, mapDispatchToProps)
 class MatchToolbar extends Component {
     render() {
+        const { sortByName, sortByExp, handlePlay } = this.props;
         return (
             <Col xs={12}>
                 <ButtonGroup justified>
                     <ButtonGroup>
-                        <Button bsStyle="primary" onClick={this.props.sortByName}>By name</Button>
+                        <Button bsStyle="primary" onClick={sortByName}>By name</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="primary" onClick={this.props.sortByExp}>By XP</Button>
+                        <Button bsStyle="primary" onClick={sortByExp}>By XP</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="success" onClick={this.props.handlePlay}>Play!</Button>
+                        <Button bsStyle="success" onClick={handlePlay}>Play!</Button>
                     </ButtonGroup>
-                    {/*TODO Add clear game*/}
                 </ButtonGroup>
             </Col>
         );

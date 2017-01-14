@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import Chart from 'chart.js';
+import { Panel, Col } from 'react-bootstrap';
+import Loading from './Loading';
 
 export default class ProfileChart extends Component {
-    componentDidMount() {
-        this.setUpChart();
-    }
-
     componentDidUpdate() {
         this.setUpChart();
     }
@@ -13,7 +11,7 @@ export default class ProfileChart extends Component {
     setUpChart() {
         const chartOptions =  {};
         const ctx = this.chartDOM;
-        const { exp_history } = this.props;
+        const { profile: { exp_history } } = this.props;
         if (exp_history && ctx) {
             new Chart(ctx, {
                 type: 'line',
@@ -23,7 +21,7 @@ export default class ProfileChart extends Component {
         }
     }
 
-    parseExpHistory = (raw_data) => ({
+    parseExpHistory = (raw_data=[]) => ({
         labels: raw_data.map(point => point.date),
         "datasets": [
             {
@@ -38,9 +36,20 @@ export default class ProfileChart extends Component {
     });
 
     render() {
-        const { exp_history } = this.props;
-        return exp_history ?
-            <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
-            <p>Sorry, user has no experience points history.</p>
+        const { profile: {exp_history}, profile } = this.props;
+        return (
+            <Col sm={7}>
+                <Panel>
+                    <h4>Exp history</h4>
+                    {
+                        Object.keys(profile).length === 0 ?
+                            <Loading /> :
+                            exp_history ?
+                                <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
+                                <p>Sorry, user has no experience points history.</p>
+                    }
+                </Panel>
+            </Col>
+        );
     }
 }
