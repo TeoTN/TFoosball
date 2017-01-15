@@ -22,11 +22,10 @@ export const getOAuthErrorMsg = (error) => {
 export function* openOAuthWindow() {
     const promptWindow = prepareWindow();
     try {
-    const { token } = yield call([promptWindow, promptWindow.open]);
+        const { token } = yield call([promptWindow, promptWindow.open]);
         yield put(setToken(token));
         return token;
     } catch (error) {
-        console.error(error);
         const errorMsg = getOAuthErrorMsg(error);
         yield put(raiseError(errorMsg));
     }
@@ -44,7 +43,7 @@ export function* loginFlow() {
             yield take(SIGN_OUT);
             yield call(fetchLogout);
             yield put(signedOut());
-            browserHistory.push('/');
+            yield call(browserHistory.push, '/');
         } catch (error) {
             yield put(raiseError(error));
         }

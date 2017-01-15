@@ -6,6 +6,8 @@ import { setToken, signIn, signOut, setProfile, signedOut } from '../actions/aut
 import { raiseError } from '../actions/error.actions';
 import { openOAuthWindow, loginFlow, getOAuthErrorMsg } from '../sagas/auth';
 import profile from '../mocks/profile.json';
+import { browserHistory } from 'react-router'
+
 
 describe('OAuth window success scenario', () => {
     const iterator = openOAuthWindow();
@@ -80,5 +82,9 @@ describe('Login flow', () => {
         it('should put signed out', () => {
             expect(iterator.next().value).toEqual(put(signedOut()))
         });
+
+        it('should redirect to home page', () => {
+            expect(iterator.next().value).toEqual(call(browserHistory.push, '/'));
+        })
     });
 });
