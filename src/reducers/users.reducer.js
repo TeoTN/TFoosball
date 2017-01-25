@@ -3,7 +3,7 @@ import * as match_types from "../actions/match.types";
 import choice from "../utils/choice";
 import getRoles from "../utils/roles";
 
-const user = (state, action) => {
+export const user = (state, action) => {
     switch (action.type) {
         case types.ADD:
             return {
