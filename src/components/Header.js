@@ -35,21 +35,24 @@ const Header = ({ auth: { token, profile, }, signIn, signOut }) => (
             <Navbar.Brand>
                 <a href="/">TFoosball</a>
             </Navbar.Brand>
+            <Navbar.Toggle />
         </Navbar.Header>
-        { profile && profile.hasOwnProperty('username') ? navigation(profile.username) : null }
-        <Nav pullRight>
-            {
-                token ?
-                    <SignOutButton signOut={signOut} /> :
-                    <SignInButton signIn={signIn} />
+        <Navbar.Collapse>
+            { profile && profile.hasOwnProperty('username') ? navigation(profile.username) : null }
+            <Nav pullRight style={{marginLeft: '15px'}}>
+                {
+                    token ?
+                        <SignOutButton signOut={signOut} /> :
+                        <SignInButton signIn={signIn} />
+                }
+            </Nav>
+            { profile ?
+                <Navbar.Text pullRight>
+                    { profile.first_name } {profile.last_name} <i>{ profile.username }</i>
+                </Navbar.Text>
+                : null
             }
-        </Nav>
-        { profile ?
-            <Navbar.Text pullRight>
-                { profile.first_name } {profile.last_name} <i>{ profile.username }</i>&nbsp;
-            </Navbar.Text>
-            : null
-        }
+        </Navbar.Collapse>
     </Navbar>
 );
 
