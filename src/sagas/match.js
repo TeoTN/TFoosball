@@ -1,6 +1,6 @@
 import { call, take, put } from 'redux-saga/effects';
 import { PUBLISH, DELETE } from '../actions/match.types';
-import { sent } from '../actions/match.actions';
+import { sent, list } from '../actions/match.actions';
 import * as API from '../api/connectors';
 import { removed } from '../actions/match.actions';
 import { raiseError } from '../actions/error.actions';
@@ -33,5 +33,14 @@ export function* removeMatch() {
         } catch (error) {
             yield put(raiseError(error));
         }
+    }
+}
+
+export function* listMatches() {
+    try {
+        const matches = yield call(API.fetchMatches);
+        yield put(list(matches));
+    } catch (error) {
+        yield put(raiseError('Unable to get latest matches.'));
     }
 }
