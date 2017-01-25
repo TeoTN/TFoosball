@@ -15,7 +15,7 @@ export default class ProfileLayout extends Component {
         const { children, profile, params: {username}} = this.props;
         return (
             <div>
-                <h1>Profile &nbsp;<small>{ username }</small></h1>
+                <h1>Profile &nbsp;<small>{ username } ({ profile.exp } XP)</small></h1>
                 <Panel>
                     <ButtonGroup>
                         <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
