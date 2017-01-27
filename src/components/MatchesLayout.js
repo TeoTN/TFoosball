@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {Table, Grid, Row, Col, Pagination, Pager} from 'react-bootstrap';
+import {Table, Grid, Row, Col, Pager} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import MatchItem from './MatchItem';
-import { browserHistory } from 'react-router';
 
 const mapStateToProps = ({matches}) => ({
     matches,
