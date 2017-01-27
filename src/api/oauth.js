@@ -7,6 +7,13 @@ export const prepareWindow = () => {
         width: 500,
         height: 600,
         windowName: 'TFoosball - Let me in with Google',
+        onPostMessage(event) {
+            if (event.data.error) {
+                this._reject(event.data.error);
+            } else {
+                this._resolve(event.data);
+            }
+        },
     };
     const google_endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
     const auth_request_data = serialize({

@@ -3,7 +3,9 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { userUpdate } from '../actions/user.actions';
 
-const mapStateToProps = state => ({...state});
+const mapStateToProps = ({users}) => ({
+    users: users.filter(u => u.selected),
+});
 const mapDispatchToProps = dispatch => ({
     cleanUser: (user) => dispatch(
         userUpdate(user.id, {playing: false, team: undefined, position: undefined})
@@ -15,11 +17,16 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 class UserPicker extends Component {
-    getUsersOptions = () => this.props.users.map(
-        (user, index) => (
-            <MenuItem eventKey={user.id} key={index}> {user.username} </MenuItem>
-        )
-    );
+    getUsersOptions = () => {
+        const { users } = this.props;
+        return users.length === 0 ?
+            <MenuItem disabled>No players selected</MenuItem> :
+            users.map(
+                (user, idx) => (
+                    <MenuItem eventKey={user.id} key={idx}> {user.username} </MenuItem>
+                )
+            );
+    };
 
     getTitle = user => user ? user.username : '-----';
 

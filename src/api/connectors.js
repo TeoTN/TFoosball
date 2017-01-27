@@ -40,6 +40,16 @@ export const fetchUsers = () => {
         .then(ensureJSON);
 };
 
+export const fetchMatches = (page) => {
+    const request = new Request(`${urls.matches}?page=${page}`, {
+        method: 'GET',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request)
+        .then(ensureSuccessOr('Unable to fetch match list'))
+        .then(ensureJSON);
+};
+
 export const fetchLogout = () => {
     const request = new Request(urls.logout, {
         method: 'GET',
@@ -49,13 +59,13 @@ export const fetchLogout = () => {
         .then(ensureSuccessOr('Unable to sign out'));
 };
 
-export const fetchMatches = () => {
-    const request = new Request(urls.matches, {
+export const fetchUserMatches = (username) => {
+    const request = new Request(`${urls.users}${username}/matches/`, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
     return fetch(request)
-        .then(ensureSuccessOr('Unable to fetch match list'))
+        .then(ensureSuccessOr('Unable to fetch user matches list'))
         .then(ensureJSON);
 };
 
@@ -68,6 +78,15 @@ export const publishMatch = (match) => {
     return fetch(request)
         .then(ensureSuccessOr('Failed to publish match'))
         .then(ensureJSON);
+};
+
+export const removeMatch = (id) => {
+    const request = new Request(`${urls.matches}${id}/`, {
+        method: 'DELETE',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request)
+        .then(ensureSuccessOr(`Failed to delete match of id#${id}`));
 };
 
 export const updateProfile = (partialData) => {

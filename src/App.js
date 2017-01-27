@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './components/Header';
 import InfoBar from './components/InfoBar';
 import ErrorBar from './components/ErrorBar';
+import QuestionModal from './components/QuestionModal';
 import { fetchProfile } from './api/connectors';
 import * as authActions from './actions/auth.actions';
 import * as errorActions from './actions/error.actions';
@@ -36,6 +37,7 @@ export default class App extends React.Component {
                 <Header />
                 <InfoBar />
                 <ErrorBar />
+                <QuestionModal />
                 <main className="container">
                     {children}
                 </main>

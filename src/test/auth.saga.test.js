@@ -6,6 +6,8 @@ import { setToken, signIn, signOut, setProfile, signedOut } from '../actions/aut
 import { raiseError } from '../actions/error.actions';
 import { openOAuthWindow, loginFlow, getOAuthErrorMsg } from '../sagas/auth';
 import profile from '../mocks/profile.json';
+import { browserHistory } from 'react-router'
+
 
 describe('OAuth window success scenario', () => {
     const iterator = openOAuthWindow();
@@ -35,7 +37,7 @@ describe('OAuth window failure scenario', () => {
     });
 
     it('should yield an effect put(raiseError(errorMsg))', () => {
-        const errorMsg = getOAuthErrorMsg(fixture.error);
+        const errorMsg = getOAuthErrorMsg(fixture);
         expect(iterator.throw(fixture).value).toEqual(put(raiseError(errorMsg)));
     });
 });
@@ -78,7 +80,11 @@ describe('Login flow', () => {
         });
 
         it('should put signed out', () => {
-            expect(iterator.next().value).toEqual(put(signedOut))
+            expect(iterator.next().value).toEqual(put(signedOut()))
         });
+
+        it('should redirect to home page', () => {
+            expect(iterator.next().value).toEqual(call(browserHistory.push, '/'));
+        })
     });
 });
