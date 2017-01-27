@@ -36,9 +36,9 @@ export function* removeMatch() {
     }
 }
 
-export function* listMatches() {
+export function* listMatches({page}) {
     try {
-        const matches = yield call(API.fetchMatches);
+        const matches = yield call(API.fetchMatches, page);
         yield put(list(matches));
     } catch (error) {
         yield put(raiseError('Unable to get latest matches.'));

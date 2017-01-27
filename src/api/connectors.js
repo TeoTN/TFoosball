@@ -40,8 +40,8 @@ export const fetchUsers = () => {
         .then(ensureJSON);
 };
 
-export const fetchMatches = () => {
-    const request = new Request(urls.matches, {
+export const fetchMatches = (page) => {
+    const request = new Request(`${urls.matches}?page=${page}`, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });

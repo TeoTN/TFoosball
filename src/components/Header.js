@@ -22,9 +22,9 @@ const navigation = (username) => (
         <LinkContainer to={{ pathname: '/ranking'}}>
             <NavItem eventKey={3} href="#">Ranking</NavItem>
         </LinkContainer>
-        {/*<LinkContainer to={{ pathname: '/tournament/0'}}>*/}
-            {/*<NavItem eventKey={5} href="#">Tournament</NavItem>*/}
-        {/*</LinkContainer>*/}
+        <LinkContainer to={{ pathname: '/matches/1'}}>
+            <NavItem eventKey={4} href="#">Matches</NavItem>
+        </LinkContainer>
     </Nav>
 );
 

@@ -8,7 +8,7 @@ const routes = {
     '/profile/:username/matches': profileMatches,
     '/profile/:username/stats': profileStats,
     '/match': fetchUsers,
-    '/matches': listMatches,
+    '/matches/:page': listMatches,
     '/ranking': fetchUsers,
 };
 

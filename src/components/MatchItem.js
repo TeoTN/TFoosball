@@ -15,11 +15,14 @@ const MatchItem = (params) => (
         <Col xs={1} componentClass="td">
             {Math.abs(params.points)}
         </Col>
-        <Col xs={2} componentClass="td">
-            <Button bsSize="xs" bsStyle="danger" onClick={params.onRemove(params)}>
-                <Glyphicon glyph="trash" />
-            </Button>
-        </Col>
+        { params.withOptions ?
+            <Col xs={2} componentClass="td">
+                <Button bsSize="xs" bsStyle="danger" onClick={params.onRemove(params)}>
+                    <Glyphicon glyph="trash"/>
+                </Button>
+            </Col> :
+            null
+        }
     </Row>
 );
 

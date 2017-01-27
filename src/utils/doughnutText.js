@@ -7,7 +7,7 @@ Chart.pluginService.register({
             ctx = chart.chart.ctx,
             type = chart.config.type;
 
-        if (type == 'doughnut')
+        if (type === 'doughnut')
         {
             var percent = Math.round((chart.config.data.datasets[0].data[0] * 100) /
                 (chart.config.data.datasets[0].data[0] +

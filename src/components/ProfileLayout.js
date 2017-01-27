@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
-import { Row, Button, Panel, ButtonGroup, NavItem, Nav } from 'react-bootstrap';
+import { Panel, NavItem, Nav } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 

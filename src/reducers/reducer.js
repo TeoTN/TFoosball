@@ -6,6 +6,7 @@ import tournaments from './tournaments.reducer';
 import auth from './auth.reducer';
 import ranking from './ranking.reducer';
 import modal from './modal.reducer';
+import matches from './matches.reducer';
 import {combineReducers} from 'redux';
 
 const reducer = combineReducers({
@@ -17,6 +18,7 @@ const reducer = combineReducers({
     auth,           // Auth state, including current user profile (NOT a viewed one)
     ranking,        // Ranking metadata
     modal,          // A modal message to be shown currently
+    matches,        // A state for matches list
 });
 
 export default reducer;

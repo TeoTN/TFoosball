@@ -7,7 +7,7 @@ import store from './store';
 import MatchLayout from './components/MatchLayout';
 import ProfileLayout from './components/ProfileLayout';
 import RankingLayout from './components/RankingLayout';
-import TournamentLayout from './components/TournamentLayout';
+import MatchesLayout  from './components/MatchesLayout';
 import IntroLayout from './components/IntroLayout';
 import InitComponent from './components/InitComponent';
 import ProfileMatches from './components/ProfileMatches';
@@ -43,6 +43,7 @@ ReactDOM.render(
                     <Route path="matches" component={ProfileMatches} />
                 </Route>
                 <Route path="ranking" component={RankingLayout} />
+                <Route path="matches/(:page)" component={MatchesLayout} />
                 {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>
         </Router>
