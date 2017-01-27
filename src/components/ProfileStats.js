@@ -1,5 +1,5 @@
 import React from 'react';
-import { Well, Row, Col, ProgressBar } from 'react-bootstrap';
+import { Well, Row, Col } from 'react-bootstrap';
 import Widget from './Widget';
 import Doughnut from './Doughnut';
 

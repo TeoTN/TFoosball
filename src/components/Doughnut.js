@@ -53,8 +53,8 @@ export default class Doughnut extends React.Component {
                                 this.getActiveColor(bsStyle),
                             ],
                             hoverBackgroundColor: [
-                                "#36A2EB",
-                                "#e7e9ea",
+                                this.getColor(bsStyle),
+                                this.getActiveColor(bsStyle),
                             ],
                             borderWidth: 0,
                         }

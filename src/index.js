@@ -43,7 +43,7 @@ ReactDOM.render(
                     <Route path="matches" component={ProfileMatches} />
                 </Route>
                 <Route path="ranking" component={RankingLayout} />
-                <Route path="tournament/(:tid)" component={TournamentLayout} />
+                {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>
         </Router>
     </Provider>,

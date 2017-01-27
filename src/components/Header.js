@@ -1,9 +1,8 @@
 import React from 'react';
 import { signIn, signOut } from '../actions/auth.actions';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import SignInButton from './SignInButton';
-import SignOutButton from './SignOutButton';
 import { connect } from 'react-redux';
 
 const mapStateToProps = ({auth}) => ({auth});
@@ -18,14 +17,14 @@ const navigation = (username) => (
             <NavItem eventKey={1} href="#">New match</NavItem>
         </LinkContainer>
         <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
-            <NavItem eventKey={2} href="#">Profile</NavItem>
+            <NavItem eventKey={2} href="#">My profile</NavItem>
         </LinkContainer>
         <LinkContainer to={{ pathname: '/ranking'}}>
             <NavItem eventKey={3} href="#">Ranking</NavItem>
         </LinkContainer>
-        <LinkContainer to={{ pathname: '/tournament/0'}}>
-            <NavItem eventKey={4} href="#">Tournament</NavItem>
-        </LinkContainer>
+        {/*<LinkContainer to={{ pathname: '/tournament/0'}}>*/}
+            {/*<NavItem eventKey={5} href="#">Tournament</NavItem>*/}
+        {/*</LinkContainer>*/}
     </Nav>
 );
 
@@ -39,19 +38,17 @@ const Header = ({ auth: { token, profile, }, signIn, signOut }) => (
         </Navbar.Header>
         <Navbar.Collapse>
             { profile && profile.hasOwnProperty('username') ? navigation(profile.username) : null }
-            <Nav pullRight style={{marginLeft: '15px'}}>
+            <Nav pullRight>
                 {
-                    token ?
-                        <SignOutButton signOut={signOut} /> :
-                        <SignInButton signIn={signIn} />
+                    token && profile ?
+                <NavDropdown eventKey={5} title={profile.username} id="account-dropdown">
+                    <MenuItem eventKey={5.1}>Settings</MenuItem>
+                    <MenuItem divider />
+                    <MenuItem eventKey={5.2} onClick={signOut}>Sign out</MenuItem>
+                </NavDropdown> :
+                <SignInButton signIn={signIn} />
                 }
             </Nav>
-            { profile ?
-                <Navbar.Text pullRight>
-                    { profile.first_name } {profile.last_name} <i>{ profile.username }</i>
-                </Navbar.Text>
-                : null
-            }
         </Navbar.Collapse>
     </Navbar>
 );
