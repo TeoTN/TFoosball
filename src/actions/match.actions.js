@@ -20,3 +20,8 @@ export const removed = (id) => ({
     type: types.DELETED,
     id
 });
+
+export const list = (response) => ({
+    type: types.LIST,
+    response,
+});

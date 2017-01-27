@@ -40,6 +40,16 @@ export const fetchUsers = () => {
         .then(ensureJSON);
 };
 
+export const fetchMatches = () => {
+    const request = new Request(urls.matches, {
+        method: 'GET',
+        headers: getDefaultHeaders(),
+    });
+    return fetch(request)
+        .then(ensureSuccessOr('Unable to fetch match list'))
+        .then(ensureJSON);
+};
+
 export const fetchLogout = () => {
     const request = new Request(urls.logout, {
         method: 'GET',
