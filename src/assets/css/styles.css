@@ -20,12 +20,8 @@
 
 .widget {
     width: 100%;
-    border-radius: 0px !important;
+    border-radius: 0 !important;
     cursor: pointer;
-}
-
-.widget:hover {
-    box-shadow: 0px 2px 4px #999;
 }
 
 tr.selected {
@@ -42,4 +38,8 @@ tr.selected {
 
 .progress {
     background: #fff !important;
+}
+
+.navbar-default {
+    box-shadow: 0 3px 7px 1px #d4d8db;
 }

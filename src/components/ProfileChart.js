@@ -9,7 +9,14 @@ export default class ProfileChart extends Component {
     }
 
     setUpChart() {
-        const chartOptions =  {};
+        const chartOptions =  {
+            legend: {
+                display: false,
+            },
+            tooltips: {
+                enabled: false,
+            },
+        };
         const ctx = this.chartDOM;
         const { profile: { exp_history } } = this.props;
         if (exp_history && ctx) {

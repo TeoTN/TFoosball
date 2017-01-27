@@ -1,6 +1,7 @@
 import React from 'react';
 import { Well, Row, Col, ProgressBar } from 'react-bootstrap';
 import Widget from './Widget';
+import Doughnut from './Doughnut';
 
 const ProfileStats = ({
     profile: {
@@ -15,18 +16,13 @@ const ProfileStats = ({
         <Col sm={5}>
         <Well>
             <h4>User statistics</h4>
-            <span>
-                <h5>Win rate</h5>
-                <ProgressBar bsStyle="success" now={win} label={`${win}%`} />
-            </span>
-            <span>
-                <h5>Offence win rate</h5>
-                <ProgressBar bsStyle="danger" now={att} label={`${att}%`} />
-            </span>
-            <span>
-                <h5>Defence win rate</h5>
-                <ProgressBar bsStyle="info" now={def} label={`${def}%`} />
-            </span>
+            <Row>
+                <Col xs={4} xsOffset={1}>
+                    <Doughnut value={win} bsStyle="success" label="Win rate" />
+                </Col>
+                <Col xs={3}><Doughnut value={att} bsStyle="danger" label="Offence wins"/></Col>
+                <Col xs={3}><Doughnut value={def} bsStyle="info" label="Defence wins"/></Col>
+            </Row>
             <Row>
                 <Widget label="Longest winning streak" value={win_streak} />
                 <Widget label="Longest losing streak" value={lose_streak} />

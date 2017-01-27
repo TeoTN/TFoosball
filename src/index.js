@@ -14,6 +14,7 @@ import ProfileMatches from './components/ProfileMatches';
 import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
 import './utils/object';
+import './utils/doughnutText';
 import { loadAuthState } from './persistence';
 
 function checkIfShouldDisplayIntro(nextState, replace) {
