@@ -1,11 +1,11 @@
 import { call, put, take } from 'redux-saga/effects';
 import * as API from '../api/connectors';
-import * as MatchActions from '../actions/match.actions';
-import * as MatchTypes from '../actions/match.types';
-import * as InfoBarActions from '../actions/infobar.actions';
-import { raiseError } from '../actions/error.actions';
-import { publish, removeMatch } from '../sagas/match';
-import { fetchUsers } from '../sagas/users';
+import * as MatchActions from '../matches/match.actions';
+import * as MatchTypes from '../matches/match.types';
+import * as InfoBarActions from '../shared/infobar.actions';
+import { raiseError } from '../shared/error.actions';
+import { publish, removeMatch } from '../matches/matches.sagas';
+import { fetchUsers } from '../users/users.sagas';
 
 describe('Publish a match - success scenario', () => {
     const iterator = publish();

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import * as actions from '../actions/user.actions';
+import * as actions from '../users/user.actions';
 import deepFreeze from 'deep-freeze';
-import users from '../reducers/users.reducer';
-import usersMock from '../mocks/users.json';
+import users from '../users/users.reducer';
+import usersMock from '../assets/mocks/users.json';
 
 describe('Users reducer', function() {
     const username = 'Shannon';
