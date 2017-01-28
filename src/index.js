@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './homepage/components/App';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import store from './store';
-import MatchLayout from './components/MatchLayout';
-import ProfileLayout from './components/ProfileLayout';
-import RankingLayout from './components/RankingLayout';
-import MatchesLayout  from './components/MatchesLayout';
-import IntroLayout from './components/IntroLayout';
-import InitComponent from './components/InitComponent';
-import ProfileMatches from './components/ProfileMatches';
+import MatchLayout from './play/components/PlayLayout';
+import ProfileLayout from './profile/components/ProfileLayout';
+import RankingLayout from './ranking/components/RankingLayout';
+import MatchesLayout  from './matches/components/MatchesLayout';
+import SettingsLayout  from './settings/components/SettingsLayout';
+import IntroLayout from './homepage/components/IntroLayout';
+import InitComponent from './homepage/components/InitComponent';
+import ProfileMatches from './profile/components/ProfileMatches';
 import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
 import './utils/object';
@@ -44,6 +45,7 @@ ReactDOM.render(
                 </Route>
                 <Route path="ranking" component={RankingLayout} />
                 <Route path="matches/(:page)" component={MatchesLayout} />
+                <Route path="settings" component={SettingsLayout} />
                 {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>
         </Router>

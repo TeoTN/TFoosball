@@ -1,9 +1,9 @@
 import { call, put } from 'redux-saga/effects';
 import * as API from '../api/connectors';
-import response from '../mocks/users.json';
-import * as UserActions from '../actions/user.actions';
-import * as ErrorActions from '../actions/error.actions';
-import { fetchUsers } from '../sagas/users.js';
+import response from '../assets/mocks/users.json';
+import * as UserActions from '../users/user.actions';
+import * as ErrorActions from '../shared/error.actions';
+import { fetchUsers } from '../users/users.sagas.js';
 
 describe('Fetch user list - success scenario', () => {
     const iterator = fetchUsers();
