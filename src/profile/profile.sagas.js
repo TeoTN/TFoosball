@@ -3,9 +3,9 @@ import { fetchUserMatches, fetchProfile } from '../api/connectors';
 import { receiveUserMatches, receiveProfile } from './profile.actions';
 import { raiseError } from '../shared/error.actions';
 
-export function* profileMatches({username}) {
+export function* profileMatches({username, page=1}) {
     try {
-        const matches = yield call(fetchUserMatches, username);
+        const matches = yield call(fetchUserMatches, username, page);
         yield put(receiveUserMatches(matches));
     } catch (error) {
         yield put(raiseError('Unable to get latest matches.'));

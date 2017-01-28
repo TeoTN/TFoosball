@@ -39,9 +39,9 @@ ReactDOM.render(
                        onEnter={checkIfShouldDisplayIntro} />
                 <Route path="welcome" component={InitComponent} />
                 <Route path="match" component={MatchLayout} />
-                <Route path="profile/(:username)" component={ProfileLayout}>
+                <Route path="profile/:username" component={ProfileLayout}>
                     <Route path="stats" />
-                    <Route path="matches" component={ProfileMatches} />
+                    <Route path="matches(/:page)" component={ProfileMatches} />
                 </Route>
                 <Route path="ranking" component={RankingLayout} />
                 <Route path="matches/(:page)" component={MatchesLayout} />

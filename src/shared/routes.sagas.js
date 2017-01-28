@@ -5,6 +5,7 @@ import { fetchUsers } from '../users/users.sagas';
 import { listMatches } from '../matches/matches.sagas';
 
 const routes = {
+    '/profile/:username/matches/:page': profileMatches,
     '/profile/:username/matches': profileMatches,
     '/profile/:username/stats': profileStats,
     '/match': fetchUsers,

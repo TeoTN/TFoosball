@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import MatchList from '../../matches/components/MatchList';
 import * as ModalActions from '../../shared/modal.actions';
 import * as MatchActions from '../../matches/match.actions';
+import NaivePager from '../../shared/components/NaivePager';
 
 const mapStateToProps = ({ profile: { matches } }) => ({ matches, });
 const mapDispatchToProps = (dispatch) => ({
@@ -11,7 +12,7 @@ const mapDispatchToProps = (dispatch) => ({
     remove: (id) => dispatch(MatchActions.remove(id)),
 });
 
-const ProfileMatches = ({ matches = [], onRemove, remove }) => {
+const ProfileMatches = ({ matches = {list: [], page: 1, totalPages:1}, onRemove, remove, params: {username} }) => {
     const askToRemove = (match) => (event) => {
         const params = {
             title: 'Are you sure?',
@@ -23,11 +24,11 @@ const ProfileMatches = ({ matches = [], onRemove, remove }) => {
         onRemove(params);
         event.preventDefault();
     };
-
     return (
         <Panel>
             <h4>Matches</h4>
-            <MatchList withOptions onRemove={askToRemove} matches={matches} />
+            <NaivePager page={matches.page} prefix={`/profile/${username}/matches`} totalPages={matches.totalPages} />
+            <MatchList withOptions onRemove={askToRemove} matches={matches.list} />
         </Panel>
     );
 };

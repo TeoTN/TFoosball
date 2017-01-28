@@ -10,7 +10,7 @@ export const receiveProfile = (response) => ({
     response,
 });
 
-export const receiveUserMatches = (matches) => ({
+export const receiveUserMatches = (response) => ({
     type: types.RECEIVE_MATCHES,
-    matches,
+    response,
 });

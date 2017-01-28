@@ -1,7 +1,8 @@
 import React from 'react';
-import {Grid, Row, Col, Pager} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import MatchList from './MatchList';
+import NaivePager from '../../shared/components/NaivePager';
 
 const mapStateToProps = ({matches}) => ({
     matches,
@@ -9,23 +10,6 @@ const mapStateToProps = ({matches}) => ({
 
 @connect(mapStateToProps, null)
 export default class MatchesLayout extends React.Component {
-    renderPager() {
-        const {matches: {page, totalPages}} = this.props;
-        return (
-            <Pager>
-                {
-                    page > 1 ?
-                        <Pager.Item previous href={`/matches/${page-1}`}>&laquo; Previous Page</Pager.Item> :
-                        null
-                }
-                {
-                    page < totalPages ?
-                        <Pager.Item next href={`/matches/${page + 1}`}>Next Page &raquo;</Pager.Item> :
-                        null
-                }
-            </Pager>
-        );
-    }
     render() {
         const { matches } = this.props;
 
@@ -35,7 +19,7 @@ export default class MatchesLayout extends React.Component {
                     <Col>
                         <h1>Matches</h1>
                     </Col>
-                    {this.renderPager()}
+                    <NaivePager page={matches.page} prefix={`/matches`} totalPages={matches.totalPages} />
                 </Row>
                 <Row>
                     <Col>
@@ -43,7 +27,7 @@ export default class MatchesLayout extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    {this.renderPager()}
+                    <NaivePager page={matches.page} prefix={`/matches`} totalPages={matches.totalPages} />
                 </Row>
             </Grid>
         );

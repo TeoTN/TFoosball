@@ -59,8 +59,8 @@ export const fetchLogout = () => {
         .then(ensureSuccessOr('Unable to sign out'));
 };
 
-export const fetchUserMatches = (username) => {
-    const request = new Request(`${urls.users}${username}/matches/`, {
+export const fetchUserMatches = (username, page=1) => {
+    const request = new Request(`${urls.users}${username}/matches/?page=${page}`, {
         method: 'GET',
         headers: getDefaultHeaders(),
     });
