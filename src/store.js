@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import rootSaga from './sagas/index';
+import rootSaga from './sagas/root';
 import reducer from './reducers/reducer'
 import { saveAuthState } from './persistence';
 

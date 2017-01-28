@@ -1,8 +1,10 @@
 import React from 'react';
 
-const RankingItem = ({user, highlight, model}) => {
+const RankingItem = ({user, highlight, onClick, model}) => {
     return (
-        <tr className={highlight ? 'selected' : ''}>
+        <tr
+            className={`clickable ${highlight ? 'selected' : ''}`}
+            onClick={onClick}>
             {
                 Object.entries(model).map(
                     ([key, label]) => <td key={key}>{user[key]}</td>

@@ -2,11 +2,15 @@ import * as types from './profile.types';
 
 export const profileUpdate = (response) => ({
     type: types.UPDATE,
-    response
+    response,
 });
 
 export const receiveProfile = (response) => ({
     type: types.RECEIVE_PROFILE,
-    response
+    response,
 });
 
+export const receiveUserMatches = (matches) => ({
+    type: types.RECEIVE_MATCHES,
+    matches,
+});

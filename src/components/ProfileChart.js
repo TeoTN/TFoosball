@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
 import Chart from 'chart.js';
+import { Col } from 'react-bootstrap';
+import Loading from './Loading';
 
 export default class ProfileChart extends Component {
-    componentDidMount() {
-        this.setUpChart();
-    }
-
     componentDidUpdate() {
         this.setUpChart();
     }
 
     setUpChart() {
-        const chartOptions =  {};
+        const chartOptions =  {
+            scales: {
+                yAxes: [{
+                    position: "left",
+                    "id": "y-exp"
+                }, {
+                    position: "right",
+                    "id": "y-amount",
+                    // gridLines: {
+                        display: false,
+                    // }
+                }]
+            }
+        };
         const ctx = this.chartDOM;
-        const { exp_history } = this.props;
+        const { profile: { exp_history } } = this.props;
         if (exp_history && ctx) {
             new Chart(ctx, {
                 type: 'line',
@@ -23,7 +34,7 @@ export default class ProfileChart extends Component {
         }
     }
 
-    parseExpHistory = (raw_data) => ({
+    parseExpHistory = (raw_data=[]) => ({
         labels: raw_data.map(point => point.date),
         "datasets": [
             {
@@ -33,14 +44,35 @@ export default class ProfileChart extends Component {
                 "pointBackgroundColor": "rgba(26,179,148,1)",
                 "pointBorderColor": "#fff",
                 "data": raw_data.map(point => point.daily_avg),
+                "yAxisID": "y-exp",
+            },
+            {
+                "label": "Matches played",
+                "fill": false,
+                "steppedLine": false,
+                "borderColor": "rgba(170, 170, 170, 0.7)",
+                "pointBackgroundColor": "rgba(150, 150, 150, 1)",
+                "pointBorderColor": "#fff",
+                "data": raw_data.map(point => point.amount),
+                "yAxisID": "y-amount",
+                "lineTension": 0.1,
             }
         ],
     });
 
     render() {
-        const { exp_history } = this.props;
-        return exp_history ?
-            <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
-            <p>Sorry, user has no experience points history.</p>
+        const { profile: {exp_history}, profile } = this.props;
+        return (
+            <Col sm={7}>
+                    <h4>History</h4>
+                    {
+                        Object.keys(profile).length === 0 ?
+                            <Loading /> :
+                            exp_history ?
+                                <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
+                                <p>Sorry, user has no experience points history.</p>
+                    }
+            </Col>
+        );
     }
 }

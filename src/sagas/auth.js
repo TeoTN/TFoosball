@@ -9,19 +9,20 @@ import { fetchProfile, fetchLogout } from '../api/connectors';
 export const getOAuthErrorMsg = (error) => {
     switch(error) {
         case 'blocked':
+            return 'Authentication window was blocked. Please, try again.';
         case 'closed':
-            return 'Failed to start authenticating. Please, try again.';
+            return 'Authentication window was closed. Please, try again.';
         case 'failure':
             return 'Failed to log in.';
         default:
-            return error || 'Failed to authenticate.';
+            return 'Failed to authenticate.';
     }
 };
 
 export function* openOAuthWindow() {
     const promptWindow = prepareWindow();
     try {
-    const { token } = yield call([promptWindow, promptWindow.open]);
+        const { token } = yield call([promptWindow, promptWindow.open]);
         yield put(setToken(token));
         return token;
     } catch (error) {
@@ -42,7 +43,7 @@ export function* loginFlow() {
             yield take(SIGN_OUT);
             yield call(fetchLogout);
             yield put(signedOut());
-            browserHistory.push('/');
+            yield call(browserHistory.push, '/');
         } catch (error) {
             yield put(raiseError(error));
         }
