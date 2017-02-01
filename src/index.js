@@ -10,7 +10,6 @@ import RankingLayout from './ranking/components/RankingLayout';
 import MatchesLayout  from './matches/components/MatchesLayout';
 import SettingsLayout  from './settings/components/SettingsLayout';
 import IntroLayout from './homepage/components/IntroLayout';
-import InitComponent from './homepage/components/InitComponent';
 import ProfileMatches from './profile/components/ProfileMatches';
 import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
@@ -37,7 +36,6 @@ ReactDOM.render(
                 <Route path="/"
                        component={IntroLayout}
                        onEnter={checkIfShouldDisplayIntro} />
-                <Route path="welcome" component={InitComponent} />
                 <Route path="match" component={MatchLayout} />
                 <Route path="profile/:username" component={ProfileLayout}>
                     <Route path="stats" />
