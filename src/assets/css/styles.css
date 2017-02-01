@@ -42,3 +42,10 @@ tr.selected {
 .navbar-default {
     box-shadow: 0 3px 7px 1px #d4d8db;
 }
+
+.profile-photo img {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    margin: 0 16px 16px 0;
+}
