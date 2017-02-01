@@ -6,6 +6,17 @@ export default class Doughnut extends React.Component {
         this.setUpChart();
     }
 
+    getLightColor(name) {
+        switch (name) {
+            case 'success': return '#69D3BF';
+            case 'danger': return '#EF8B80';
+            case 'info': return '#7BBCE8';
+            case 'warning': return '#F7BF65';
+            case 'primary': return '#76828D';
+            default: return '#76828D';
+        }
+    }
+
     getColor(name) {
         switch (name) {
             case 'success': return '#18bc9c';
@@ -19,9 +30,9 @@ export default class Doughnut extends React.Component {
 
     getActiveColor(name) {
         switch (name) {
-            case 'success': return '#128f76';
-            case 'danger': return '#d62c1a';
-            case 'info': return '#217dbb';
+            case 'success': return '#098c73';
+            case 'danger': return '#d32017';
+            case 'info': return '#187aa9';
             case 'warning': return '#c87f0a';
             case 'primary': return '#1a242f';
             default: return '#1a242f';
@@ -29,6 +40,7 @@ export default class Doughnut extends React.Component {
     }
 
     setUpChart() {
+        const { value, bsStyle } = this.props;
         const chartOptions =  {
             legend: {
                 display: false,
@@ -36,40 +48,36 @@ export default class Doughnut extends React.Component {
             tooltips: {
                 enabled: false,
             },
-            cutoutPercentage: 60,
+            cutoutPercentage: 70,
+            rotation: Math.PI*1.5 - Math.PI*value/100,
         };
+
         const ctx = this.chartDOM;
-        const { value, bsStyle } = this.props;
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'doughnut',
-                options: chartOptions,
-                data: {
-                    datasets: [
-                        {
-                            data: [value, 100-value],
-                            backgroundColor: [
-                                this.getColor(bsStyle),
-                                this.getActiveColor(bsStyle),
-                            ],
-                            hoverBackgroundColor: [
-                                this.getColor(bsStyle),
-                                this.getActiveColor(bsStyle),
-                            ],
-                            borderWidth: 0,
-                        }
-                    ]
-                },
-            });
-        }
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'doughnut',
+            options: chartOptions,
+            data: {
+                datasets: [
+                    {
+                        data: [value, 100-value],
+                        backgroundColor: [
+                            this.getColor(bsStyle),
+                            "#e1e5e5",
+                        ],
+                        borderWidth: 0,
+                    }
+                ]
+            },
+        });
     }
 
     render() {
-        const { label } = this.props;
+        const { label, bsStyle } = this.props;
         return (
             <div>
                 <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} />
-                { label ? <h6 className="text-center">{label}</h6> : null }
+                { label ? <h6 className={`text-center text-${bsStyle}`}>{label}</h6> : null }
             </div>
         );
     }

@@ -63,7 +63,7 @@ export default class ProfileChart extends Component {
     render() {
         const { profile: {exp_history}, profile } = this.props;
         return (
-            <Col sm={7}>
+            <Col md={7}>
                     <h4>History</h4>
                     {
                         Object.keys(profile).length === 0 ?

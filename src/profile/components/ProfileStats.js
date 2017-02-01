@@ -13,15 +13,19 @@ const ProfileStats = ({
     const att = Math.round(att_ratio * 100);
     const win = Math.round(win_ratio * 100);
     return (
-        <Col sm={5}>
+        <Col md={5}>
         <Well>
             <h4>User statistics</h4>
             <Row>
-                <Col xs={4} xsOffset={1}>
+                <Col sm={4} xs={4} smOffset={1}>
                     <Doughnut value={win} bsStyle="success" label="Win rate" />
                 </Col>
-                <Col xs={3}><Doughnut value={att} bsStyle="danger" label="Offence wins"/></Col>
-                <Col xs={3}><Doughnut value={def} bsStyle="info" label="Defence wins"/></Col>
+                <Col sm={3} xs={4}>
+                    <Doughnut value={att} bsStyle="danger" label="Offence wins"/>
+                </Col>
+                <Col sm={3} xs={4}>
+                    <Doughnut value={def} bsStyle="info" label="Defence wins"/>
+                </Col>
             </Row>
             <Row>
                 <Widget label="Longest winning streak" value={win_streak} />
