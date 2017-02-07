@@ -5,8 +5,8 @@ import { ensureJSON, ensureSuccessOr } from './helpers';
 const urls = {
     users: `${API_ROOT}users/`,
     matches: `${API_ROOT}matches/`,
-    profile: `${API_SERVER}rest-auth/user/`,
-    logout: `${API_SERVER}rest-auth/logout/`,
+    profile: `${API_SERVER}brightit/rest-auth/user/`,
+    logout: `${API_SERVER}brightit/rest-auth/logout/`,
 };
 
 const getDefaultHeaders = () => {
