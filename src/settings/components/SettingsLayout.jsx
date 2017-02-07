@@ -47,6 +47,10 @@ export default class SettingsLayout extends React.Component {
             raiseError('Username must consist of at least 3 characters.');
             return;
         }
+        if (username.length >= 15) {
+            raiseError('Username must consist of no more than 14 characters.');
+            return;
+        }
 
         const data = {
             username,
