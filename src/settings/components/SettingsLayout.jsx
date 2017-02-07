@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 import * as actions from '../../profile/profile.actions';
 import { raiseError } from '../../shared/error.actions';
-import { updateProfile } from '../../api/connectors';
+import { updateProfile, updateMember } from '../../api/connectors';
 import { displayInfo } from '../../shared/infobar.actions';
 import InputField from './InputField';
 
@@ -38,10 +38,10 @@ export default class SettingsLayout extends React.Component {
         this.setState({ [fieldName]: event.target.value });
     };
 
-    save = (event) => {
+    saveMember = (event) => {
         event.preventDefault();
-        const { update, raiseError, displayInfo } = this.props;
-        const { first_name, last_name, username } = this.state;
+        const { update, profile, raiseError, displayInfo } = this.props;
+        const { username } = this.state;
 
         if (username.length < 3) {
             raiseError('Username must consist of at least 3 characters.');
@@ -50,6 +50,20 @@ export default class SettingsLayout extends React.Component {
 
         const data = {
             username,
+        };
+
+        updateMember(profile.username, data)
+            .then(update)
+            .then(() => displayInfo('Team profile changes saved'))
+            .catch(raiseError)
+    };
+
+    saveProfile = (event) => {
+        event.preventDefault();
+        const { update, raiseError, displayInfo } = this.props;
+        const { first_name, last_name } = this.state;
+
+        const data = {
             first_name,
             last_name,
         };
@@ -69,15 +83,27 @@ export default class SettingsLayout extends React.Component {
                 <Row>
                 <Col sm={8}>
                     <Well>
-                        <Form onSubmit={this.save} horizontal>
+                        <Form onSubmit={this.saveMember} horizontal>
                             <fieldset>
-                                <legend>Profile data</legend>
+                                <legend>Team member <small>(<em>BrightIT</em>)</small></legend>
                                 <InputField
                                     name="username"
                                     label="Username"
                                     onChange={this.handleChange}
                                     value={this.state.username}
                                 />
+                                <FormGroup>
+                                    <Col smOffset={3} sm={8}>
+                                        <Button type="submit" bsStyle="success" block>
+                                            Save
+                                        </Button>
+                                    </Col>
+                                </FormGroup>
+                            </fieldset>
+                        </Form>
+                        <Form onSubmit={this.saveProfile} horizontal>
+                            <fieldset>
+                                <legend>Profile data</legend>
                                 <InputField
                                     name="first_name"
                                     label="First name"

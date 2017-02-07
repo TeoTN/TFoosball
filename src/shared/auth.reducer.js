@@ -19,7 +19,7 @@ const auth = (state = loadAuthState('auth') || {}, action) => {
             };
         case ProfileTypes.UPDATE:
             const { id } = action.response;
-            if (id !== state.profile.id) return state;
+            // if (id !== state.profile.id) return state;
             return {
                 ...state,
                 profile: action.response,

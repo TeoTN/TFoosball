@@ -89,6 +89,17 @@ export const removeMatch = (id) => {
         .then(ensureSuccessOr(`Failed to delete match of id#${id}`));
 };
 
+export const updateMember = (username, partialData) => {
+    const request = new Request(`${urls.users}${username}/`, {
+        method: 'PATCH',
+        headers: getDefaultHeaders(),
+        body: JSON.stringify(partialData)
+    });
+    return fetch(request)
+        .then(ensureSuccessOr('Failed to update team profile'))
+        .then(ensureJSON);
+};
+
 export const updateProfile = (partialData) => {
     const request = new Request(urls.profile, {
         method: 'PATCH',
