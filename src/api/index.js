@@ -61,7 +61,10 @@ const api = {
         matchPoints: () => `${API_ROOT}/${api._domain}/matches/count-points/`,
         logout: () => `${API_SERVER}${api._domain}/rest-auth/logout/`
     },
-    _domain: loadTeamState().domain,
+    _domain: (() => {
+        const teams = loadTeamState();
+        return teams ? teams.domain : 'unknown';
+    })(),
 };
 
 

@@ -6,7 +6,6 @@ import { raiseError } from '../shared/error.actions';
 import { displayInfo } from '../shared/infobar.actions';
 
 const validateMember = (data) => {
-    console.log('validate', data);
     if (data.username.length < 3) {
         throw new Error('Username must consist of at least 3 characters.');
     }
@@ -33,7 +32,6 @@ function* saveProfile() {
 function* saveMember() {
     while (true) {
         const action = yield take(REQUEST_SAVE_MEMBER);
-        console.log(action)
         const username = yield select(state => state.auth.profile.username);
         const url = api.urls.userEntity(username);
         try {

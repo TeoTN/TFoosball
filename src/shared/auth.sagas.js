@@ -1,4 +1,4 @@
-import { take, call, put } from 'redux-saga/effects';
+import { take, call, put, fork, cancel } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import { setTeams } from '../profile/profile.actions';
@@ -25,7 +25,6 @@ export function* openOAuthWindow() {
     const promptWindow = prepareWindow();
     try {
         const { token, teams } = yield call([promptWindow, promptWindow.open]);
-        console.log("openOAuthWindow teams:", teams)
         yield put(setToken(token));
         yield put(setTeams(teams));
         return { token, teams };
@@ -35,20 +34,28 @@ export function* openOAuthWindow() {
     }
 }
 
+function* authenticate(profile_url) {
+    yield take(SIGN_IN);
+    const {teams} = yield call(openOAuthWindow);
+    yield call(saveTeamState, {domain: teams[0]});
+    browserHistory.push(`/match`);
+    try {
+        const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
+        yield put(setProfile(profile));
+    } catch (error) {
+        yield put(raiseError(error));
+    }
+}
+
 export function* loginFlow() {
     const profile_url = api.urls.profile();
     const logout_url = api.urls.logout();
     while (true) {
-        yield take(SIGN_IN);
-        const { token, teams } = yield call(openOAuthWindow);
-        if (!token) continue;
-        yield call(saveTeamState, {domain: teams[0]});
-        browserHistory.push(`/match`);
+        const task = yield fork(authenticate, profile_url);
         try {
-            const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
-            yield put(setProfile(profile));
             yield take(SIGN_OUT);
-            yield call(api.requests.get, logout_url);
+            yield cancel(task);
+            yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
             yield put(signedOut());
             browserHistory.push('/');
         } catch (error) {

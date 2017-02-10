@@ -13,7 +13,7 @@ const routes = {
     '/match': fetchUsers,
     '/matches/:page': listMatches,
     '/ranking': fetchUsers,
-    '/settings': settings,    
+    '/settings': settings,
 };
 
 export function* routerSaga() {
