@@ -10,18 +10,21 @@ const mapDispatchToProps = (dispatch) => ({
 
 const InfoBar = connect(mapStateToProps, mapDispatchToProps)(
 ({infoList, handleMsg}) => (
-    <ListGroup className="container">
-        {infoList.map(info => (
-            <ListGroupItem
-                header="Hey you!"
-                onClick={() => handleMsg(info.id)}
-                key={info.id}>
-                <span className="text-success">
-                    { info.msg } <small>(Click to dismiss)</small>
-                </span>
-            </ListGroupItem>
-        ))}
-    </ListGroup>
+    infoList.length > 0 ?
+        <ListGroup className="container">
+            {infoList.map(info => (
+                <ListGroupItem
+                    header="Hey you!"
+                    onClick={() => handleMsg(info.id)}
+                    key={info.id}>
+                    <span className="text-success">
+                        { info.msg } <small>(Click to dismiss)</small>
+                    </span>
+                </ListGroupItem>
+            ))}
+        </ListGroup> :
+        null
+
 ));
 
 export default InfoBar;

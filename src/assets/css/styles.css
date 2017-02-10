@@ -56,4 +56,5 @@ tr.selected {
 
 .jumbotron {
     border-radius: 0 !important;
+    margin-top: -21px;
 }

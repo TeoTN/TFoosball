@@ -5,7 +5,7 @@ import { setTeams } from '../profile/profile.actions';
 import { setToken, setProfile, signedOut } from './auth.actions';
 import { raiseError } from './error.actions';
 import { prepareWindow } from '../api/oauth';
-import { saveTeamState } from '../persistence';
+import { saveTeamState, loadTeamState } from '../persistence';
 import api from '../api';
 
 export const getOAuthErrorMsg = (error) => {
@@ -37,7 +37,10 @@ export function* openOAuthWindow() {
 function* authenticate(profile_url) {
     yield take(SIGN_IN);
     const {teams} = yield call(openOAuthWindow);
-    yield call(saveTeamState, {domain: teams[0]});
+    const currentTeam = yield call(loadTeamState);
+    if (!currentTeam) {
+        yield call(saveTeamState, { domain: teams[0][0], name: teams[0][1] });
+    }
     browserHistory.push(`/match`);
     try {
         const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');

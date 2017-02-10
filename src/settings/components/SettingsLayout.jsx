@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Form, FormGroup, Button, Row, Col, Well } from 'react-bootstrap';
 import { requestSaveMember, requestSaveProfile } from '../settings.actions';
 import InputField from './InputField';
+import { loadTeamState } from '../../persistence';
 
 
 const mapStateToProps = ({auth: {profile}}) => ({profile,});
@@ -20,6 +21,7 @@ export default class SettingsLayout extends React.Component {
             username,
             first_name,
             last_name,
+            currentTeam: loadTeamState(),
         };
     }
 
@@ -45,6 +47,7 @@ export default class SettingsLayout extends React.Component {
     };
 
     render() {
+        const { currentTeam, username, first_name, last_name } = this.state;
         return (
             <div className="container">
                 <h1>
@@ -55,12 +58,12 @@ export default class SettingsLayout extends React.Component {
                     <Well>
                         <Form onSubmit={this.saveMember} horizontal>
                             <fieldset>
-                                <legend>Team member <small>(<em>BrightIT</em>)</small></legend>
+                                <legend>Team member <small>(<em>{ currentTeam.name }</em>)</small></legend>
                                 <InputField
                                     name="username"
                                     label="Username"
                                     onChange={this.handleChange}
-                                    value={this.state.username}
+                                    value={username}
                                 />
                                 <FormGroup>
                                     <Col smOffset={3} sm={8}>
@@ -78,13 +81,13 @@ export default class SettingsLayout extends React.Component {
                                     name="first_name"
                                     label="First name"
                                     onChange={this.handleChange}
-                                    value={this.state.first_name}
+                                    value={first_name}
                                 />
                                 <InputField
                                     name="last_name"
                                     label="Last name"
                                     onChange={this.handleChange}
-                                    value={this.state.last_name}
+                                    value={last_name}
                                 />
                                 <FormGroup>
                                     <Col smOffset={3} sm={8}>

@@ -37,7 +37,7 @@ export default (state = {}, action) => {
         case types.SET_TEAMS:
             return {
                 ...state,
-                teams: action.teams,
+                teams: action.teams.map(([domain, name]) => ({ domain, name })),
             };
         default:
             return state;
