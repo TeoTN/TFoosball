@@ -1,25 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    Form,
-    FormGroup,
-    Button,
-    Row,
-    Col,
-    Well,
-} from 'react-bootstrap';
-import * as actions from '../../profile/profile.actions';
-import { raiseError } from '../../shared/error.actions';
-import { updateProfile, updateMember } from '../../api/connectors';
-import { displayInfo } from '../../shared/infobar.actions';
+import { Form, FormGroup, Button, Row, Col, Well } from 'react-bootstrap';
+import { requestSaveMember, requestSaveProfile } from '../settings.actions';
 import InputField from './InputField';
 
 
 const mapStateToProps = ({auth: {profile}}) => ({profile,});
 const mapDispatchToProps = (dispatch) => ({
-    update: (userNewData) => dispatch(actions.profileUpdate(userNewData)),
-    displayInfo: (msg) => dispatch(displayInfo(msg)),
-    raiseError: (msg) => dispatch(raiseError(msg)),
+    saveMember: (data) => dispatch(requestSaveMember(data)),
+    saveProfile: (data) => dispatch(requestSaveProfile(data)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -40,47 +29,24 @@ export default class SettingsLayout extends React.Component {
 
     saveMember = (event) => {
         event.preventDefault();
-        const { update, profile, raiseError, displayInfo } = this.props;
-        const { username } = this.state;
-
-        if (username.length < 3) {
-            raiseError('Username must consist of at least 3 characters.');
-            return;
-        }
-        if (username.length >= 15) {
-            raiseError('Username must consist of no more than 14 characters.');
-            return;
-        }
-
         const data = {
-            username,
+            username: this.state.username
         };
-
-        updateMember(profile.username, data)
-            .then(update)
-            .then(() => displayInfo('Team profile changes saved'))
-            .catch(raiseError)
+        this.props.saveMember(data);
     };
 
     saveProfile = (event) => {
         event.preventDefault();
-        const { update, raiseError, displayInfo } = this.props;
-        const { first_name, last_name } = this.state;
-
         const data = {
-            first_name,
-            last_name,
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
         };
-
-        updateProfile(data)
-            .then(update)
-            .then(() => displayInfo('Profile changes saved'))
-            .catch(raiseError)
+        this.props.saveProfile(data);
     };
 
     render() {
         return (
-            <div>
+            <div className="container">
                 <h1>
                     Settings&nbsp;
                 </h1>

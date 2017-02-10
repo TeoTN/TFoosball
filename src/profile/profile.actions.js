@@ -14,3 +14,8 @@ export const receiveUserMatches = (response) => ({
     type: types.RECEIVE_MATCHES,
     response,
 });
+
+export const setTeams = (teams) => ({
+    type: types.SET_TEAMS,
+    teams,
+});

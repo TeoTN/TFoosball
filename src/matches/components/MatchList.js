@@ -32,8 +32,11 @@ export default class MatchList extends React.Component {
                 </Row>
                 </thead>
                 <tbody>
-                    { matches.map((match, idx) =>
-                        <MatchItem key={idx} {...match} withOptions={withOptions} onRemove={onRemove} />)}
+                    {
+                        matches.map((match, idx) =>
+                            <MatchItem key={idx} {...match} withOptions={withOptions} onRemove={onRemove} />
+                        )
+                    }
                 </tbody>
             </Table>
         );

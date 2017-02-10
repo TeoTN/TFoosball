@@ -7,6 +7,7 @@ import auth from '../shared/auth.reducer';
 import ranking from '../ranking/ranking.reducer';
 import modal from '../shared/modal.reducer';
 import matches from '../matches/matches.reducer';
+import play from '../play/play.reducer';
 import {combineReducers} from 'redux';
 
 const reducer = combineReducers({
@@ -19,6 +20,7 @@ const reducer = combineReducers({
     ranking,        // Ranking metadata
     modal,          // A modal message to be shown currently
     matches,        // A state for matches list
+    play,           // Currently played match
 });
 
 export default reducer;

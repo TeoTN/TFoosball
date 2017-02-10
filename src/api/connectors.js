@@ -2,12 +2,13 @@ import { API_SERVER, API_ROOT } from './config';
 import { loadAuthState } from '../persistence';
 import { ensureJSON, ensureSuccessOr } from './helpers';
 
-const urls = {
-    users: `${API_ROOT}users/`,
-    matches: `${API_ROOT}matches/`,
-    profile: `${API_SERVER}brightit/rest-auth/user/`,
-    logout: `${API_SERVER}brightit/rest-auth/logout/`,
-};
+export const getTeamDomain = () => window.location.pathname.split('/')[1];
+export const getUrls = (domain = getTeamDomain()) => ({
+    users: `${API_ROOT}/${domain}/users/`,
+    matches: `${API_ROOT}/${domain}/matches/`,
+    profile: `${API_SERVER}${domain}/rest-auth/user/`,
+    logout: `${API_SERVER}${domain}/rest-auth/logout/`,
+});
 
 const getDefaultHeaders = () => {
     const auth = loadAuthState();
@@ -20,6 +21,7 @@ const getDefaultHeaders = () => {
 };
 
 export const fetchProfile = (username) => {
+    const urls = getUrls();
     const target = username ? `${urls.users}${username}/` : urls.profile;
     const request = new Request(target, {
         method: 'GET',
@@ -31,6 +33,7 @@ export const fetchProfile = (username) => {
 };
 
 export const fetchUsers = () => {
+    const urls = getUrls();
     const request = new Request(urls.users, {
         method: 'GET',
         headers: getDefaultHeaders(),
@@ -41,6 +44,7 @@ export const fetchUsers = () => {
 };
 
 export const fetchMatches = (page) => {
+    const urls = getUrls();
     const request = new Request(`${urls.matches}?page=${page}`, {
         method: 'GET',
         headers: getDefaultHeaders(),
@@ -51,6 +55,7 @@ export const fetchMatches = (page) => {
 };
 
 export const fetchLogout = () => {
+    const urls = getUrls();
     const request = new Request(urls.logout, {
         method: 'GET',
         headers: getDefaultHeaders(),
@@ -60,6 +65,7 @@ export const fetchLogout = () => {
 };
 
 export const fetchUserMatches = (username, page=1) => {
+    const urls = getUrls();
     const request = new Request(`${urls.users}${username}/matches/?page=${page}`, {
         method: 'GET',
         headers: getDefaultHeaders(),
@@ -70,6 +76,7 @@ export const fetchUserMatches = (username, page=1) => {
 };
 
 export const publishMatch = (match) => {
+    const urls = getUrls();
     const request = new Request(urls.matches, {
         method: 'POST',
         headers: getDefaultHeaders(),
@@ -81,6 +88,7 @@ export const publishMatch = (match) => {
 };
 
 export const removeMatch = (id) => {
+    const urls = getUrls();
     const request = new Request(`${urls.matches}${id}/`, {
         method: 'DELETE',
         headers: getDefaultHeaders(),
@@ -90,6 +98,7 @@ export const removeMatch = (id) => {
 };
 
 export const updateMember = (username, partialData) => {
+    const urls = getUrls();
     const request = new Request(`${urls.users}${username}/`, {
         method: 'PATCH',
         headers: getDefaultHeaders(),
@@ -101,6 +110,7 @@ export const updateMember = (username, partialData) => {
 };
 
 export const updateProfile = (partialData) => {
+    const urls = getUrls();
     const request = new Request(urls.profile, {
         method: 'PATCH',
         headers: getDefaultHeaders(),
@@ -112,6 +122,7 @@ export const updateProfile = (partialData) => {
 };
 
 export const fetchMatchPoints = (players) => {
+    const urls = getUrls();
     const params = Object.entries(players).map(([k, v]) => `${k}=${v}`).join('&');
     const request = new Request(`${urls.matches}count-points/?${params}`, {
         method: 'GET',

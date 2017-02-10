@@ -13,16 +13,16 @@ const mapDispatchToProps = dispatch => ({
 
 const navigation = (username) => (
     <Nav>
-        <LinkContainer to={{ pathname: '/match'}}>
+        <LinkContainer to={{ pathname: `/match`}}>
             <NavItem eventKey={1} href="#">New match</NavItem>
         </LinkContainer>
         <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
             <NavItem eventKey={2} href="#">My profile</NavItem>
         </LinkContainer>
-        <LinkContainer to={{ pathname: '/ranking'}}>
+        <LinkContainer to={{ pathname: `/ranking`}}>
             <NavItem eventKey={3} href="#">Ranking</NavItem>
         </LinkContainer>
-        <LinkContainer to={{ pathname: '/matches/1'}}>
+        <LinkContainer to={{ pathname: `/matches/1`}}>
             <NavItem eventKey={4} href="#">Matches</NavItem>
         </LinkContainer>
     </Nav>
@@ -42,7 +42,7 @@ const Header = ({ auth: { token, profile, }, signIn, signOut }) => (
                 {
                     token && profile ?
                 <NavDropdown eventKey={5} title={profile.username} id="account-dropdown">
-                    <LinkContainer to={{ pathname: '/settings'}}>
+                    <LinkContainer to={{ pathname: `/settings`}}>
                         <MenuItem eventKey={5.1}>Settings</MenuItem>
                     </LinkContainer>
                     <MenuItem divider />

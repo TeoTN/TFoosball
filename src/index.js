@@ -15,18 +15,7 @@ import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
 import './utils/object';
 import './utils/doughnutText';
-import { loadAuthState } from './persistence';
 
-function checkIfShouldDisplayIntro(nextState, replace) {
-    const auth = loadAuthState();
-    const { profile } = store.getState();
-    if (auth && !!profile) {
-        replace({
-            pathname: '/match',
-            state: { nextPathname: nextState.location.pathname }
-        });
-    }
-}
 
 //TODO Redirect when unauthorized
 ReactDOM.render(
@@ -34,8 +23,7 @@ ReactDOM.render(
         <Router history={browserHistory}>
             <Route component={App}>
                 <Route path="/"
-                       component={IntroLayout}
-                       onEnter={checkIfShouldDisplayIntro} />
+                       component={IntroLayout} />
                 <Route path="match" component={MatchLayout} />
                 <Route path="profile/:username" component={ProfileLayout}>
                     <Route path="stats" />

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
@@ -11,15 +11,14 @@ const mapStateToProps = ({profile}) => ({profile});
 
 @withRouter
 @connect(mapStateToProps, null)
-export default class ProfileLayout extends Component {
+export default class ProfileLayout extends React.Component {
     render() {
         const { children, profile, params: {username}} = this.props;
         const avatarURL = !profile.email ? '' : `https://www.gravatar.com/avatar/${md5(profile.email )}`;
 
         return (
-            <div>
+            <div className="container">
                 <h1>
-
                     <picture className="profile-photo">
                         <img src={avatarURL} type="image/jpeg" alt="avatar" />
                     </picture>

@@ -49,3 +49,11 @@ tr.selected {
     border-radius: 32px;
     margin: 0 16px 16px 0;
 }
+
+.container-fluid {
+    padding: 0 !important;
+}
+
+.jumbotron {
+    border-radius: 0 !important;
+}

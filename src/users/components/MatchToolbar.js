@@ -5,18 +5,16 @@ import * as ErrorActions from '../../shared/error.actions';
 import { Button, ButtonGroup, Col } from 'react-bootstrap';
 
 const mapStateToProps = state => ({...state});
-const mapDispatchToProps = (dispatch, props) => {
-    return {
-        handlePlay: () => {
-            try { dispatch(UserActions.choosePlayersForMatch()) }
-            catch(err) { dispatch(ErrorActions.raiseError(err.message)); }
-            window.scrollTo(0, 0);
-        },
-        raiseError: (msg) => dispatch(ErrorActions.raiseError(msg)),
-        sortByExp: () => dispatch(UserActions.sortBy("exp", false)),
-        sortByName: () => dispatch(UserActions.sortBy("username")),
-    }
-};
+const mapDispatchToProps = (dispatch) => ({
+    handlePlay: () => {
+        try { dispatch(UserActions.choosePlayersForMatch()) }
+        catch(err) { dispatch(ErrorActions.raiseError(err.message)); }
+        window.scrollTo(0, 0);
+    },
+    raiseError: (msg) => dispatch(ErrorActions.raiseError(msg)),
+    sortByExp: () => dispatch(UserActions.sortBy("exp", false)),
+    sortByName: () => dispatch(UserActions.sortBy("username")),
+});
 
 @connect(mapStateToProps, mapDispatchToProps)
 class MatchToolbar extends Component {

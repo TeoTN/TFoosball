@@ -3,6 +3,8 @@ import { browserHistory as history } from 'react-router';
 import { profileMatches, profileStats } from '../profile/profile.sagas';
 import { fetchUsers } from '../users/users.sagas';
 import { listMatches } from '../matches/matches.sagas';
+import { settings } from '../settings/settings.sagas';
+
 
 const routes = {
     '/profile/:username/matches/:page': profileMatches,
@@ -11,6 +13,7 @@ const routes = {
     '/match': fetchUsers,
     '/matches/:page': listMatches,
     '/ranking': fetchUsers,
+    '/settings': settings,    
 };
 
 export function* routerSaga() {

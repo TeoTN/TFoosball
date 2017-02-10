@@ -1,11 +1,12 @@
 import { call, put } from 'redux-saga/effects';
-import { fetchUserMatches, fetchProfile } from '../api/connectors';
+import api from '../api';
 import { receiveUserMatches, receiveProfile } from './profile.actions';
 import { raiseError } from '../shared/error.actions';
 
 export function* profileMatches({username, page=1}) {
+    const url = api.urls.userMatches(username);
     try {
-        const matches = yield call(fetchUserMatches, username, page);
+        const matches = yield call(api.requests.get, url, { page });
         yield put(receiveUserMatches(matches));
     } catch (error) {
         yield put(raiseError('Unable to get latest matches.'));
@@ -14,9 +15,10 @@ export function* profileMatches({username, page=1}) {
 
 export function* profileStats({username}) {
     try {
-        const profile = yield call(fetchProfile, username);
+        const url = api.urls.userEntity(username);
+        const profile = yield call(api.requests.get, url, null, `Failed to get ${username} profile.`);
         yield put(receiveProfile(profile));
     } catch (error) {
-        yield put(raiseError(`Failed to get ${username} profile.`))
+        yield put(raiseError(error))
     }
 }

@@ -30,3 +30,5 @@ const removeData = (key) => () => {
 export const loadAuthState = loadData('auth');
 export const saveAuthState = saveData('auth');
 export const removeAuthState = removeData('auth');
+export const loadTeamState = loadData('team');
+export const saveTeamState = saveData('team');
