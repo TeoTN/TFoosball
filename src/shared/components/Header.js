@@ -1,9 +1,12 @@
 import React from 'react';
 import { signIn, signOut } from '../auth.actions';
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import SignInButton from './SignInButton';
 import { connect } from 'react-redux';
+import HeaderDropdown from './HeaderDropdown';
+import { saveTeamState } from '../../persistence';
+import { browserHistory } from 'react-router';
 
 const mapStateToProps = ({auth}) => ({auth});
 const mapDispatchToProps = dispatch => ({
@@ -11,48 +14,57 @@ const mapDispatchToProps = dispatch => ({
     signOut: () => dispatch(signOut()),
 });
 
-const navigation = (username) => (
-    <Nav>
-        <LinkContainer to={{ pathname: `/match`}}>
-            <NavItem eventKey={1} href="#">New match</NavItem>
-        </LinkContainer>
-        <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
-            <NavItem eventKey={2} href="#">My profile</NavItem>
-        </LinkContainer>
-        <LinkContainer to={{ pathname: `/ranking`}}>
-            <NavItem eventKey={3} href="#">Ranking</NavItem>
-        </LinkContainer>
-        <LinkContainer to={{ pathname: `/matches/1`}}>
-            <NavItem eventKey={4} href="#">Matches</NavItem>
-        </LinkContainer>
-    </Nav>
-);
+@connect(mapStateToProps, mapDispatchToProps)
+export default class Header extends React.Component {
+    selectTeam(team) {
+        saveTeamState(team);
+        window.location = '/match';
+    }
 
-const Header = ({ auth: { token, profile, }, signIn, signOut }) => (
-    <Navbar staticTop>
-        <Navbar.Header>
-            <Navbar.Brand>
-                <a href="/">TFoosball</a>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-            { profile && profile.hasOwnProperty('username') ? navigation(profile.username) : null }
-            <Nav pullRight>
-                {
-                    token && profile ?
-                <NavDropdown eventKey={5} title={profile.username} id="account-dropdown">
-                    <LinkContainer to={{ pathname: `/settings`}}>
-                        <MenuItem eventKey={5.1}>Settings</MenuItem>
-                    </LinkContainer>
-                    <MenuItem divider />
-                    <MenuItem eventKey={5.2} onClick={signOut}>Sign out</MenuItem>
-                </NavDropdown> :
-                <SignInButton signIn={signIn} />
-                }
+    renderNavigation(username) {
+        return (
+            <Nav>
+                <LinkContainer to={{ pathname: `/match`}}>
+                    <NavItem eventKey={1} href="#">New match</NavItem>
+                </LinkContainer>
+                <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
+                    <NavItem eventKey={2} href="#">My profile</NavItem>
+                </LinkContainer>
+                <LinkContainer to={{ pathname: `/ranking`}}>
+                    <NavItem eventKey={3} href="#">Ranking</NavItem>
+                </LinkContainer>
+                <LinkContainer to={{ pathname: `/matches/1`}}>
+                    <NavItem eventKey={4} href="#">Matches</NavItem>
+                </LinkContainer>
             </Nav>
-        </Navbar.Collapse>
-    </Navbar>
-);
+        );
+    }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+    render() {
+        const { auth: {token, teams, profile = {}} } = this.props;
+        return (
+            <Navbar staticTop>
+                <Navbar.Header>
+                    <Navbar.Brand>
+                        <a href="/">TFoosball</a>
+                    </Navbar.Brand>
+                    <Navbar.Toggle />
+                </Navbar.Header>
+                <Navbar.Collapse>
+                    { profile.hasOwnProperty('username') ? this.renderNavigation(profile.username) : null }
+                    <Nav pullRight>
+                        {
+                            token && profile.hasOwnProperty('username') ?
+                                <HeaderDropdown
+                                    signOut={signOut}
+                                    profile={profile}
+                                    teams={teams}
+                                    selectTeam={this.selectTeam} /> :
+                                <SignInButton signIn={signIn} />
+                        }
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+        );
+    }
+}

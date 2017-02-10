@@ -34,11 +34,6 @@ export default (state = {}, action) => {
             };
         case authTypes.SIGN_OUT:
             return {};
-        case types.SET_TEAMS:
-            return {
-                ...state,
-                teams: action.teams.map(([domain, name]) => ({ domain, name })),
-            };
         default:
             return state;
     }
