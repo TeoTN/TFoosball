@@ -30,7 +30,8 @@ class PlayStats extends React.Component {
 
     getPlayerStats = () => this.props.players.map(this.renderUserStats);
 
-    render({stats}) {
+    render() {
+        const { stats } = this.props;
         return (
             <div>
                 <Row>
