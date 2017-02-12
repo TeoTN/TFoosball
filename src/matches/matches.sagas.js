@@ -3,8 +3,7 @@ import { PUBLISH, DELETE } from './match.types';
 import { sent, list } from './match.actions';
 import api from '../api';
 import { removed } from './match.actions';
-import { raiseError } from '../shared/error.actions';
-import { displayInfo } from '../shared/infobar.actions';
+import { showInfo, raiseError } from '../shared/notifier.actions';
 import { fetchUsers } from '../users/users.sagas';
 
 export function* publish() {
@@ -15,7 +14,7 @@ export function* publish() {
         try {
             const response = yield call(api.requests.post, url, action.match_data, 'Failed to send match to server');
             yield put(sent(response));
-            yield put(displayInfo(success_msg(response.points)));
+            yield put(showInfo(success_msg(response.points)));
             yield call(fetchUsers);
             yield call(action.callback);
         } catch (error) {

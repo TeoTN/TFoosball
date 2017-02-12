@@ -2,8 +2,7 @@ import { call, put, take } from 'redux-saga/effects';
 import * as API from '../api/connectors';
 import * as MatchActions from '../matches/match.actions';
 import * as MatchTypes from '../matches/match.types';
-import * as InfoBarActions from '../shared/infobar.actions';
-import { raiseError } from '../shared/error.actions';
+import { raiseError, showInfo } from '../shared/notifier.actions';
 import { publish, removeMatch } from '../matches/matches.sagas';
 import { fetchUsers } from '../users/users.sagas';
 
@@ -45,7 +44,7 @@ describe('Publish a match - success scenario', () => {
 
     it('should display success message', () => {
         const success_msg = points => `Match successfully saved. Red: ${points}, Blue: ${-points}`;
-        expect(iterator.next(response).value).toEqual(put(InfoBarActions.displayInfo(success_msg(response.points))));
+        expect(iterator.next(response).value).toEqual(put(showInfo(success_msg(response.points))));
     });
 
     it('should call to refresh users', () => {

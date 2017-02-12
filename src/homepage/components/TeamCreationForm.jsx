@@ -5,7 +5,7 @@ import { createTeam } from '../../shared/teams.actions.js';
 
 const mapStateToProps = ({auth}) => ({auth});
 const mapDispatchToProps = (dispatch) => ({
-    createTeam: (team) => dispatch(createTeam(team)),
+    createTeam: (team, username) => dispatch(createTeam(team, username)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -14,17 +14,18 @@ export default class TeamCreationForm extends React.Component {
         super(props);
         this.state = {
             team: '',
+            username: '',
         };
     }
 
     handleCreateTeam = () => {
         const { createTeam } = this.props;
-        const { team } = this.state;
-        createTeam(team);
+        const { team, username } = this.state;
+        createTeam(team, username);
     };
 
-    handleChange = (event) => {
-        this.setState({ team: event.target.value });
+    handleChange = (field) => (event) => {
+        this.setState({ [field]: event.target.value });
     };
 
     render() {
@@ -34,8 +35,15 @@ export default class TeamCreationForm extends React.Component {
                     <Row>
                         <Col xs={3}>
                             <FormControl
+                                placeholder="Username"
+                                onChange={this.handleChange('username')}
+                                value={this.state.username}
+                            />
+                        </Col>
+                        <Col xs={3}>
+                            <FormControl
                                 placeholder="Team name"
-                                onChange={this.handleChange}
+                                onChange={this.handleChange('team')}
                                 value={this.state.team}
                             />
                         </Col>

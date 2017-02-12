@@ -39,9 +39,9 @@ tr.selected {
     background: #fff !important;
 }
 
-.navbar-default {
-    box-shadow: 0 3px 7px 1px #d4d8db;
-}
+/*.navbar-default {*/
+    /*box-shadow: 0 3px 7px 1px #d4d8db;*/
+/*}*/
 
 .profile-photo img {
     width: 64px;
@@ -55,6 +55,11 @@ tr.selected {
 }
 
 .jumbotron {
+    border-radius: 0 !important;
+    margin-top: -21px;
+}
+
+.alert {
     border-radius: 0 !important;
     margin-top: -21px;
 }

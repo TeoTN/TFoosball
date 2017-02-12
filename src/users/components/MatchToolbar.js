@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as UserActions from '../user.actions';
-import * as ErrorActions from '../../shared/error.actions';
+import { raiseError } from '../../shared/notifier.actions';
 import { Button, ButtonGroup, Col } from 'react-bootstrap';
 
 const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch) => ({
     handlePlay: () => {
         try { dispatch(UserActions.choosePlayersForMatch()) }
-        catch(err) { dispatch(ErrorActions.raiseError(err.message)); }
+        catch(err) { dispatch(raiseError(err.message)); }
         window.scrollTo(0, 0);
     },
-    raiseError: (msg) => dispatch(ErrorActions.raiseError(msg)),
+    raiseError: (msg) => dispatch(raiseError(msg)),
     sortByExp: () => dispatch(UserActions.sortBy("exp", false)),
     sortByName: () => dispatch(UserActions.sortBy("username")),
 });

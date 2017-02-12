@@ -2,7 +2,7 @@ import { take, call, put, fork, cancel } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import { setToken, setProfile, signedOut, setTeams } from './auth.actions';
-import { raiseError } from './error.actions';
+import { raiseError } from './notifier.actions';
 import { prepareWindow } from '../api/oauth';
 import { saveTeamState, loadTeamState } from '../persistence';
 import api from '../api';

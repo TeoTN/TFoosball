@@ -2,10 +2,10 @@ import { call, take, put, select } from 'redux-saga/effects';
 import api from '../api';
 import { REQUEST_SAVE_MEMBER, REQUEST_SAVE_PROFILE } from './settings.actions';
 import { profileUpdate } from '../profile/profile.actions';
-import { raiseError } from '../shared/error.actions';
-import { displayInfo } from '../shared/infobar.actions';
+import { showInfo, raiseError } from '../shared/notifier.actions';
 
-const validateMember = (data) => {
+// TODO move it somewhere
+export const validateMember = (data) => {
     if (data.username.length < 3) {
         throw new Error('Username must consist of at least 3 characters.');
     }
@@ -22,7 +22,7 @@ function* saveProfile() {
         try {
             const response = yield call(api.requests.patch, url, action.partialData, 'Failed to save profile.');
             yield put(profileUpdate(response));
-            yield put(displayInfo('Profile changes saved.'))
+            yield put(showInfo('Profile changes saved.'))
         } catch(error) {
             yield put(raiseError(error));
         }
@@ -38,7 +38,7 @@ function* saveMember() {
             const data = validateMember(action.partialData);
             const response = yield call(api.requests.patch, url, data, 'Failed to save team member.');
             yield put(profileUpdate(response));
-            yield put(displayInfo('Team member profile saved.'))
+            yield put(showInfo('Team member profile saved.'))
         } catch(error) {
             yield put(raiseError(error));
         }

@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import api from '../api';
 import { receiveUserMatches, receiveProfile } from './profile.actions';
-import { raiseError } from '../shared/error.actions';
+import { raiseError } from '../shared/notifier.actions';
 
 export function* profileMatches({username, page=1}) {
     const url = api.urls.userMatches(username);

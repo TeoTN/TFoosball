@@ -1,7 +1,7 @@
 import { call, take, put, select } from 'redux-saga/effects';
 import api from '../api';
 import { CHOOSE } from '../users/user.types';
-import { raiseError } from '../shared/error.actions';
+import { raiseError } from '../shared/notifier.actions';
 import { requestStatsDone } from './play.actions';
 
 export function* playScore() {

@@ -3,7 +3,7 @@ import storageAPIPolyfill from '../utils/storage.polyfill';
 import { prepareWindow } from '../api/oauth';
 import { fetchProfile, fetchLogout } from '../api/connectors';
 import { setToken, signIn, signOut, setProfile, signedOut } from '../shared/auth.actions';
-import { raiseError } from '../shared/error.actions';
+import { raiseError } from '../shared/notifier.actions';
 import { openOAuthWindow, loginFlow, getOAuthErrorMsg } from '../shared/auth.sagas';
 import profile from '../assets/mocks/profile.json';
 import { browserHistory } from 'react-router'
