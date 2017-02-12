@@ -9,9 +9,9 @@ import { fetchUsers } from '../users/users.sagas';
 
 export function* publish() {
     const success_msg = points => `Match successfully saved. Red: ${points}, Blue: ${-points}`;
-    const url = api.urls.matchList();
     while (true) {
         const action = yield take(PUBLISH);
+        const url = api.urls.matchList();
         try {
             const response = yield call(api.requests.post, url, action.match_data, 'Failed to send match to server');
             yield put(sent(response));

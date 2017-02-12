@@ -6,7 +6,6 @@ import SignInButton from './SignInButton';
 import { connect } from 'react-redux';
 import HeaderDropdown from './HeaderDropdown';
 import { saveTeamState } from '../../persistence';
-import { browserHistory } from 'react-router';
 
 const mapStateToProps = ({auth}) => ({auth});
 const mapDispatchToProps = dispatch => ({
@@ -41,7 +40,7 @@ export default class Header extends React.Component {
     }
 
     render() {
-        const { auth: {token, teams, profile = {}} } = this.props;
+        const { auth: {token, teams, profile = {}}, signIn, signOut } = this.props;
         return (
             <Navbar staticTop>
                 <Navbar.Header>

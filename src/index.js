@@ -22,8 +22,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route component={App}>
-                <Route path="/"
-                       component={IntroLayout} />
+                <Route path="/" component={IntroLayout} />
                 <Route path="match" component={MatchLayout} />
                 <Route path="profile/:username" component={ProfileLayout}>
                     <Route path="stats" />

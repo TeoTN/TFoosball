@@ -33,14 +33,17 @@ export function* openOAuthWindow() {
     }
 }
 
-function* authenticate(profile_url) {
-    yield take(SIGN_IN);
+export function* authenticate() {
     const {teams} = yield call(openOAuthWindow);
     const currentTeam = yield call(loadTeamState);
     if (!currentTeam) {
-        yield call(saveTeamState, { domain: teams[0][0], name: teams[0][1] });
+        const team = { domain: teams[0][0], name: teams[0][1] };
+        yield call(saveTeamState, team);
     }
-    browserHistory.push(`/match`);
+}
+
+export function* fetchProfile() {
+    const profile_url = api.urls.profile();
     try {
         const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
         yield put(setProfile(profile));
@@ -49,14 +52,20 @@ function* authenticate(profile_url) {
     }
 }
 
+function* signIn() {
+    yield take(SIGN_IN);
+    yield call(authenticate);
+    yield call(fetchProfile);
+    browserHistory.push(`/match`);
+}
+
 export function* loginFlow() {
-    const profile_url = api.urls.profile();
-    const logout_url = api.urls.logout();
     while (true) {
-        const task = yield fork(authenticate, profile_url);
+        const task = yield fork(signIn);
         try {
             yield take(SIGN_OUT);
             yield cancel(task);
+            const logout_url = api.urls.logout();
             yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
             yield put(signedOut());
             browserHistory.push('/');
