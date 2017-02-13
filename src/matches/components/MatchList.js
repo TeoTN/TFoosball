@@ -4,7 +4,7 @@ import MatchItem from './MatchItem';
 
 export default class MatchList extends React.Component {
     render() {
-        const { matches, withOptions, onRemove } = this.props;
+        const { matches, withOptions, onRemove, username } = this.props;
 
         return (
             <Table striped hover>
@@ -34,7 +34,13 @@ export default class MatchList extends React.Component {
                 <tbody>
                     {
                         matches.map((match, idx) =>
-                            <MatchItem key={idx} {...match} withOptions={withOptions} onRemove={onRemove} />
+                            <MatchItem
+                                key={idx}
+                                username={username}
+                                withOptions={withOptions}
+                                onRemove={onRemove}
+                                {...match}
+                            />
                         )
                     }
                 </tbody>

@@ -5,7 +5,7 @@ import RankingListHeader from './RankingListHeader';
 import {IS_MOBILE} from '../../api/config';
 import { browserHistory } from 'react-router';
 
-const RankingList = ({users, authId, sortBy, ranking}) => {
+const RankingList = ({users, username, sortBy, ranking}) => {
     const model = (IS_MOBILE) ? ranking.model.mobile : ranking.model.desktop;
     const showProfile = (username) => () => { browserHistory.push(`/profile/${username}/stats`) };
 
@@ -19,7 +19,7 @@ const RankingList = ({users, authId, sortBy, ranking}) => {
                         key={user.id}
                         user={user}
                         model={model}
-                        highlight={user.id === authId}
+                        highlight={user.username === username}
                         onClick={showProfile(user.username)}
                     />
                 )

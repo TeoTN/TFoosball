@@ -7,7 +7,7 @@ import * as MatchActions from '../../matches/match.actions';
 import NaivePager from '../../shared/components/NaivePager';
 import Loading from '../../shared/components/Loading';
 
-const mapStateToProps = ({ profile: { matches } }) => ({ matches, });
+const mapStateToProps = ({ profile: { matches } }) => ({ matches });
 const mapDispatchToProps = (dispatch) => ({
     onRemove: (modalParams) => dispatch(ModalActions.showQuestionModal(modalParams)),
     remove: (id) => dispatch(MatchActions.remove(id)),
@@ -31,7 +31,7 @@ const ProfileMatches = ({ matches = {list: [], page: 1, totalPages:1}, onRemove,
             <NaivePager page={matches.page} prefix={`/profile/${username}/matches`} totalPages={matches.totalPages} />
             {
                 matches.list ?
-                    <MatchList withOptions onRemove={askToRemove} matches={matches.list} /> :
+                    <MatchList withOptions onRemove={askToRemove} matches={matches.list} username={username} /> :
                     <Loading />
             }
         </Panel>

@@ -27,7 +27,7 @@ export default class RankingLayout extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        <RankingList users={users} authId={profile.id} sortBy={sortBy} ranking={ranking}/>
+                        <RankingList users={users} username={profile.username} sortBy={sortBy} ranking={ranking}/>
                     </Col>
                 </Row>
             </Grid>
