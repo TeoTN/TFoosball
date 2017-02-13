@@ -1,6 +1,6 @@
 import { API_SERVER, API_ROOT } from './config';
 import { loadAuthState, loadTeamState } from '../persistence';
-import { ensureJSON, ensureSuccessOr } from './helpers';
+import { ensureJSON, ensureSuccessOr, checkIfForbiddenOr } from './helpers';
 
 const getDefaultHeaders = () => {
     const auth = loadAuthState();
@@ -25,7 +25,10 @@ const api = {
                 method: 'GET',
                 headers: getDefaultHeaders(),
             });
-            return fetch(request).then(ensureSuccessOr(error_msg)).then(ensureJSON);
+            return fetch(request)
+                .then(checkIfForbiddenOr('Access denied'))
+                .then(ensureSuccessOr(error_msg))
+                .then(ensureJSON);
         },
         post(url, body, error_msg='Failed to send data to server') {
             const request = new Request(url, {
@@ -33,7 +36,10 @@ const api = {
                 headers: getDefaultHeaders(),
                 body: JSON.stringify(body),
             });
-            return fetch(request).then(ensureSuccessOr(error_msg)).then(ensureJSON);
+            return fetch(request)
+                .then(checkIfForbiddenOr('Access denied'))
+                .then(ensureSuccessOr(error_msg))
+                .then(ensureJSON);
         },
         patch(url, body, error_msg='Failed to send data to server') {
             const request = new Request(url, {
@@ -41,14 +47,19 @@ const api = {
                 headers: getDefaultHeaders(),
                 body: JSON.stringify(body),
             });
-            return fetch(request).then(ensureSuccessOr(error_msg)).then(ensureJSON);
+            return fetch(request)
+                .then(checkIfForbiddenOr('Access denied'))
+                .then(ensureSuccessOr(error_msg))
+                .then(ensureJSON);
         },
         ['delete'](url, error_msg='Failed to delete data on server') {
             const request = new Request(url, {
                 method: 'DELETE',
                 headers: getDefaultHeaders(),
             });
-            return fetch(request).then(ensureSuccessOr(error_msg));
+            return fetch(request)
+                .then(checkIfForbiddenOr('Access denied'))
+                .then(ensureSuccessOr(error_msg));
         },
     },
     urls: {
