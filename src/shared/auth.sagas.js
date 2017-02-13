@@ -47,6 +47,10 @@ function* signIn() {
     yield take(SIGN_IN);
     const auth = yield authenticate();
     const currentTeam = yield call(loadTeamState);
+    if (!auth.teams) {
+        browserHistory.push('/welcome');
+        return;
+    }
     if (!currentTeam && auth.hasOwnProperty('teams')) {
         const team = { domain: auth.teams[0][0], name: auth.teams[0][1] };
         yield call(saveTeamState, team);

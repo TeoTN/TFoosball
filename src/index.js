@@ -7,8 +7,9 @@ import store from './store';
 import MatchLayout from './play/components/PlayLayout';
 import ProfileLayout from './profile/components/ProfileLayout';
 import RankingLayout from './ranking/components/RankingLayout';
-import MatchesLayout  from './matches/components/MatchesLayout';
-import SettingsLayout  from './settings/components/SettingsLayout';
+import MatchesLayout from './matches/components/MatchesLayout';
+import SettingsLayout from './settings/components/SettingsLayout';
+import TeamAssignment  from './homepage/components/TeamAssignment';
 import IntroLayout from './homepage/components/IntroLayout';
 import ProfileMatches from './profile/components/ProfileMatches';
 import './assets/css/styles.css';
@@ -23,6 +24,7 @@ ReactDOM.render(
         <Router history={browserHistory}>
             <Route component={App}>
                 <Route path="/" component={IntroLayout} />
+                <Route path="welcome" component={TeamAssignment} />
                 <Route path="match" component={MatchLayout} />
                 <Route path="profile/:username" component={ProfileLayout}>
                     <Route path="stats" />
