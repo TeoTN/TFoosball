@@ -3,13 +3,19 @@ import { NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 
-const HeaderDropdown = ({ teams, profile, signOut, selectTeam }) => (
+const HeaderDropdown = ({ teams, profile, signOut, selectTeam, currentTeam }) => (
     <NavDropdown eventKey={5} title={profile.username} id="account-dropdown">
-        <MenuItem disabled><span className="h6">TEAMS</span></MenuItem>
+        <MenuItem header>TEAMS</MenuItem>
         {
             teams.length > 0 ?
                 teams.map(team =>
-                    <MenuItem key={team.domain} onClick={() => selectTeam(team)}>{team.name}</MenuItem>
+                    <MenuItem
+                        key={team.domain}
+                        onSelect={() => selectTeam(team)}
+                        disabled={currentTeam.name === team.name}
+                    >
+                        {team.name}
+                    </MenuItem>
                 ) :
                 null
         }

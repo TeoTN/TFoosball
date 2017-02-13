@@ -1,8 +1,9 @@
-import { take, call, put, fork, cancel } from 'redux-saga/effects';
+import { take, call, put, fork, cancel, select } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
-import { setToken, setProfile, signedOut, setTeams } from './auth.actions';
-import { raiseError } from './notifier.actions';
+import { setToken, setProfile, signedOut } from './auth.actions';
+import { setTeams } from './teams/teams.actions';
+import { raiseError, clean } from './notifier.actions';
 import { prepareWindow } from '../api/oauth';
 import { saveTeamState, loadTeamState } from '../persistence';
 import api from '../api';
@@ -20,42 +21,44 @@ export const getOAuthErrorMsg = (error) => {
     }
 };
 
-export function* openOAuthWindow() {
+export function* authenticate() {
+    const alreadyAuthenticated = yield select(state => !!state.auth.token);
+    if (alreadyAuthenticated) return {};
     const promptWindow = prepareWindow();
     try {
         const { token, teams } = yield call([promptWindow, promptWindow.open]);
         yield put(setToken(token));
-        yield put(setTeams(teams));
+        yield put(setTeams(teams.map(([domain, name]) => ({ domain, name }))));
         return { token, teams };
     } catch (error) {
         const errorMsg = getOAuthErrorMsg(error);
         yield put(raiseError(errorMsg));
-    }
-}
-
-export function* authenticate() {
-    const {teams} = yield call(openOAuthWindow);
-    const currentTeam = yield call(loadTeamState);
-    if (!currentTeam) {
-        const team = { domain: teams[0][0], name: teams[0][1] };
-        yield call(saveTeamState, team);
+        // TODO STOP
     }
 }
 
 export function* fetchProfile() {
     const profile_url = api.urls.profile();
-    try {
-        const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
-        yield put(setProfile(profile));
-    } catch (error) {
-        yield put(raiseError(error));
-    }
+    const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
+    yield put(setProfile(profile));
 }
 
 function* signIn() {
     yield take(SIGN_IN);
-    yield call(authenticate);
-    yield call(fetchProfile);
+    const auth = yield authenticate();
+    const currentTeam = yield call(loadTeamState);
+    if (!currentTeam && auth.hasOwnProperty('teams')) {
+        const team = { domain: auth.teams[0][0], name: auth.teams[0][1] };
+        yield call(saveTeamState, team);
+    }
+    try {
+        yield fetchProfile();
+    } catch (error) {
+        // What if the entry belongs to the other user that was previously logged in?
+        const team = { domain: auth.teams[0][0], name: auth.teams[0][1] };
+        yield call(saveTeamState, team);
+        yield fetchProfile();
+    }
     browserHistory.push(`/match`);
 }
 
@@ -68,6 +71,7 @@ export function* loginFlow() {
             const logout_url = api.urls.logout();
             yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
             yield put(signedOut());
+            yield put(clean());
             browserHistory.push('/');
         } catch (error) {
             yield put(raiseError(error));

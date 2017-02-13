@@ -17,11 +17,6 @@ const auth = (state = loadAuthState('auth') || {}, action) => {
                 ...state,
                 profile: action.response
             };
-        case types.SET_TEAMS:
-            return {
-                ...state,
-                teams: action.teams.map(([domain, name]) => ({ domain, name })),
-            };
         case ProfileTypes.UPDATE:
             // const { id } = action.response;
             // if (id !== state.profile.id) return state;

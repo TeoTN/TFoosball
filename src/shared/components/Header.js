@@ -1,26 +1,23 @@
 import React from 'react';
 import { signIn, signOut } from '../auth.actions';
+import { selectTeam } from '../teams/teams.actions';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import SignInButton from './SignInButton';
 import { connect } from 'react-redux';
 import HeaderDropdown from './HeaderDropdown';
-import { saveTeamState } from '../../persistence';
 import Notifications from './Notifications';
+import { loadTeamState } from '../../persistence';
 
-const mapStateToProps = ({auth}) => ({auth});
+const mapStateToProps = ({auth, teams}) => ({auth, teams});
 const mapDispatchToProps = dispatch => ({
     signIn: () => dispatch(signIn()),
     signOut: () => dispatch(signOut()),
+    selectTeam: (team) => dispatch(selectTeam(team)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Header extends React.Component {
-    selectTeam(team) {
-        saveTeamState(team);
-        window.location = '/match';
-    }
-
     renderNavigation(username) {
         return (
             <Nav>
@@ -41,7 +38,8 @@ export default class Header extends React.Component {
     }
 
     render() {
-        const { auth: {token, teams, profile = {}}, signIn, signOut } = this.props;
+        const { auth: {token, profile = {}}, teams, signIn, signOut, selectTeam } = this.props;
+        const currentTeam = loadTeamState();
         return (
             <div>
             <Navbar staticTop>
@@ -60,7 +58,9 @@ export default class Header extends React.Component {
                                     signOut={signOut}
                                     profile={profile}
                                     teams={teams}
-                                    selectTeam={this.selectTeam} /> :
+                                    selectTeam={selectTeam}
+                                    currentTeam={currentTeam}
+                                /> :
                                 <SignInButton signIn={signIn} />
                         }
                     </Nav>

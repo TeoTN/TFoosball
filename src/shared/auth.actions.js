@@ -21,8 +21,3 @@ export const signIn = () => ({
 export const signOut = () => ({
     type: types.SIGN_OUT,
 });
-
-export const setTeams = (teams) => ({
-    type: types.SET_TEAMS,
-    teams,
-});

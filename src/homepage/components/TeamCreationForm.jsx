@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Form, FormGroup, FormControl, Button } from 'react-bootstrap';
-import { createTeam } from '../../shared/teams.actions.js';
+import { requestCreateTeam } from '../../shared/teams/teams.actions.js';
 
 const mapStateToProps = ({auth}) => ({auth});
 const mapDispatchToProps = (dispatch) => ({
-    createTeam: (team, username) => dispatch(createTeam(team, username)),
+    createTeam: (team, username) => dispatch(requestCreateTeam(team, username)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)

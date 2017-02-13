@@ -7,6 +7,7 @@ import ranking from '../ranking/ranking.reducer';
 import modal from '../shared/modal.reducer';
 import matches from '../matches/matches.reducer';
 import play from '../play/play.reducer';
+import teams from '../shared/teams/teams.reducer';
 import {combineReducers} from 'redux';
 
 const reducer = combineReducers({
@@ -19,6 +20,7 @@ const reducer = combineReducers({
     modal,          // A modal message to be shown currently
     matches,        // A state for matches list
     play,           // Currently played match
+    teams,          // Available teams
 });
 
 export default reducer;
