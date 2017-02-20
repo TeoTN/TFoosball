@@ -16,23 +16,33 @@ import './assets/css/styles.css';
 import './assets/css/bootstrap.min.css';
 import './utils/object';
 import './utils/doughnutText';
+import {loadState} from './persistence';
 
+function requireAuth(nextState, replace, next) {
+    const persistedState = loadState();
+    if (!(persistedState.hasOwnProperty('auth') && persistedState.auth.hasOwnProperty('token'))) {
+        replace({
+            pathname: "/",
+            state: {nextPathname: nextState.location.pathname}
+        });
+    }
+    next();
+}
 
-//TODO Redirect when unauthorized
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route component={App}>
                 <Route path="/" component={IntroLayout} />
-                <Route path="welcome" component={TeamAssignment} />
-                <Route path="match" component={MatchLayout} />
-                <Route path="profile/:username" component={ProfileLayout}>
+                <Route path="welcome" component={TeamAssignment} onEnter={requireAuth} />
+                <Route path="match" component={MatchLayout} onEnter={requireAuth} />
+                <Route path="profile/:username" component={ProfileLayout} onEnter={requireAuth}>
                     <Route path="stats" />
                     <Route path="matches(/:page)" component={ProfileMatches} />
                 </Route>
-                <Route path="ranking" component={RankingLayout} />
-                <Route path="matches/(:page)" component={MatchesLayout} />
-                <Route path="settings" component={SettingsLayout} />
+                <Route path="ranking" component={RankingLayout} onEnter={requireAuth} />
+                <Route path="matches/(:page)" component={MatchesLayout} onEnter={requireAuth} />
+                <Route path="settings" component={SettingsLayout} onEnter={requireAuth} />
                 {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>
         </Router>
