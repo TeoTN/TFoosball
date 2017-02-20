@@ -1,13 +1,13 @@
-import { API_SERVER, API_ROOT } from './config';
-import { loadAuthState, loadTeamState } from '../persistence';
+import { API_ROOT } from './config';
+import { loadState } from '../persistence';
 import { ensureJSON, ensureSuccessOr, checkIfForbiddenOr } from './helpers';
 
 const getDefaultHeaders = () => {
-    const auth = loadAuthState();
+    const persistedState = loadState();
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    if (auth) {
-        headers.append('Authorization', `Token ${auth.token}`);
+    if (persistedState && persistedState.hasOwnProperty('auth')) {
+        headers.append('Authorization', `Token ${persistedState.auth.token}`);
     }
     return headers;
 };
@@ -63,19 +63,19 @@ const api = {
         },
     },
     urls: {
-        userEntity: (username) => `${API_ROOT}/${api._domain}/users/${username}/`,
-        userList: () => `${API_ROOT}/${api._domain}/users/`,
-        userMatches: (username) => `${API_ROOT}/${api._domain}/users/${username}/matches/`,
-        profile: () => `${API_SERVER}${api._domain}/rest-auth/user/`,
-        matchList: () => `${API_ROOT}/${api._domain}/matches/`,
-        matchEntity: (id) => `${API_ROOT}/${api._domain}/matches/${id}/`,
-        matchPoints: () => `${API_ROOT}/${api._domain}/matches/count-points/`,
-        teams: () => `${API_ROOT}/teams/`,
-        logout: () => `${API_SERVER}${api._domain}/rest-auth/logout/`
-    },
-    get _domain() {
-        const teams = loadTeamState();
-        return teams ? teams.domain : 'unknown';
+        playerList: () => `${API_ROOT}/players/`,
+        playerEntity: (player_id) => `${API_ROOT}/players/${player_id}/`,
+        playerEntityInvite: (player_id) => `${API_ROOT}/players/${player_id}/invite/`,
+        teamList: () => `${API_ROOT}/teams/`,
+        teamListJoined: () => `${API_ROOT}/teams/joined/`,
+        teamEntity: (team_id) => `${API_ROOT}/teams/${team_id}/`,
+        teamMemberList: (team_id) => `${API_ROOT}/teams/${team_id}/members/`,
+        teamMemberEntity: (team_id, member_id) => `${API_ROOT}/teams/${team_id}/members/${member_id}/`,
+        teamMatchList: (team_id) => `${API_ROOT}/teams/${team_id}/matches/`,
+        teamMatchEntity: (team_id, match_id) => `${API_ROOT}/teams/${team_id}/matches/${match_id}/`,
+        teamMatchPoints: (team_id) => `${API_ROOT}/teams/${team_id}/matches/points/`,
+        profile: () => `${API_ROOT}/rest-auth/user/`,
+        logout: () => `${API_ROOT}/rest-auth/logout/`
     }
 };
 

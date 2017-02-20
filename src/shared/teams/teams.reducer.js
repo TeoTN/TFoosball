@@ -1,11 +1,35 @@
-import { TEAM_CREATED, SET_TEAMS } from './teams.actions';
+import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM } from './teams.actions';
+import { UPDATE_PROFILE } from '../../profile/profile.types';
+export const getSelectedTeam = (state) => state.joined.find(team => team.id === state.selected);
 
-export default (state = [], action) => {
+export default (state = { joined: [], selected: 0 }, action) => {
     switch (action.type) {
         case TEAM_CREATED:
-            return [action.team, ...state];
+            return {
+                ...state,
+                joined: [action.teams, ...state.joined],
+            };
         case SET_TEAMS:
-            return action.teams;
+            return {
+                ...state,
+                joined: action.teams,
+            };
+        case SELECT_TEAM:
+            return {
+                ...state,
+                selected: action.team.id,
+            };
+        case UPDATE_PROFILE:
+            // On profile update
+            if (!action.hasOwnProperty('response') || !action.response.hasOwnProperty('username')) {
+                return state;
+            }
+            return {
+                ...state,
+                joined: state.joined.map(
+                    t => t.id !== state.selected ? t : Object.assign(t, {username: action.response.username})
+                ),
+            };
         default:
             return state;
     }

@@ -3,6 +3,7 @@ import api from '../api';
 import { REQUEST_SAVE_MEMBER, REQUEST_SAVE_PROFILE } from './settings.actions';
 import { profileUpdate } from '../profile/profile.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
+import { getSelectedTeam } from '../shared/teams/teams.reducer';
 
 // TODO move it somewhere
 export const validateMember = (data) => {
@@ -21,7 +22,8 @@ function* saveProfile() {
         const action = yield take(REQUEST_SAVE_PROFILE);
         try {
             const response = yield call(api.requests.patch, url, action.partialData, 'Failed to save profile.');
-            yield put(profileUpdate(response));
+
+            // yield put(profileUpdate(response));
             yield put(showInfo('Profile changes saved.'))
         } catch(error) {
             yield put(raiseError(error));
@@ -32,12 +34,13 @@ function* saveProfile() {
 function* saveMember() {
     while (true) {
         const action = yield take(REQUEST_SAVE_MEMBER);
-        const username = yield select(state => state.auth.profile.username);
-        const url = api.urls.userEntity(username);
+        const teamsState = yield select(state => state.teams);
+        const currentTeam = getSelectedTeam(teamsState);
+        const url = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
         try {
             const data = validateMember(action.partialData);
             const response = yield call(api.requests.patch, url, data, 'Failed to save team member.');
-            yield put(profileUpdate(response));
+            // yield put(profileUpdate(response));
             yield put(showInfo('Team member profile saved.'))
         } catch(error) {
             yield put(raiseError(error));

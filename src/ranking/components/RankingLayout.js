@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Grid, Row, Col} from 'react-bootstrap';
 import {sortBy} from '../../users/user.actions';
 import {connect} from 'react-redux';
@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class RankingLayout extends Component {
+export default class RankingLayout extends React.Component {
     render() {
         const {users, sortBy, ranking, auth} = this.props;
         const profile = auth.profile || {};

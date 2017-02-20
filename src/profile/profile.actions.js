@@ -1,7 +1,7 @@
 import * as types from './profile.types';
 
 export const profileUpdate = (response) => ({
-    type: types.UPDATE,
+    type: types.UPDATE_PROFILE,
     response,
 });
 

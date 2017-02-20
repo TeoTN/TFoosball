@@ -24,7 +24,7 @@ const matches = (state = { page: 1, totalPages: 1, list: [] }, action) => {
 export default (state = {}, action) => {
     switch (action.type) {
         case types.RECEIVE_PROFILE:
-        case types.UPDATE:
+        case types.UPDATE_PROFILE:
             return Object.assign({}, state, action.response);
         case types.RECEIVE_MATCHES:
         case MatchTypes.DELETED:

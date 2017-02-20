@@ -6,7 +6,7 @@ import PlayResult from './PlayResult';
 import PlayStats from './PlayStats';
 import table from '../../assets/img/table.jpg';
 
-const mapStateToProps = state => ({...state});
+const mapStateToProps = ({users}) => ({users});
 
 @connect(mapStateToProps, null)
 class FoosballTable extends Component {

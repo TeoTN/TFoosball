@@ -1,13 +1,13 @@
 import React from 'react';
 import { signIn, signOut } from '../auth.actions';
 import { selectTeam } from '../teams/teams.actions';
+import { getSelectedTeam } from '../teams/teams.reducer';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import SignInButton from './SignInButton';
 import { connect } from 'react-redux';
 import HeaderDropdown from './HeaderDropdown';
 import Notifications from './Notifications';
-import { loadTeamState } from '../../persistence';
 
 const mapStateToProps = ({auth, teams}) => ({auth, teams});
 const mapDispatchToProps = dispatch => ({
@@ -38,8 +38,9 @@ export default class Header extends React.Component {
     }
 
     render() {
-        const { auth: {token, profile = {}}, teams, signIn, signOut, selectTeam } = this.props;
-        const currentTeam = loadTeamState();
+        const { auth: {token, profile}, teams, signIn, signOut, selectTeam } = this.props;
+        const currentTeam = getSelectedTeam(teams);
+        const username = profile && profile.hasOwnProperty('username') ? profile.username : '';
         return (
             <div>
             <Navbar staticTop>
@@ -50,14 +51,14 @@ export default class Header extends React.Component {
                     <Navbar.Toggle />
                 </Navbar.Header>
                 <Navbar.Collapse>
-                    { profile.hasOwnProperty('username') ? this.renderNavigation(profile.username) : null }
+                    { username ? this.renderNavigation(username) : null }
                     <Nav pullRight>
                         {
-                            token && profile.hasOwnProperty('username') ?
+                            token && username ?
                                 <HeaderDropdown
                                     signOut={signOut}
-                                    profile={profile}
-                                    teams={teams}
+                                    username={username}
+                                    teams={teams.joined}
                                     selectTeam={selectTeam}
                                     currentTeam={currentTeam}
                                 /> :

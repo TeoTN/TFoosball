@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import { Form, FormGroup, Button, Row, Col, Well } from 'react-bootstrap';
 import { requestSaveMember, requestSaveProfile } from '../settings.actions';
 import InputField from './InputField';
-import { loadTeamState } from '../../persistence';
+import { getSelectedTeam } from '../../shared/teams/teams.reducer';
 
-
-const mapStateToProps = ({auth: {profile}}) => ({profile,});
+const mapStateToProps = ({auth: {profile}, teams}) => ({profile, teams});
 const mapDispatchToProps = (dispatch) => ({
     saveMember: (data) => dispatch(requestSaveMember(data)),
     saveProfile: (data) => dispatch(requestSaveProfile(data)),
@@ -16,12 +15,13 @@ const mapDispatchToProps = (dispatch) => ({
 export default class SettingsLayout extends React.Component {
     constructor(props) {
         super(props);
-        const { username, first_name, last_name } = this.props.profile;
+        const { profile: {first_name, last_name, username}, teams } = this.props;
+        const currentTeam = getSelectedTeam(teams);
         this.state = {
             username,
             first_name,
             last_name,
-            currentTeam: loadTeamState(),
+            currentTeam,
         };
     }
 
@@ -58,7 +58,9 @@ export default class SettingsLayout extends React.Component {
                     <Well>
                         <Form onSubmit={this.saveMember} horizontal>
                             <fieldset>
-                                <legend>Team member <small>(<em>{ currentTeam.name }</em>)</small></legend>
+                                <legend>
+                                    Team member <small>(<em>{ currentTeam ? currentTeam.name : ''}</em>)</small>
+                                </legend>
                                 <InputField
                                     name="username"
                                     label="Username"

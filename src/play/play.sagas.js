@@ -15,7 +15,8 @@ export function* playScore() {
                     {}
                 )
         );
-        const url = api.urls.matchPoints();
+        const currentTeamId = yield select(state => state.teams.selected);
+        const url = api.urls.teamMatchPoints(currentTeamId);
         try {
             const response = yield call(api.requests.get, url, players, 'Unable to get match score statistics.');
             yield put(requestStatsDone(response));

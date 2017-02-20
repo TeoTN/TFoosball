@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import { Row, Col, Form, FormGroup, FormControl, Button } from 'react-bootstrap';
 import { requestCreateTeam } from '../../shared/teams/teams.actions.js';
 
-const mapStateToProps = ({auth}) => ({auth});
 const mapDispatchToProps = (dispatch) => ({
     createTeam: (team, username) => dispatch(requestCreateTeam(team, username)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(null, mapDispatchToProps)
 export default class TeamCreationForm extends React.Component {
     constructor(props) {
         super(props);
