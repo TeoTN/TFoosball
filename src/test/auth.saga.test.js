@@ -1,17 +1,24 @@
-import { call, put, take } from 'redux-saga/effects';
-import storageAPIPolyfill from '../utils/storage.polyfill';
+import { call, put, take, select, fork, cancel } from 'redux-saga/effects';
+import { createMockTask } from 'redux-saga/utils';
 import { prepareWindow } from '../api/oauth';
-import { fetchProfile, fetchLogout } from '../api/connectors';
-import { setToken, signIn, signOut, setProfile, signedOut } from '../shared/auth.actions';
-import { raiseError } from '../shared/notifier.actions';
-import { openOAuthWindow, loginFlow, getOAuthErrorMsg } from '../shared/auth.sagas';
+import api from '../api';
+import * as AuthActions from '../shared/auth.actions';
+import { clean, raiseError } from '../shared/notifier.actions';
+import { authenticate, loginFlow, getOAuthErrorMsg, signIn, fetchProfile } from '../shared/auth.sagas';
+import { fetchTeams, initTeam } from '../shared/teams/teams.sagas';
+import { removeState } from '../persistence';
 import profile from '../assets/mocks/profile.json';
 import { browserHistory } from 'react-router'
 
 
-describe('OAuth window success scenario', () => {
-    const iterator = openOAuthWindow();
+describe('Authenticate: OAuth window success scenario', () => {
+    const iterator = authenticate();
     const fixture = { token: 'some_token_value' };
+
+    it('should check if token exists', () => {
+        const iter = iterator.next().value;
+        expect(JSON.stringify(iter)).toEqual(JSON.stringify(select()))
+    });
 
     it('should yield an effect call([promptWindow, open])', () => {
         const promptWindow = prepareWindow();
@@ -21,13 +28,40 @@ describe('OAuth window success scenario', () => {
     });
 
     it('should yield an effect put(setToken(token))', () => {
-        expect(iterator.next(fixture).value).toEqual(put(setToken(fixture.token)));
+        expect(iterator.next(fixture).value).toEqual(put(AuthActions.setToken(fixture.token)));
+    });
+
+    it('should return token and complete', () => {
+        const iter = iterator.next(fixture.token).value;
+        expect(iter).toEqual(fixture);
+        expect(iterator.next().done).toEqual(true);
     });
 });
 
-describe('OAuth window failure scenario', () => {
-    const iterator = openOAuthWindow();
+describe('Authenticate: OAuth window already authenticated', () => {
+    const iterator = authenticate();
+    const fixture = { token: 'some_token_value' };
+
+    it('should check if token exists', () => {
+        const iter = iterator.next(fixture).value;
+        expect(JSON.stringify(iter)).toEqual(JSON.stringify(select()))
+    });
+
+    it('should return token and complete', () => {
+        const iter = iterator.next(fixture.token).value;
+        expect(iter).toEqual(fixture);
+        expect(iterator.next().done).toEqual(true);
+    });
+});
+
+describe('Authenticate: OAuth window failure scenario', () => {
+    const iterator = authenticate();
     const fixture = { error: 'failure' };
+
+    it('should check if token exists', () => {
+        const iter = iterator.next(fixture).value;
+        expect(JSON.stringify(iter)).toEqual(JSON.stringify(select()))
+    });
 
     it('should yield an effect call([promptWindow, open])', () => {
         const promptWindow = prepareWindow();
@@ -40,51 +74,90 @@ describe('OAuth window failure scenario', () => {
         const errorMsg = getOAuthErrorMsg(fixture);
         expect(iterator.throw(fixture).value).toEqual(put(raiseError(errorMsg)));
     });
+
+    it('should complete', () => {
+        const iter = iterator.next('some-token').value;
+        expect(iter).toEqual({});
+        expect(iterator.next().done).toEqual(true);
+    });
+});
+
+describe('SignIn saga', () => {
+    const iterator = signIn();
+    const fixtureTeam = {
+        id: 1,
+        member_id: 7,
+    };
+
+    it('should wait for action SIGN_IN', () => {
+        expect(iterator.next(AuthActions.signIn()).value).toEqual(take(AuthActions.signIn().type));
+    });
+
+    it('should call Authenticate saga', () => {
+        expect(iterator.next().value).toEqual(call(authenticate));
+    });
+
+    it('should call FetchTeams saga', () => {
+        expect(iterator.next().value).toEqual(call(fetchTeams));
+    });
+
+    it('should call InitTeam saga', () => {
+        expect(iterator.next().value).toEqual(call(initTeam));
+    });
+
+    it('should call FetchProfile saga', () => {
+        expect(iterator.next(fixtureTeam).value).toEqual(call(fetchProfile, fixtureTeam.id, fixtureTeam.member_id));
+    });
+
+    it('should navigate to root and finish', () => {
+        expect(iterator.next().value).toEqual(call([browserHistory, browserHistory.push], `/match`));
+        expect(iterator.next().done).toEqual(true);
+    });
+
 });
 
 describe('Login flow', () => {
     const iterator = loginFlow();
-    const tokenFixture = { token: 'some_token_value' };
-
-    beforeAll(() => {
-        global.window.name = '';
-        global.window = storageAPIPolyfill(window);
-    });
 
     describe('success scenario', () => {
-        it('should wait for log in', () => {
-            expect(iterator.next(signIn()).value).toEqual(take(signIn().type));
+        let signInSaga;
+        it('should fork SignIn saga', () => {
+            signInSaga = fork(signIn);
+            expect(iterator.next().value).toEqual(signInSaga);
         });
 
-        it('should open OAuth window', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(call(openOAuthWindow));
+        it('should wait for SIGN_OUT action', () => {
+            expect(iterator.next(createMockTask()).value).toEqual(take(AuthActions.signOut().type));
         });
 
-        it('should fetch user profile', () => {
-            const iter = iterator.next(tokenFixture.token).value;
-            expect(iter).toEqual(call(fetchProfile))
+        it('should cancel SignIn saga', () => {
+            expect(JSON.stringify(iterator.next().value)).toEqual(JSON.stringify(cancel(createMockTask())));
         });
 
-        it('should set user profile', () => {
-            const iter = iterator.next(profile).value;
-            expect(iter).toEqual(put(setProfile(profile)));
+        it('should call API sign out', () => {
+            const logout_url = api.urls.logout();
+            const expected = call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
+            expect(iterator.next().value).toEqual(expected)
         });
 
-        it('should wait for sign out', () => {
-            expect(iterator.next().value).toEqual(take(signOut().type));
+        it('should dispatch SIGNED_OUT action', () => {
+            expect(iterator.next().value).toEqual(put(AuthActions.signedOut()));
         });
 
-        it('should fetch log out', () => {
-            expect(iterator.next().value).toEqual(call(fetchLogout));
+        it('should clean notifications', () => {
+            expect(iterator.next().value).toEqual(put(clean()));
         });
 
-        it('should put signed out', () => {
-            expect(iterator.next().value).toEqual(put(signedOut()))
+        it('should clean localStorage', () => {
+            expect(iterator.next().value).toEqual(call(removeState));
         });
 
         it('should redirect to home page', () => {
-            expect(iterator.next().value).toEqual(call(browserHistory.push, '/'));
-        })
+            expect(iterator.next().value).toEqual(call([browserHistory, browserHistory.push], '/'));
+        });
+
+        it('should not complete the saga', () => {
+            expect(iterator.next().done).toEqual(false); // Fork signIn again
+        });
     });
 });

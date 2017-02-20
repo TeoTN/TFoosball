@@ -1,5 +1,5 @@
-import { call, put, take } from 'redux-saga/effects';
-import * as API from '../api/connectors';
+import { call, put, take, select } from 'redux-saga/effects';
+import api from '../api';
 import * as MatchActions from '../matches/match.actions';
 import * as MatchTypes from '../matches/match.types';
 import { raiseError, showInfo } from '../shared/notifier.actions';
@@ -33,9 +33,15 @@ describe('Publish a match - success scenario', () => {
         expect(iter).toEqual(take(MatchTypes.PUBLISH));
     });
 
+    it('should select team id', () => {
+        expect(JSON.stringify(iterator.next(MatchActions.publish(matchData, callback)).value)).toEqual(JSON.stringify(select(() => 1)));
+    });
+
     it('should call api to publish match', () => {
-        const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
-        expect(iter).toEqual(call(API.publishMatch, matchData));
+        const url = api.urls.teamMatchList(1);
+        const expected = call(api.requests.post, url, matchData, 'Failed to send match to server');
+        const iter = iterator.next(1).value;
+        expect(iter).toEqual(expected);
     });
 
     it('should put an action with server response', () => {
@@ -66,7 +72,7 @@ describe('Publish a match - API failure scenario', () => {
         red_score: 3,
         blue_score: 10,
     };
-
+    const currentTeamId = 1;
     const callback = () => {};
 
     it('should wait for PUBLISH action to be dispatched', () => {
@@ -74,13 +80,21 @@ describe('Publish a match - API failure scenario', () => {
         expect(iter).toEqual(take(MatchTypes.PUBLISH));
     });
 
+    it('should select team id', () => {
+        const iter = JSON.stringify(iterator.next(MatchActions.publish(matchData, callback)).value);
+        expect(iter).toEqual(JSON.stringify(select(() => currentTeamId)));
+    });
+
     it('should call api to publish match', () => {
-        const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
-        expect(iter).toEqual(call(API.publishMatch, matchData));
+        const url = api.urls.teamMatchList(currentTeamId);
+        const expected = call(api.requests.post, url, matchData, 'Failed to send match to server');
+        const iter = iterator.next(currentTeamId).value;
+        expect(iter).toEqual(expected);
     });
 
     it('should put ERROR when API fails', () => {
-        expect(iterator.throw('Failed to publish match').value).toEqual(put(raiseError('Failed to publish match')));
+        const error_msg = 'Failed to send match to server';
+        expect(iterator.throw(error_msg).value).toEqual(put(raiseError(error_msg)));
     });
 });
 
@@ -93,9 +107,15 @@ describe('Remove a match - success scenario', () => {
         expect(iter).toEqual(take(MatchTypes.DELETE));
     });
 
+    it('should select team id', () => {
+        const iter = JSON.stringify(iterator.next(MatchActions.remove(matchID)).value);
+        expect(iter).toEqual(JSON.stringify(select(() => 1)));
+    });
+
     it('should call API to remove match', () => {
-        const iter = iterator.next(MatchActions.remove(matchID)).value;
-        expect(iter).toEqual(call(API.removeMatch, matchID));
+        const iter = iterator.next(1).value;
+        const url = api.urls.teamMatchEntity(1, matchID);
+        expect(iter).toEqual(call(api.requests['delete'], url));
     });
 
     it('should put action match DELETED', () => {
@@ -113,9 +133,15 @@ describe('Remove a match - failure scenario', () => {
         expect(iter).toEqual(take(MatchTypes.DELETE));
     });
 
+    it('should select team id', () => {
+        const iter = JSON.stringify(iterator.next(MatchActions.remove(matchID)).value);
+        expect(iter).toEqual(JSON.stringify(select(() => 1)));
+    });
+
     it('should call API to remove match', () => {
-        const iter = iterator.next(MatchActions.remove(matchID)).value;
-        expect(iter).toEqual(call(API.removeMatch, matchID));
+        const iter = iterator.next(1).value;
+        const url = api.urls.teamMatchEntity(1, matchID);
+        expect(iter).toEqual(call(api.requests['delete'], url));
     });
 
     it('should handle API response error', () => {
