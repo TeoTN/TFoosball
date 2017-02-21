@@ -1,5 +1,4 @@
 import * as types from "./user.types";
-import * as match_types from "../matches/match.types";
 import choice from "../utils/choice";
 import getRoles from "../utils/roles";
 
@@ -13,10 +12,8 @@ const user = (state, action) => {
         case types.UPDATE:
             if (state.id !== action.id) return state;
             return Object.assign({}, state, action.userData);
-        case match_types.SENT:
-            // eslint-disable-next-line
-            const {position, team, selected, playing, ...newState} = state;
-            return newState;
+        case types.UPDATE_LIST:
+            return Object.assign(state, action.userList.find(u => u.id === state.id));
         default:
             return state;
     }
@@ -50,7 +47,6 @@ export default (state = [], action) => {
                 ...state
             ];
         case types.UPDATE:
-        case match_types.SENT:
             return state.map(u => user(u, action));
         case types.DELETE:
             return state.filter(user => user.id !== action.id);
@@ -68,6 +64,9 @@ export default (state = [], action) => {
         case types.RECEIVE_LIST:
             const data = Array.isArray(action.response) ? action.response : [];
             return getSortedUsers(data, 'exp', false);
+        case types.UPDATE_LIST:
+            const updated = state.map(u => user(u, action));
+            return getSortedUsers(updated, 'exp', false)
         default:
             return state;
     }

@@ -49,5 +49,10 @@ export const sortBy = (column, isAscendingOrder = true) => ({
 
 export const receiveUsers = (response) => ({
     type: types.RECEIVE_LIST,
-    response
+    response,
+});
+
+export const updateUsers = (response) => ({
+    type: types.UPDATE_LIST,
+    userList: response,
 });

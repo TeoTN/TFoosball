@@ -13,3 +13,14 @@ export function* fetchUsers() {
         yield put(raiseError(error));
     }
 }
+
+export function* fetchUpdateUsers() {
+    const currentTeamId = yield select(state => state.teams.selected);
+    const url = api.urls.teamMemberList(currentTeamId);
+    try {
+        const response = yield call(api.requests.get, url);
+        yield put(UserActions.updateUsers(response));
+    } catch (error) {
+        yield put(raiseError(error));
+    }
+}

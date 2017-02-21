@@ -4,7 +4,7 @@ import { sent, list } from './match.actions';
 import api from '../api';
 import { removed } from './match.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
-import { fetchUsers } from '../users/users.sagas';
+import { fetchUpdateUsers } from '../users/users.sagas';
 
 export function* publish() {
     const success_msg = points => `Match successfully saved. Red: ${points}, Blue: ${-points}`;
@@ -16,7 +16,7 @@ export function* publish() {
             const response = yield call(api.requests.post, url, action.match_data, 'Failed to send match to server');
             yield put(sent(response));
             yield put(showInfo(success_msg(response.points)));
-            yield call(fetchUsers);
+            yield call(fetchUpdateUsers);
             yield call(action.callback);
         } catch (error) {
             yield put(raiseError(error));
