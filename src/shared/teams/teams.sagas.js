@@ -10,10 +10,10 @@ import { getSelectedTeam } from './teams.reducer';
 
 export function* handleSelectTeam() {
     while (true) {
-        const {team} = yield take(SELECT_TEAM);
+        const { team } = yield take(SELECT_TEAM);
         try {
-            yield fetchProfile(team.id, team.member_id);
-            browserHistory.push('/match');
+            yield call(fetchProfile, team.id, team.member_id);
+            yield call([browserHistory, browserHistory.push], '/match');
         } catch (error) {
             yield put(raiseError(error));
         }
@@ -29,6 +29,7 @@ function* createTeam(action) {
     const response = yield call(api.requests.post, url, data, 'Team already exists');
     yield put(teamCreated(response));
     yield put(showInfo(`Team ${action.name} created.`));
+    yield put(selectTeam(response));
     return response;
 }
 
@@ -37,10 +38,11 @@ export function* teamCreationFlow() {
         const action = yield take(REQUEST_CREATE_TEAM);
         // TODO First validate form data
         try {
-            yield authenticate(); // TODO check if not authenticated within this generator itself
-            const team = yield createTeam(action);
-            yield fetchProfile(team.id, team.member_id)(); // TODO Should not get there if failed during any previous steps
-            browserHistory.push('/match');
+            yield call(authenticate); // TODO check if not authenticated within this generator itself
+            const team = yield call(createTeam, action);
+            yield call(fetchTeams);
+            yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
+            yield call([browserHistory, browserHistory.push], '/match');
         } catch (error) {
             yield put(raiseError(error));
         }
