@@ -47,6 +47,10 @@ export function* signIn() {
     yield call(authenticate);
     yield call(fetchTeams);
     const currentTeam = yield call(initTeam);
+    if (!currentTeam) {
+        // User is not assigned to any team and we were redirected to /welcome page
+        return;
+    }
     try {
         yield call(fetchProfile, currentTeam.id, currentTeam.member_id);
     } catch (error) {
