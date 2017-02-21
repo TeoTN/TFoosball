@@ -1,5 +1,12 @@
 import { call, take, put, select } from 'redux-saga/effects';
-import { REQUEST_CREATE_TEAM, SELECT_TEAM, teamCreated, setTeams, selectTeam } from './teams.actions.js';
+import {
+    REQUEST_CREATE_TEAM,
+    REQUEST_JOIN_TEAM,
+    SELECT_TEAM,
+    teamCreated,
+    setTeams,
+    selectTeam
+} from './teams.actions.js';
 import api from '../../api';
 import { showInfo, raiseError } from '../notifier.actions';
 import { authenticate, fetchProfile } from '../auth.sagas';
@@ -76,10 +83,24 @@ export function* initTeam() {
     return currentTeam;
 }
 
+function* handleJoinTeam() {
+    while (true) {
+        const action = yield take(REQUEST_JOIN_TEAM);
+        const url = api.urls.teamJoin();
+        try {
+            const response = yield call(api.requests.post, url, action.data);
+            yield put(showInfo(response));
+        } catch(error) {
+            yield put(raiseError(error));
+        }
+    }
+}
+
 export function* teams() {
     yield [
         fetchTeams(),
         teamCreationFlow(),
         handleSelectTeam(),
+        handleJoinTeam(),
     ];
 }

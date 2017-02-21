@@ -1,6 +1,7 @@
 import React from 'react';
 import { Panel, Grid, Row } from 'react-bootstrap';
 import TeamCreationForm from './TeamCreationForm';
+import JoinTeamForm from './JoinTeamForm';
 
 export default (props) =>
     <Grid>
@@ -13,6 +14,7 @@ export default (props) =>
                 <h3>Create team:</h3>
                 <TeamCreationForm />
                 <h3>Join existing one:</h3>
+                <JoinTeamForm />
                 {props.children}
             </Panel>
         </Row>
