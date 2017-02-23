@@ -3,6 +3,7 @@ import choice from "../utils/choice";
 import getRoles from "../utils/roles";
 
 const user = (state, action) => {
+    const { playing, position, team } = state;
     switch (action.type) {
         case types.ADD:
             return {
@@ -14,6 +15,16 @@ const user = (state, action) => {
             return Object.assign({}, state, action.userData);
         case types.UPDATE_LIST:
             return Object.assign(state, action.userList.find(u => u.id === state.id));
+        case types.SWAP_POSITIONS:
+            if (playing) {
+                return Object.assign(state, { position: position === 'att' ? 'def' : 'att'});
+            }
+            return state;
+        case types.SWAP_SIDES:
+            if (playing) {
+                return Object.assign(state, { team: team === 'red' ? 'blue' : 'red' })
+            }
+            return state;
         default:
             return state;
     }
@@ -47,6 +58,8 @@ export default (state = [], action) => {
                 ...state
             ];
         case types.UPDATE:
+        case types.SWAP_POSITIONS:
+        case types.SWAP_SIDES:
             return state.map(u => user(u, action));
         case types.DELETE:
             return state.filter(user => user.id !== action.id);
@@ -66,7 +79,7 @@ export default (state = [], action) => {
             return getSortedUsers(data, 'exp', false);
         case types.UPDATE_LIST:
             const updated = state.map(u => user(u, action));
-            return getSortedUsers(updated, 'exp', false)
+            return getSortedUsers(updated, 'exp', false);
         default:
             return state;
     }

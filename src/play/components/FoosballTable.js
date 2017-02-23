@@ -4,33 +4,46 @@ import { connect } from 'react-redux';
 import UserPicker from '../../users/components/UserPicker';
 import PlayResult from './PlayResult';
 import PlayStats from './PlayStats';
+import PlayToolbar from './PlayToolbar';
+import { choosePlayersForMatch, swapPositions, swapSides } from '../../users/user.actions';
+import { raiseError } from '../../shared/notifier.actions';
 import table from '../../assets/img/table.jpg';
 
 const mapStateToProps = ({users}) => ({users});
+const mapDispatchToProps = (dispatch) => ({
+    swapSides: () => dispatch(swapSides()),
+    swapPositions: () => dispatch(swapPositions()),
+    regenerate: () => {
+        try { dispatch(choosePlayersForMatch()) }
+        catch(err) { dispatch(raiseError(err.message)); }
+    },
+});
 
-@connect(mapStateToProps, null)
+@connect(mapStateToProps, mapDispatchToProps)
 class FoosballTable extends Component {
     render() {
-        const { users } = this.props;
+        const { users, swapSides, swapPositions, regenerate } = this.props;
         const playing = users.filter(u => u.playing);
 
         return (
         <Well>
             <Row>
-                <Col xs={12}><h3>Squad</h3></Col>
-                <Col smOffset={3} sm={9} xs={12}>
-                    <ButtonGroup justified>
-                        <UserPicker team={'blue'} position={'att'} />
-                        <UserPicker team={'blue'} position={'def'} />
-                    </ButtonGroup>
-                </Col>
-                <Col xs={12}>
-                    <Image src={table} rounded responsive thumbnail />
+                <Col xs={12} style={{ marginBottom: '15px'}}>
+                    <PlayToolbar onSwapSides={swapSides} onSwapPositions={swapPositions} onRegenerate={regenerate} />
                 </Col>
                 <Col sm={9} xs={12}>
                     <ButtonGroup justified>
                         <UserPicker team={'red'} position={'def'} />
                         <UserPicker team={'red'} position={'att'} />
+                    </ButtonGroup>
+                </Col>
+                <Col xs={12}>
+                    <Image src={table} rounded responsive thumbnail />
+                </Col>
+                <Col smOffset={3} sm={9} xs={12}>
+                    <ButtonGroup justified>
+                        <UserPicker team={'blue'} position={'att'} />
+                        <UserPicker team={'blue'} position={'def'} />
                     </ButtonGroup>
                 </Col>
             </Row>

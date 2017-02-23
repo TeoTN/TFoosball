@@ -56,3 +56,6 @@ export const updateUsers = (response) => ({
     type: types.UPDATE_LIST,
     userList: response,
 });
+
+export const swapSides = () => ({ type: types.SWAP_SIDES, });
+export const swapPositions = () => ({ type: types.SWAP_POSITIONS, });

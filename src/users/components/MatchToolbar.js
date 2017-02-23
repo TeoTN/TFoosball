@@ -11,7 +11,6 @@ const mapDispatchToProps = (dispatch) => ({
         catch(err) { dispatch(raiseError(err.message)); }
         window.scrollTo(0, 0);
     },
-    raiseError: (msg) => dispatch(raiseError(msg)),
     sortByExp: () => dispatch(UserActions.sortBy("exp", false)),
     sortByName: () => dispatch(UserActions.sortBy("username")),
 });
