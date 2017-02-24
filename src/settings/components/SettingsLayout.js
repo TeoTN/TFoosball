@@ -1,21 +1,26 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Form, FormGroup, Button, Row, Col, Well } from 'react-bootstrap';
-import { requestSaveMember, requestSaveProfile } from '../settings.actions';
-import InputField from './InputField';
-import { getSelectedTeam } from '../../shared/teams/teams.reducer';
+import {connect} from 'react-redux';
+import {Row, Col, Well} from 'react-bootstrap';
+import {requestSaveMember, requestSaveProfile} from '../settings.actions';
+import {getSelectedTeam} from '../../shared/teams/teams.reducer';
+import { memberAcceptance } from '../../shared/teams/teams.actions';
+import MemberSettings from './MemberSettings';
+import ProfileSettings from './ProfileSettings';
+import PendingMemberList from './PendingMemberList';
 
 const mapStateToProps = ({auth: {profile}, teams}) => ({profile, teams});
 const mapDispatchToProps = (dispatch) => ({
     saveMember: (data) => dispatch(requestSaveMember(data)),
     saveProfile: (data) => dispatch(requestSaveProfile(data)),
+    acceptMember: (id) => dispatch(memberAcceptance(id, true)),
+    rejectMember: (id) => dispatch(memberAcceptance(id, false)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class SettingsLayout extends React.Component {
     constructor(props) {
         super(props);
-        const { profile: {first_name, last_name, username}, teams } = this.props;
+        const {profile: {first_name, last_name, username}, teams} = this.props;
         const currentTeam = getSelectedTeam(teams);
         this.state = {
             username,
@@ -26,7 +31,7 @@ export default class SettingsLayout extends React.Component {
     }
 
     handleChange = (fieldName) => (event) => {
-        this.setState({ [fieldName]: event.target.value });
+        this.setState({[fieldName]: event.target.value});
     };
 
     saveMember = (event) => {
@@ -47,61 +52,41 @@ export default class SettingsLayout extends React.Component {
     };
 
     render() {
-        const { currentTeam, username, first_name, last_name } = this.state;
+        const {currentTeam, username, first_name, last_name} = this.state;
+        const {teams: {pending}, rejectMember, acceptMember} = this.props;
         return (
             <div className="container">
                 <h1>
                     Settings&nbsp;
                 </h1>
                 <Row>
-                <Col sm={8}>
-                    <Well>
-                        <Form onSubmit={this.saveMember} horizontal>
-                            <fieldset>
-                                <legend>
-                                    Team member <small>(<em>{ currentTeam ? currentTeam.name : ''}</em>)</small>
-                                </legend>
-                                <InputField
-                                    name="username"
-                                    label="Username"
-                                    onChange={this.handleChange}
-                                    value={username}
-                                />
-                                <FormGroup>
-                                    <Col smOffset={3} sm={8}>
-                                        <Button type="submit" bsStyle="success" block>
-                                            Save
-                                        </Button>
-                                    </Col>
-                                </FormGroup>
-                            </fieldset>
-                        </Form>
-                        <Form onSubmit={this.saveProfile} horizontal>
-                            <fieldset>
-                                <legend>Profile data</legend>
-                                <InputField
-                                    name="first_name"
-                                    label="First name"
-                                    onChange={this.handleChange}
-                                    value={first_name}
-                                />
-                                <InputField
-                                    name="last_name"
-                                    label="Last name"
-                                    onChange={this.handleChange}
-                                    value={last_name}
-                                />
-                                <FormGroup>
-                                    <Col smOffset={3} sm={8}>
-                                        <Button type="submit" bsStyle="success" block>
-                                            Save
-                                        </Button>
-                                    </Col>
-                                </FormGroup>
-                            </fieldset>
-                        </Form>
-                    </Well>
-                </Col>
+                    <Col md={8} xs={12}>
+                        <Well>
+                            <ProfileSettings
+                                saveProfile={this.saveProfile}
+                                handleChange={this.handleChange}
+                                first_name={first_name}
+                                last_name={last_name}
+                            />
+                        </Well>
+                    </Col>
+                    <Col md={8} xs={12}>
+                        <Well>
+                            <h2>
+                                Team membership <small>(<em>{ currentTeam ? currentTeam.name : ''}</em>)</small>
+                            </h2>
+                            <MemberSettings
+                                saveMember={this.saveMember}
+                                handleChange={this.handleChange}
+                                username={username}
+                            />
+                            <PendingMemberList
+                                users={pending}
+                                onAccept={acceptMember}
+                                onReject={rejectMember}
+                            />
+                        </Well>
+                    </Col>
                 </Row>
                 {this.props.children}
             </div>

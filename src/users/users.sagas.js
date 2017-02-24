@@ -23,4 +23,4 @@ export function* fetchUpdateUsers() {
     } catch (error) {
         yield put(raiseError(error));
     }
-}
+};

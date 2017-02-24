@@ -3,6 +3,8 @@ export const REQUEST_JOIN_TEAM = 'TEAMS::REQUEST_JOIN';
 export const TEAM_CREATED = 'TEAMS::DONE_CREATE';
 export const SET_TEAMS = 'TEAMS::SET_TEAMS';
 export const SELECT_TEAM = 'TEAMS::SELECT';
+export const PENDING_MEMBERS = 'TEAMS::PENDING_MEMBERS';
+export const MEMBER_ACCEPTANCE = 'TEAMS::MEMBER_ACCEPTANCE';
 
 export const requestCreateTeam = (name, username) => ({
     type: REQUEST_CREATE_TEAM,
@@ -32,4 +34,15 @@ export const requestJoinTeam = (team, username) => ({
         team,
         username,
     },
+});
+
+export const setPendingMembers = (response) => ({
+    type: PENDING_MEMBERS,
+    list: response,
+});
+
+export const memberAcceptance = (id, shouldAccept) => ({
+    type: MEMBER_ACCEPTANCE,
+    id,
+    shouldAccept,
 });

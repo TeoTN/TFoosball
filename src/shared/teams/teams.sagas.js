@@ -3,9 +3,11 @@ import {
     REQUEST_CREATE_TEAM,
     REQUEST_JOIN_TEAM,
     SELECT_TEAM,
+    MEMBER_ACCEPTANCE,
     teamCreated,
     setTeams,
-    selectTeam
+    selectTeam,
+    setPendingMembers,
 } from './teams.actions.js';
 import api from '../../api';
 import { showInfo, raiseError } from '../notifier.actions';
@@ -97,11 +99,45 @@ function* handleJoinTeam() {
     }
 }
 
+export function* fetchPendingMembers() {
+    const teamsState = yield select(state => state.teams);
+    let currentTeam = getSelectedTeam(teamsState);
+    const url = api.urls.teamMemberList(currentTeam.id);
+    try {
+        const response = yield call(api.requests.get, url, { is_accepted: 'False' }, 'Failed to fetch pending members');
+        yield put(setPendingMembers(response));
+    } catch (error) {
+        yield put(raiseError(error));
+    }
+}
+
+export function* memberAcceptance() {
+    while (true) {
+        const action = yield take(MEMBER_ACCEPTANCE);
+        const teamsState = yield select(state => state.teams);
+        let currentTeam = getSelectedTeam(teamsState);
+        const url = api.urls.teamMemberEntity(currentTeam.id, action.id);
+        try {
+            if (action.shouldAccept) {
+                yield call(api.requests.patch, url, { is_accepted: true }, 'Cannot accept membership of this user.');
+            } else {
+                yield call(api.requests['delete'], url, { is_accepted: true }, 'Cannot reject membership of this user');
+            }
+            yield put(showInfo(`User membership ${action.shouldAccept ? 'confirmed' : 'rejected'} successfully.`))
+        } catch (error) {
+            yield put(raiseError(error));
+        } finally {
+            yield call(fetchPendingMembers);
+        }
+    }
+}
+
 export function* teams() {
     yield [
         fetchTeams(),
         teamCreationFlow(),
         handleSelectTeam(),
         handleJoinTeam(),
+        memberAcceptance(),
     ];
 }

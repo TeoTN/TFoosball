@@ -1,9 +1,9 @@
-import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM } from './teams.actions';
+import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM, PENDING_MEMBERS } from './teams.actions';
 import { UPDATE_PROFILE } from '../../profile/profile.types';
 import { SIGNED_OUT } from '../auth.types';
 export const getSelectedTeam = (state) => state.joined.find(team => team.id === state.selected);
 
-export default (state = { joined: [], selected: 0 }, action) => {
+export default (state = { joined: [], selected: 0, pending: [] }, action) => {
     switch (action.type) {
         case TEAM_CREATED:
             return {
@@ -34,6 +34,11 @@ export default (state = { joined: [], selected: 0 }, action) => {
             };
         case SIGNED_OUT:
             return { joined: [], selected: 0 };
+        case PENDING_MEMBERS:
+            return {
+                ...state,
+                pending: action.list,
+            };
         default:
             return state;
     }
