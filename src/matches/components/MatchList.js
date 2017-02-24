@@ -11,7 +11,7 @@ export default class MatchList extends React.Component {
                 <thead>
                 <Row componentClass="tr">
                     <Col xs={4} className="align-r" componentClass="td">
-                        <strong> Red team </strong>
+                        <strong> Red team</strong>
                     </Col>
                     <Col xs={1} componentClass="td">
                         <strong> Score </strong>
