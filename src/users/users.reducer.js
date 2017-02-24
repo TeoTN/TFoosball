@@ -3,7 +3,6 @@ import choice from "../utils/choice";
 import getRoles from "../utils/roles";
 
 const user = (state, action) => {
-    const { playing, position, team } = state;
     switch (action.type) {
         case types.ADD:
             return {
@@ -16,13 +15,13 @@ const user = (state, action) => {
         case types.UPDATE_LIST:
             return Object.assign(state, action.userList.find(u => u.id === state.id));
         case types.SWAP_POSITIONS:
-            if (playing) {
-                return Object.assign(state, { position: position === 'att' ? 'def' : 'att'});
+            if (state.playing) {
+                return Object.assign(state, { position: state.position === 'att' ? 'def' : 'att'});
             }
             return state;
         case types.SWAP_SIDES:
-            if (playing) {
-                return Object.assign(state, { team: team === 'red' ? 'blue' : 'red' })
+            if (state.playing) {
+                return Object.assign(state, { team: state.team === 'red' ? 'blue' : 'red' })
             }
             return state;
         default:

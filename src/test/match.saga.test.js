@@ -4,7 +4,7 @@ import * as MatchActions from '../matches/match.actions';
 import * as MatchTypes from '../matches/match.types';
 import { raiseError, showInfo } from '../shared/notifier.actions';
 import { publish, removeMatch } from '../matches/matches.sagas';
-import { fetchUsers } from '../users/users.sagas';
+import { fetchUpdateUsers } from '../users/users.sagas';
 
 describe('Publish a match - success scenario', () => {
     const iterator = publish();
@@ -54,7 +54,7 @@ describe('Publish a match - success scenario', () => {
     });
 
     it('should call to refresh users', () => {
-        expect(iterator.next().value).toEqual(call(fetchUsers));
+        expect(iterator.next().value).toEqual(call(fetchUpdateUsers));
     });
 
     it('should call the callback', () => {
