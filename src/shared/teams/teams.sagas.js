@@ -61,8 +61,8 @@ export function* fetchTeams() {
     if (!alreadyAuthenticated) return;
     const url = api.urls.teamListJoined();
     try {
-        const teams = yield call(api.requests.get, url, {}, 'Failed to fetch user teams');
-        yield put(setTeams(teams));
+        const response = yield call(api.requests.get, url, {}, 'Failed to fetch user teams');
+        yield put(setTeams(response));
     } catch (error) {
         yield put(raiseError(error))
     }
@@ -88,7 +88,8 @@ function* handleJoinTeam() {
         const action = yield take(REQUEST_JOIN_TEAM);
         const url = api.urls.teamJoin();
         try {
-            const response = yield call(api.requests.post, url, action.data);
+            const err_msg = 'Team doesn\'t exist or username already taken';
+            const response = yield call(api.requests.post, url, action.data, err_msg);
             yield put(showInfo(response));
         } catch(error) {
             yield put(raiseError(error));

@@ -15,9 +15,10 @@ export const teamCreated = (team) => ({
     team
 });
 
-export const setTeams = (teams) => ({
+export const setTeams = ({ teams, pending }) => ({
     type: SET_TEAMS,
     teams,
+    pending
 });
 
 export const selectTeam = (team) => ({

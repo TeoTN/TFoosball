@@ -29,12 +29,29 @@ function requireAuth(nextState, replace, next) {
     next();
 }
 
+function hasTeams(nextState, replace, next) {
+    const persistedState = loadState();
+    if (
+        persistedState.hasOwnProperty('teams') &&
+        persistedState.teams.hasOwnProperty('joined') &&
+        persistedState.teams.joined.length >= 1
+    ) {
+        replace({
+            pathname: "/match",
+            state: {nextPathname: nextState.location.pathname}
+        });
+    }
+    next();
+}
+
+const chain = (argsArr) => (nextState, replace, next) => argsArr.forEach(fun => fun(nextState, replace, next));
+
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route component={App}>
                 <Route path="/" component={IntroLayout} />
-                <Route path="welcome" component={TeamAssignment} onEnter={requireAuth} />
+                <Route path="welcome" component={TeamAssignment} onEnter={chain([requireAuth, hasTeams])} />
                 <Route path="match" component={MatchLayout} onEnter={requireAuth} />
                 <Route path="profile/:username" component={ProfileLayout} onEnter={requireAuth}>
                     <Route path="stats" />

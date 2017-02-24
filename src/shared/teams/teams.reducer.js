@@ -14,6 +14,7 @@ export default (state = { joined: [], selected: 0 }, action) => {
             return {
                 ...state,
                 joined: action.teams,
+                pending: action.pending,
             };
         case SELECT_TEAM:
             return {

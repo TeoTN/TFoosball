@@ -1,16 +1,27 @@
 import React from 'react';
-import { Panel, Grid, Row } from 'react-bootstrap';
+import {Panel, Grid, Row} from 'react-bootstrap';
+import {connect} from 'react-redux';
 import TeamCreationForm from './TeamCreationForm';
 import JoinTeamForm from './JoinTeamForm';
 
-export default (props) =>
+const mapStateToProps = ({teams}) => ({
+    pending: teams.pending,
+});
+
+const TeamAssignment = (props) => (
     <Grid>
         <Row>
             <Panel>
                 <h1>Welcome!</h1>
                 <p>
-                    We've noticed that you don't belong to any team. You can create one or join to existing one.
+                    We've noticed that you don't belong yet to any team. You can create one or join to existing one.
                 </p>
+
+                {
+                    props.pending > 0 ?
+                        <h5>Number of pending join requests: <span className="text-info h4">{props.pending}</span></h5> :
+                        null
+                }
                 <h3>Create team:</h3>
                 <TeamCreationForm />
                 <h3>Join existing one:</h3>
@@ -19,3 +30,6 @@ export default (props) =>
             </Panel>
         </Row>
     </Grid>
+);
+
+export default connect(mapStateToProps, null)(TeamAssignment);
