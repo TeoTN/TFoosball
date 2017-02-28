@@ -1,10 +1,9 @@
 import React from 'react';
 import { Jumbotron, Grid } from 'react-bootstrap';
-import jumbo from '../../assets/img/jumbotron.jpg';
 import TeamCreationForm from './TeamCreationForm';
 
 export default (props) =>
-    <Jumbotron style={{background: `url(${jumbo})`, color: 'white'}}>
+    <Jumbotron>
         <Grid>
         <h1>Make it funny, again!</h1>
         <p>

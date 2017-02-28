@@ -1,3 +1,10 @@
+.jumbotron {
+    background: black url('../img/jumbotron.jpg') no-repeat scroll right;
+    color: white;
+    background-size: 85%;
+    text-shadow: #444 1px 1px;
+}
+
 .with-margin {
     margin: 15px !important;
 }
