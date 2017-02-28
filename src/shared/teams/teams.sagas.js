@@ -29,7 +29,7 @@ export function* handleSelectTeam() {
     }
 }
 
-function* createTeam(action) {
+export function* createTeam(action) {
     const url = api.urls.teamList();
     const data = validateMember({
         name: action.name,
@@ -85,7 +85,7 @@ export function* initTeam() {
     return currentTeam;
 }
 
-function* handleJoinTeam() {
+export function* handleJoinTeam() {
     while (true) {
         const action = yield take(REQUEST_JOIN_TEAM);
         const url = api.urls.teamJoin();

@@ -7,7 +7,6 @@ import { clean, raiseError } from '../shared/notifier.actions';
 import { authenticate, loginFlow, getOAuthErrorMsg, signIn, fetchProfile } from '../shared/auth.sagas';
 import { fetchTeams, initTeam } from '../shared/teams/teams.sagas';
 import { removeState } from '../persistence';
-import profile from '../assets/mocks/profile.json';
 import { browserHistory } from 'react-router'
 
 
