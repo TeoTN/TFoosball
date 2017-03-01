@@ -23,7 +23,7 @@ describe('Team creation flow saga - success scenario', () => {
     });
 
     it('should fetch user\'s teams', () => {
-        expect(iterator.next().value).toEqual(call(fetchTeams));
+        expect(iterator.next(team).value).toEqual(call(fetchTeams));
     });
 
     it('should fetch user profile', () => {
