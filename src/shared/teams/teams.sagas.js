@@ -11,7 +11,7 @@ import {
 } from './teams.actions.js';
 import api from '../../api';
 import { showInfo, raiseError } from '../notifier.actions';
-import { authenticate, fetchProfile } from '../auth.sagas';
+import { authenticate, fetchProfile } from '../auth/auth.sagas';
 import { validateMember } from '../../settings/settings.sagas';
 import { browserHistory } from 'react-router';
 import { getSelectedTeam } from './teams.reducer';
@@ -81,7 +81,6 @@ export function* initTeam() {
         currentTeam = teamsState.joined[0];
     }
     yield put(selectTeam(currentTeam));
-    console.log('initTeam returns', currentTeam);
     return currentTeam;
 }
 

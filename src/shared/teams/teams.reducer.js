@@ -1,6 +1,6 @@
 import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM, PENDING_MEMBERS } from './teams.actions';
 import { UPDATE_PROFILE } from '../../profile/profile.types';
-import { SIGNED_OUT } from '../auth.types';
+import { SIGNED_OUT } from '../auth/auth.types';
 export const getSelectedTeam = (state) => state.joined.find(team => team.id === state.selected);
 
 export default (state = { joined: [], selected: 0, pending: [] }, action) => {

@@ -1,5 +1,5 @@
 import * as types from './profile.types';
-import * as authTypes from '../shared/auth.types';
+import * as authTypes from '../shared/auth/auth.types';
 import * as MatchTypes from '../matches/match.types';
 
 const matches = (state = { page: 1, totalPages: 1, list: [] }, action) => {

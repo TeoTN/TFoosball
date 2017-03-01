@@ -2,7 +2,7 @@ import users from '../users/users.reducer';
 import notifications from '../shared/notifier.reducer';
 import profile from '../profile/profile.reducer';
 import tournaments from '../tournament/tournaments.reducer';
-import auth from '../shared/auth.reducer';
+import auth from '../shared/auth/auth.reducer';
 import ranking from '../ranking/ranking.reducer';
 import modal from '../shared/modal.reducer';
 import matches from '../matches/matches.reducer';

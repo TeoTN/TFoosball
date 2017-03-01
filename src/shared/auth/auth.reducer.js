@@ -1,5 +1,5 @@
 import * as types from './auth.types';
-import { REQUEST_SAVE_PROFILE, REQUEST_SAVE_MEMBER} from '../settings/settings.actions';
+import { REQUEST_SAVE_PROFILE, REQUEST_SAVE_MEMBER} from '../../settings/settings.actions';
 
 const profile = (state = {}, action) => {
     switch (action.type) {
