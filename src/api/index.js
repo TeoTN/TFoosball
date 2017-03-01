@@ -17,9 +17,8 @@ const api = {
         get(url, params, error_msg='Failed to retrieve data from server') {
             let target = url;
             if (params && Object.keys(params).length > 0) {
-                const body = new URLSearchParams();
-                Object.entries(params).forEach(([key, value]) => body.append(key, value));
-                target = `${url}?${body.toString()}`;
+                const queryParams = Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
+                target = `${url}?${queryParams}`;
             }
             const request = new Request(target, {
                 method: 'GET',
