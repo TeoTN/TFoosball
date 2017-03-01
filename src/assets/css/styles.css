@@ -2,7 +2,10 @@
     background: black url('../img/jumbotron.jpg') no-repeat scroll right;
     color: white;
     background-size: 85%;
-    text-shadow: #444 1px 1px;
+}
+.jumbotron p {
+    font-weight: 100 !important;
+    font-size: 20px;
 }
 
 .with-margin {
