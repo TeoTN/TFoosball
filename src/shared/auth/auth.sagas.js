@@ -26,8 +26,12 @@ export function* authenticate() {
 
 export function* fetchProfile(team_id, member_id) {
     const profile_url = api.urls.teamMemberEntity(team_id, member_id);
-    const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
-    yield put(setProfile(profile));
+    try {
+        const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
+        yield put(setProfile(profile));
+    } catch(error) {
+        yield put(raiseError(error));
+    }
 }
 
 export function* signIn() {

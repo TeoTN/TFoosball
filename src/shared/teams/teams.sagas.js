@@ -16,16 +16,14 @@ import { validateMember } from '../../settings/settings.sagas';
 import { browserHistory } from 'react-router';
 import { getSelectedTeam } from './teams.reducer';
 
+export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
+export const stateTeamsSelector = state => state.hasOwnProperty('teams') ? state.teams : [];
 
 export function* handleSelectTeam() {
     while (true) {
         const { team } = yield take(SELECT_TEAM);
-        try {
-            yield call(fetchProfile, team.id, team.member_id);
-            yield call([browserHistory, browserHistory.push], '/match');
-        } catch (error) {
-            yield put(raiseError(error));
-        }
+        yield call(fetchProfile, team.id, team.member_id);
+        yield call([browserHistory, browserHistory.push], '/match');
     }
 }
 
@@ -35,7 +33,13 @@ export function* createTeam(action) {
         name: action.name,
         username: action.username,
     });
-    const response = yield call(api.requests.post, url, data, 'Team already exists');
+    let response = {};
+    try {
+        response = yield call(api.requests.post, url, data, 'Team already exists');
+    } catch (error) {
+        yield put(raiseError(error));
+        return response;
+    }
     yield put(teamCreated(response));
     yield put(showInfo(`Team ${action.name} created.`));
     yield put(selectTeam(response));
@@ -46,20 +50,16 @@ export function* teamCreationFlow() {
     while (true) {
         const action = yield take(REQUEST_CREATE_TEAM);
         // TODO First validate form data
-        try {
-            yield call(authenticate); // TODO check if not authenticated within this generator itself
-            const team = yield call(createTeam, action);
-            yield call(fetchTeams);
-            yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
-            yield call([browserHistory, browserHistory.push], '/match');
-        } catch (error) {
-            yield put(raiseError(error));
-        }
+        yield call(authenticate); // TODO check if not authenticated within this generator itself
+        const team = yield call(createTeam, action);
+        yield call(fetchTeams);
+        yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
+        yield call([browserHistory, browserHistory.push], '/match');
     }
 }
 
 export function* fetchTeams() {
-    const alreadyAuthenticated = yield select(state => !!state.auth.token);
+    const alreadyAuthenticated = yield select(stateTokenSelector);
     if (!alreadyAuthenticated) return;
     const url = api.urls.teamListJoined();
     try {
@@ -71,10 +71,10 @@ export function* fetchTeams() {
 }
 
 export function* initTeam() {
-    const teamsState = yield select(state => state.teams);
+    const teamsState = yield select(stateTeamsSelector);
     let currentTeam = getSelectedTeam(teamsState);
     if (teamsState.joined.length === 0) {
-        browserHistory.push('/welcome');
+        yield call([browserHistory, browserHistory.push], '/welcome');
         return;
     }
     if (!currentTeam) {
@@ -89,8 +89,8 @@ export function* handleJoinTeam() {
         const action = yield take(REQUEST_JOIN_TEAM);
         const url = api.urls.teamJoin();
         try {
-            const err_msg = 'Team doesn\'t exist or username already taken';
-            const response = yield call(api.requests.post, url, action.data, err_msg);
+            const errorMsg = 'Team doesn\'t exist or username already taken';
+            const response = yield call(api.requests.post, url, action.data, errorMsg);
             yield put(showInfo(response));
         } catch(error) {
             yield put(raiseError(error));
@@ -99,11 +99,12 @@ export function* handleJoinTeam() {
 }
 
 export function* fetchPendingMembers() {
-    const teamsState = yield select(state => state.teams);
+    const errorMsg = 'Failed to fetch pending members';
+    const teamsState = yield select(stateTeamsSelector);
     let currentTeam = getSelectedTeam(teamsState);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
-        const response = yield call(api.requests.get, url, { is_accepted: 'False' }, 'Failed to fetch pending members');
+        const response = yield call(api.requests.get, url, { is_accepted: 'False' }, errorMsg);
         yield put(setPendingMembers(response));
     } catch (error) {
         yield put(raiseError(error));
