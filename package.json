@@ -1,6 +1,6 @@
 {
   "name": "tfoosball",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
@@ -28,6 +28,7 @@
     "deep-freeze": "0.0.1",
     "detect-port": "1.0.1",
     "dotenv": "^2.0.0",
+    "enzyme": "^2.7.1",
     "eslint": "3.8.1",
     "eslint-config-react-app": "^0.5.0",
     "eslint-loader": "1.6.0",
@@ -48,6 +49,7 @@
     "path-exists": "2.1.0",
     "postcss-loader": "1.0.0",
     "promise": "7.1.1",
+    "react-addons-test-utils": "^15.4.2",
     "react-dev-utils": "^0.4.2",
     "recursive-readdir": "2.1.0",
     "strip-ansi": "3.0.1",
