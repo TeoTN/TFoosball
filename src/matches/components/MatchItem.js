@@ -2,9 +2,13 @@ import React from 'react';
 import { Row, Col, Glyphicon, Button } from 'react-bootstrap';
 
 const MatchItem = (params) => {
-    const highlight = (params.red_score > params.blue_score &&
-        (params.username === params.red_att || params.username === params.red_def)) ||
-        (params.username === params.blue_att || params.username === params.blue_def);
+    const highlight = (
+        params.red_score > params.blue_score &&
+        (params.username === params.red_att || params.username === params.red_def)
+    ) || (
+        params.red_score < params.blue_score &&
+        (params.username === params.blue_att || params.username === params.blue_def)
+    );
     return (
         <Row componentClass="tr" className={highlight ? 'selected' : 'default'}>
             <Col xs={4} className="text-danger align-r" componentClass="td">
@@ -16,7 +20,7 @@ const MatchItem = (params) => {
             <Col xs={4} className="text-info" componentClass="td">
                 {params.blue_att}, {params.blue_def}
             </Col>
-            <Col xs={1} componentClass="td">
+            <Col xs={1} componentClass="td" className="points">
                 {Math.abs(params.points) * (!highlight && params.withOptions ? -1 : 1)}
             </Col>
             { params.withOptions ?
