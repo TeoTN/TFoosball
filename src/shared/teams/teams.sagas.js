@@ -19,6 +19,11 @@ import { getSelectedTeam } from './teams.reducer';
 export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
 export const stateTeamsSelector = state => state.hasOwnProperty('teams') ? state.teams : [];
 
+export function* getCurrentTeam() {
+    const teamsState = yield select(stateTeamsSelector);
+    return getSelectedTeam(teamsState);
+}
+
 export function* handleSelectTeam() {
     while (true) {
         const { team } = yield take(SELECT_TEAM);
@@ -100,8 +105,7 @@ export function* handleJoinTeam() {
 
 export function* fetchPendingMembers() {
     const errorMsg = 'Failed to fetch pending members';
-    const teamsState = yield select(stateTeamsSelector);
-    let currentTeam = getSelectedTeam(teamsState);
+    const currentTeam = yield call(getCurrentTeam);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
         const response = yield call(api.requests.get, url, { is_accepted: 'False' }, errorMsg);
@@ -114,8 +118,7 @@ export function* fetchPendingMembers() {
 export function* memberAcceptance() {
     while (true) {
         const action = yield take(MEMBER_ACCEPTANCE);
-        const teamsState = yield select(state => state.teams);
-        let currentTeam = getSelectedTeam(teamsState);
+        const currentTeam = yield call(getCurrentTeam);
         const url = api.urls.teamMemberEntity(currentTeam.id, action.id);
         try {
             if (action.shouldAccept) {

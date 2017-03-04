@@ -10,6 +10,7 @@ import {
     initTeam,
     handleJoinTeam,
     fetchPendingMembers,
+    getCurrentTeam
 } from '../shared/teams/teams.sagas';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { requestJoinTeam } from '../shared/teams/teams.actions';
@@ -396,13 +397,13 @@ describe('FetchPendingMembers saga', () => {
         const iterator = fetchPendingMembers();
         const url = api.urls.teamMemberList(stateWithTeamsAndSelected.teams.selected);
 
-        it('should select teams from store', () => {
+        it('should get current team', () => {
             const iter = iterator.next(stateWithTeamsAndSelected).value;
-            expect(iter).toEqual(select(stateTeamsSelector));
+            expect(iter).toEqual(call(getCurrentTeam));
         });
 
         it('should call API with GET request to fetch not accepted members', () => {
-            const iter = iterator.next(stateWithTeamsAndSelected.teams).value;
+            const iter = iterator.next(stateWithTeamsAndSelected.teams.joined[1]).value;
             expect(iter).toEqual(call(api.requests.get, url, { is_accepted: 'False'}, errorMsg));
         });
 
@@ -422,13 +423,13 @@ describe('FetchPendingMembers saga', () => {
         const iterator = fetchPendingMembers();
         const url = api.urls.teamMemberList(stateWithTeamsAndSelected.teams.selected);
 
-        it('should select teams from store', () => {
+        it('should get current team', () => {
             const iter = iterator.next(stateWithTeamsAndSelected).value;
-            expect(iter).toEqual(select(stateTeamsSelector));
+            expect(iter).toEqual(call(getCurrentTeam));
         });
 
         it('should call API with GET request to fetch not accepted members', () => {
-            const iter = iterator.next(stateWithTeamsAndSelected.teams).value;
+            const iter = iterator.next(stateWithTeamsAndSelected.teams.joined[1]).value;
             expect(iter).toEqual(call(api.requests.get, url, { is_accepted: 'False'}, errorMsg));
         });
 
