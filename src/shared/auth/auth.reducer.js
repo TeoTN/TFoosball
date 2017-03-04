@@ -1,17 +1,17 @@
 import * as types from './auth.types';
 import { REQUEST_SAVE_PROFILE, REQUEST_SAVE_MEMBER} from '../../settings/settings.actions';
 
-const profile = (state = {}, action) => {
+export const profile = (state = {}, action) => {
     switch (action.type) {
         case REQUEST_SAVE_PROFILE:
         case REQUEST_SAVE_MEMBER:
-            return Object.assign(state, action.partialData);
+            return Object.assign({}, state, action.partialData);
         default:
             return state;
     }
 };
 
-const auth = (state = {}, action) => {
+export const auth = (state = {}, action) => {
     switch (action.type) {
         case types.SET_TOKEN:
             return {
@@ -35,4 +35,5 @@ const auth = (state = {}, action) => {
             return state;
     }
 };
+
 export default auth;

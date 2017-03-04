@@ -2,7 +2,7 @@ import * as types from "./user.types";
 import choice from "../utils/choice";
 import getRoles from "../utils/roles";
 
-const user = (state, action) => {
+export const user = (state = {}, action) => {
     switch (action.type) {
         case types.ADD:
             return {
@@ -13,15 +13,15 @@ const user = (state, action) => {
             if (state.id !== action.id) return state;
             return Object.assign({}, state, action.userData);
         case types.UPDATE_LIST:
-            return Object.assign(state, action.userList.find(u => u.id === state.id));
+            return Object.assign({}, state, action.userList.find(u => u.id === state.id));
         case types.SWAP_POSITIONS:
             if (state.playing) {
-                return Object.assign(state, { position: state.position === 'att' ? 'def' : 'att'});
+                return Object.assign({}, state, { position: state.position === 'att' ? 'def' : 'att'});
             }
             return state;
         case types.SWAP_SIDES:
             if (state.playing) {
-                return Object.assign(state, { team: state.team === 'red' ? 'blue' : 'red' })
+                return Object.assign({}, state, { team: state.team === 'red' ? 'blue' : 'red' })
             }
             return state;
         default:
@@ -35,7 +35,7 @@ export const getSortedUsers = (state, column, isAscendingOrder) =>
         return isAscendingOrder ? comparison : -comparison;
     });
 
-const clean = (state = [], action) => {
+export const clean = (state = [], action) => {
     switch (action.type) {
         case types.CHOOSE:
             return state.map(u => ({
@@ -49,7 +49,7 @@ const clean = (state = [], action) => {
     }
 };
 
-export default (state = [], action) => {
+export const users = (state = [], action) => {
     switch (action.type) {
         case types.ADD:
             return [
@@ -83,3 +83,5 @@ export default (state = [], action) => {
             return state;
     }
 };
+
+export default users;
