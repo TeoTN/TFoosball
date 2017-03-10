@@ -1,4 +1,4 @@
-import { loginFlow } from '../shared/auth.sagas';
+import { loginFlow } from '../shared/auth/auth.sagas';
 import { logger } from '../shared/logger.sagas';
 import { routerSaga } from '../shared/routes.sagas';
 import { publish, removeMatch } from '../matches/matches.sagas';

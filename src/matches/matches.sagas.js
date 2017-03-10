@@ -6,11 +6,13 @@ import { removed } from './match.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { fetchUpdateUsers } from '../users/users.sagas';
 
+export const stateTeamsSelectedSelector = state => state.teams.selected;
+
 export function* publish() {
     const success_msg = points => `Match successfully saved. Red: ${points}, Blue: ${-points}`;
     while (true) {
         const action = yield take(PUBLISH);
-        const currentTeamId = yield select(state => state.teams.selected);
+        const currentTeamId = yield select(stateTeamsSelectedSelector);
         const url = api.urls.teamMatchList(currentTeamId);
         try {
             const response = yield call(api.requests.post, url, action.match_data, 'Failed to send match to server');
@@ -27,20 +29,19 @@ export function* publish() {
 export function* removeMatch() {
     while (true) {
         const action = yield take(DELETE);
-        const currentTeamId = yield select(state => state.teams.selected);
+        const currentTeamId = yield select(stateTeamsSelectedSelector);
         const url = api.urls.teamMatchEntity(currentTeamId, action.id);
         try {
             yield call(api.requests['delete'], url);
             yield put(removed(action.id));
         } catch (error) {
-            console.error(error);
             yield put(raiseError(error));
         }
     }
 }
 
 export function* listMatches({page}) {
-    const currentTeamId = yield select(state => state.teams.selected);
+    const currentTeamId = yield select(stateTeamsSelectedSelector);
     const url = api.urls.teamMatchList(currentTeamId);
     try {
         const matches = yield call(api.requests.get, url, { page });

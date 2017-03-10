@@ -2,10 +2,11 @@ import { call, put, select } from 'redux-saga/effects';
 import api from '../api';
 import * as UserActions from './user.actions';
 import { raiseError } from '../shared/notifier.actions';
+import { getCurrentTeam } from '../shared/teams/teams.sagas';
 
 export function* fetchUsers() {
-    const currentTeamId = yield select(state => state.teams.selected);
-    const url = api.urls.teamMemberList(currentTeamId);
+    const currentTeam = yield call(getCurrentTeam);
+    const url = api.urls.teamMemberList(currentTeam.id);
     try {
         const response = yield call(api.requests.get, url);
         yield put(UserActions.receiveUsers(response));
@@ -15,12 +16,12 @@ export function* fetchUsers() {
 }
 
 export function* fetchUpdateUsers() {
-    const currentTeamId = yield select(state => state.teams.selected);
-    const url = api.urls.teamMemberList(currentTeamId);
+    const currentTeam = yield call(getCurrentTeam);
+    const url = api.urls.teamMemberList(currentTeam.id);
     try {
-        const response = yield call(api.requests.get, url);
+        const response = yield call(api.requests.get, url, {}, 'Failed to fetch users list');
         yield put(UserActions.updateUsers(response));
     } catch (error) {
         yield put(raiseError(error));
     }
-};
+}

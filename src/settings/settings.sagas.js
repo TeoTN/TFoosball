@@ -1,9 +1,8 @@
-import { call, take, put, select } from 'redux-saga/effects';
+import { call, take, put } from 'redux-saga/effects';
 import api from '../api';
 import { REQUEST_SAVE_MEMBER, REQUEST_SAVE_PROFILE } from './settings.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
-import { getSelectedTeam } from '../shared/teams/teams.reducer';
-import { fetchPendingMembers } from '../shared/teams/teams.sagas';
+import { fetchPendingMembers, getCurrentTeam } from '../shared/teams/teams.sagas';
 
 // TODO move it somewhere
 export const validateMember = (data) => {
@@ -16,7 +15,7 @@ export const validateMember = (data) => {
     return data;
 };
 
-function* saveProfile() {
+export function* saveProfile() {
     const url = api.urls.profile();
     while (true) {
         const action = yield take(REQUEST_SAVE_PROFILE);
@@ -29,11 +28,10 @@ function* saveProfile() {
     }
 }
 
-function* saveMember() {
+export function* saveMember() {
     while (true) {
         const action = yield take(REQUEST_SAVE_MEMBER);
-        const teamsState = yield select(state => state.teams);
-        const currentTeam = getSelectedTeam(teamsState);
+        const currentTeam = yield call(getCurrentTeam);
         const url = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
         try {
             const data = validateMember(action.partialData);
