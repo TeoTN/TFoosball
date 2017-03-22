@@ -43,7 +43,7 @@ export default class Header extends React.Component {
         const username = profile && profile.hasOwnProperty('username') ? profile.username : '';
         return (
             <div>
-            <Navbar staticTop>
+            <Navbar staticTop collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
                         <a href="/">TFoosball</a>
