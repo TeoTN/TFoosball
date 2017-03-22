@@ -33,11 +33,11 @@ class PlayResult extends React.Component {
             </Col>
             <Col sm={4}>
                 <FormControl
-                    style={{ borderColor: '#e74c3c' }}
+                    style={{ borderColor: '#3498db' }}
                     type="number"
-                    placeholder="Red"
-                    onChange={this.onInputChange('red')}
-                    value={this.state.red}
+                    placeholder="Blue"
+                    onChange={this.onInputChange('blue')}
+                    value={this.state.blue}
                 />
             </Col>
             <Col xsHidden sm={1}>
@@ -45,11 +45,11 @@ class PlayResult extends React.Component {
             </Col>
             <Col sm={4}>
                 <FormControl
-                    style={{ borderColor: '#3498db' }}
+                    style={{ borderColor: '#e74c3c' }}
                     type="number"
-                    placeholder="Blue"
-                    onChange={this.onInputChange('blue')}
-                    value={this.state.blue}
+                    placeholder="Red"
+                    onChange={this.onInputChange('red')}
+                    value={this.state.red}
                 />
             </Col>
             <Col sm={3}>

@@ -33,19 +33,19 @@ class FoosballTable extends Component {
                 <Col xs={12} style={{ marginBottom: '15px'}}>
                     <PlayToolbar onSwapSides={swapSides} onSwapPositions={swapPositions} onRegenerate={regenerate} />
                 </Col>
-                <Col sm={9} xs={12}>
+                <Col smOffset={3} sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'red'} position={'def'} />
-                        <UserPicker team={'red'} position={'att'} />
+                        <UserPicker team={'blue'} position={'att'} />
+                        <UserPicker team={'blue'} position={'def'} />
                     </ButtonGroup>
                 </Col>
                 <Col xs={12}>
                     <Image src={table} rounded responsive thumbnail />
                 </Col>
-                <Col smOffset={3} sm={9} xs={12}>
+                <Col sm={9} xs={12}>
                     <ButtonGroup justified>
-                        <UserPicker team={'blue'} position={'att'} />
-                        <UserPicker team={'blue'} position={'def'} />
+                        <UserPicker team={'red'} position={'def'} />
+                        <UserPicker team={'red'} position={'att'} />
                     </ButtonGroup>
                 </Col>
             </Row>
