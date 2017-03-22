@@ -1,8 +1,8 @@
-import { call, put, take, select } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import api from '../api';
 import { raiseError, showInfo } from '../shared/notifier.actions';
-import { stateUsersPlayingSelector, playScore } from '../play/play.sagas';
-import { CHOOSE } from '../users/user.types';
+import { stateUsersPlayingSelector, fetchPlayScore, playScore } from '../play/play.sagas';
+import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/user.types';
 import { getCurrentTeam } from '../shared/teams/teams.sagas';
 import { requestStatsDone } from '../play/play.actions';
 
@@ -24,11 +24,7 @@ describe('PlayScore saga', () => {
     };
 
     describe('Scenario 1: Successfully obtained play score', () => {
-        const iterator = playScore();
-        it('should wait to take CHOOSE', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(take(CHOOSE));
-        });
+        const iterator = fetchPlayScore();
 
         it('should select playing users', () => {
             const iter = iterator.next().value;
@@ -50,17 +46,13 @@ describe('PlayScore saga', () => {
             expect(iter).toEqual(put(requestStatsDone(response)));
         });
 
-        it('should not return from saga', () => {
-            expect(iterator.next().done).toBe(false);
+        it('should return from saga', () => {
+            expect(iterator.next().done).toBe(true);
         });
     });
 
     describe('Scenario 2: Failed to obtain play score from API', () => {
-        const iterator = playScore();
-        it('should wait to take CHOOSE', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(take(CHOOSE));
-        });
+        const iterator = fetchPlayScore();
 
         it('should select playing users', () => {
             const iter = iterator.next().value;
@@ -82,8 +74,28 @@ describe('PlayScore saga', () => {
             expect(iter).toEqual(put(raiseError(errorMsg)));
         });
 
-        it('should not return from saga', () => {
-            expect(iterator.next().done).toBe(false);
+        it('should return from saga', () => {
+            expect(iterator.next().done).toBe(true);
+        });
+    });
+
+    describe('React to all player changing actions', () => {
+        const iterator = playScore();
+
+        it('should take latest CHOOSE', () => {
+            expect(iterator.next().value).toEqual(takeLatest(CHOOSE, fetchPlayScore));
+        });
+
+        it('should take latest SWAP_POSITIONS', () => {
+            expect(iterator.next().value).toEqual(takeLatest(SWAP_POSITIONS, fetchPlayScore));
+        });
+
+        it('should take latest SWAP_SIDES', () => {
+            expect(iterator.next().value).toEqual(takeLatest(SWAP_SIDES, fetchPlayScore));
+        });
+
+        it('should take latest ASSIGN', () => {
+            expect(iterator.next().value).toEqual(takeLatest(ASSIGN, fetchPlayScore));
         });
     });
 });

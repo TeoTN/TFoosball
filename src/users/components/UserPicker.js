@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { userUpdate } from '../user.actions';
+import { userUpdate, userAssign } from '../user.actions';
 
 const mapStateToProps = ({users}) => ({
     users: users.filter(u => u.selected),
@@ -11,12 +11,12 @@ const mapDispatchToProps = dispatch => ({
         userUpdate(user.id, {playing: false, team: undefined, position: undefined})
     ),
     assignUser: (user, team, position) => dispatch(
-        userUpdate(user.id, {playing: true, team, position})
+        userAssign(user.id, {playing: true, team, position})
     ),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-class UserPicker extends Component {
+class UserPicker extends React.Component {
     getUsersOptions = () => {
         const { users } = this.props;
         return users.length === 0 ?
@@ -46,8 +46,12 @@ class UserPicker extends Component {
         const user = users.find(u => u.team === team && u.position === position);
 
         return (
-            <DropdownButton bsStyle={this.getColor(team)} title={this.getTitle(user)}
-                            id={`player-${team}-${position}`} onSelect={this.handleChange(user)}>
+            <DropdownButton
+                bsStyle={this.getColor(team)}
+                title={this.getTitle(user)}
+                id={`player-${team}-${position}`}
+                onSelect={this.handleChange(user)}>
+                <MenuItem header>{position.toUpperCase()}</MenuItem>
                 {this.getUsersOptions()}
             </DropdownButton>
         );

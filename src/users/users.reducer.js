@@ -10,6 +10,7 @@ export const user = (state = {}, action) => {
             };
         case types.CHOOSE:
         case types.UPDATE:
+        case types.ASSIGN:
             if (state.id !== action.id) return state;
             return Object.assign({}, state, action.userData);
         case types.UPDATE_LIST:
@@ -59,6 +60,7 @@ export const users = (state = [], action) => {
         case types.UPDATE:
         case types.SWAP_POSITIONS:
         case types.SWAP_SIDES:
+        case types.ASSIGN:
             return state.map(u => user(u, action));
         case types.DELETE:
             return state.filter(user => user.id !== action.id);
@@ -68,8 +70,7 @@ export const users = (state = [], action) => {
             if (selected.length < 4) { //TODO Feature request 1-1 matches
                 throw new Error("Insufficient number of players selected.");
             }
-            const chosen = choice(selected, 4);
-            const playing = getRoles(chosen);
+            const playing = getRoles(choice(selected, 4));
             return intermediateState.map(u => (playing[u.username]) ? playing[u.username] : u);
         case types.SORT:
             return getSortedUsers(state, action.column, action.isAscendingOrder);

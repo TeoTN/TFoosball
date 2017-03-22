@@ -7,3 +7,4 @@ export const SORT = 'USER::SORT';
 export const UPDATE_LIST = 'USER::UPDATE::LIST';
 export const SWAP_SIDES = 'USER::SWAP::SIDES';
 export const SWAP_POSITIONS = 'USER::SWAP::POSITIONS';
+export const ASSIGN = 'USER::ASSIGN';
