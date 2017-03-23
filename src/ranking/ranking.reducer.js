@@ -2,7 +2,6 @@ import * as types from '../users/user.types';
 
 const model = {
     "desktop": {
-        "id": "ID",
         "username": "Username",
         "first_name": "First name",
         "last_name": "Last name",

@@ -6,6 +6,7 @@ import * as ModalActions from '../../shared/modal.actions';
 import * as MatchActions from '../../matches/match.actions';
 import NaivePager from '../../shared/components/NaivePager';
 import Loading from '../../shared/components/Loading';
+import { defaultData } from '../../matches/matches.reducer';
 
 const mapStateToProps = ({ profile: { matches } }) => ({ matches });
 const mapDispatchToProps = (dispatch) => ({
@@ -13,7 +14,7 @@ const mapDispatchToProps = (dispatch) => ({
     remove: (id) => dispatch(MatchActions.remove(id)),
 });
 
-const ProfileMatches = ({ matches = {list: [], page: 1, totalPages:1}, onRemove, remove, params: {username} }) => {
+const ProfileMatches = ({ matches = defaultData, onRemove, remove, params: {username} }) => {
     const askToRemove = (match) => (event) => {
         const params = {
             title: 'Are you sure?',
@@ -25,13 +26,20 @@ const ProfileMatches = ({ matches = {list: [], page: 1, totalPages:1}, onRemove,
         onRemove(params);
         event.preventDefault();
     };
+    console.log(matches.count);
     return (
         <Panel>
             <h4>Matches</h4>
             <NaivePager page={matches.page} prefix={`/profile/${username}/matches`} totalPages={matches.totalPages} />
             {
                 matches.list ?
-                    <MatchList withOptions onRemove={askToRemove} matches={matches.list} username={username} /> :
+                    <MatchList
+                        onRemove={askToRemove}
+                        matches={matches.list}
+                        username={username}
+                        count={matches.count}
+                        withOptions
+                    /> :
                     <Loading />
             }
         </Panel>

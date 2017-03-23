@@ -23,7 +23,7 @@ export default class MatchesLayout extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        <MatchList matches={matches.list} />
+                        <MatchList matches={matches.list} count={matches.count} />
                     </Col>
                 </Row>
                 <Row>
