@@ -39,7 +39,7 @@ class ProfileSettings extends React.Component {
             <Panel>
                 <Row>
                     <Col md={8} xs={12}>
-                        <h4>Personal data</h4>
+                        <h4 className="text-info">Personal data</h4>
                         <ProfileSettingsForm
                             saveProfile={this.saveProfile}
                             handleChange={this.handleChange}

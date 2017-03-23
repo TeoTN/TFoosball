@@ -12,7 +12,8 @@ class TeamSettings extends React.Component {
         return (
             <Panel>
                 <h3>Team: {currentTeam.name}</h3>
-                <h4>Pending team members</h4>
+                <hr/>
+                <h4 className="text-info">Pending team members</h4>
                 { pendingTeams.length > 0 ?
                     <PendingMemberList
                         users={pendingTeams}
