@@ -1,14 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Row, Col, Well} from 'react-bootstrap';
+import {Row, Col, Tab, NavItem, Nav} from 'react-bootstrap';
 import {requestSaveMember, requestSaveProfile} from '../settings.actions';
-import {getSelectedTeam} from '../../shared/teams/teams.reducer';
 import { memberAcceptance } from '../../shared/teams/teams.actions';
-import MemberSettings from './MemberSettings';
 import ProfileSettings from './ProfileSettings';
-import PendingMemberList from './PendingMemberList';
+import TeamSettings from './TeamSettings';
+import {getSelectedTeam} from '../../shared/teams/teams.reducer';
 
-const mapStateToProps = ({auth: {profile}, teams}) => ({profile, teams});
+const mapStateToProps = ({auth: {profile}, teams}) => ({
+    profile,
+    currentTeam: getSelectedTeam(teams),
+    pendingTeams: teams.pending,
+});
 const mapDispatchToProps = (dispatch) => ({
     saveMember: (data) => dispatch(requestSaveMember(data)),
     saveProfile: (data) => dispatch(requestSaveProfile(data)),
@@ -18,76 +21,51 @@ const mapDispatchToProps = (dispatch) => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class SettingsLayout extends React.Component {
-    constructor(props) {
-        super(props);
-        const {profile: {first_name, last_name, username}, teams} = this.props;
-        const currentTeam = getSelectedTeam(teams);
-        this.state = {
-            username,
-            first_name,
-            last_name,
-            currentTeam,
-        };
-    }
-
-    handleChange = (fieldName) => (event) => {
-        this.setState({[fieldName]: event.target.value});
-    };
-
-    saveMember = (event) => {
-        event.preventDefault();
-        const data = {
-            username: this.state.username
-        };
-        this.props.saveMember(data);
-    };
-
-    saveProfile = (event) => {
-        event.preventDefault();
-        const data = {
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-        };
-        this.props.saveProfile(data);
-    };
-
     render() {
-        const {currentTeam, username, first_name, last_name} = this.state;
-        const {teams: {pending}, rejectMember, acceptMember} = this.props;
+        const {
+            pendingTeams,
+            currentTeam,
+            profile,
+            rejectMember,
+            acceptMember,
+            saveProfile,
+            saveMember
+        } = this.props;
         return (
             <div className="container">
                 <h1>
                     Settings&nbsp;
                 </h1>
-                <Row>
-                    <Col md={8} xs={12}>
-                        <Well>
-                            <ProfileSettings
-                                saveProfile={this.saveProfile}
-                                handleChange={this.handleChange}
-                                first_name={first_name}
-                                last_name={last_name}
-                            />
-                        </Well>
-                    </Col>
-                    <Col md={8} xs={12}>
-                        <Well>
-                            <h2>
-                                Team membership <small>(<em>{ currentTeam ? currentTeam.name : ''}</em>)</small>
-                            </h2>
-                            <MemberSettings
-                                saveMember={this.saveMember}
-                                handleChange={this.handleChange}
-                                username={username}
-                            />
-                            <PendingMemberList
-                                users={pending}
-                                onAccept={acceptMember}
-                                onReject={rejectMember}
-                            />
-                        </Well>
-                    </Col>
-                </Row>
+                <Tab.Container id="tabs-with-dropdown" defaultActiveKey="profile">
+                    <Row className="clearfix">
+                        <Col sm={12}>
+                            <Nav bsStyle="tabs">
+                                <NavItem eventKey="profile">Profile</NavItem>
+                                <NavItem eventKey="team">Team</NavItem>
+                            </Nav>
+                        </Col>
+                        <Col sm={12}>
+                            <Tab.Content animation>
+                                <Tab.Pane eventKey="profile">
+                                    <ProfileSettings
+                                        profile={profile}
+                                        saveProfile={saveProfile}
+                                        saveMember={saveMember}
+                                    />
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="team">
+                                    <TeamSettings
+                                        pendingTeams={pendingTeams}
+                                        rejectMember={rejectMember}
+                                        acceptMember={acceptMember}
+                                        currentTeam={currentTeam}
+                                    />
+                                </Tab.Pane>
+                            </Tab.Content>
+                        </Col>
+                    </Row>
+                </Tab.Container>
+
                 {this.props.children}
             </div>
         );

@@ -1,34 +1,57 @@
-import React from 'react'
-import InputField from './InputField';
-import { Form, FormGroup, Button, Col } from 'react-bootstrap';
+import React from 'react';
+import {Panel, Row, Col} from 'react-bootstrap';
+import ProfileSettingsForm from './ProfileSettingsForm';
 
-const ProfileSettings = ({saveProfile, first_name, last_name, handleChange}) => {
-    return (
-        <Form onSubmit={saveProfile} horizontal>
-            <fieldset>
-                <legend>Profile data</legend>
-                <InputField
-                    name="first_name"
-                    label="First name"
-                    onChange={handleChange}
-                    value={first_name}
-                />
-                <InputField
-                    name="last_name"
-                    label="Last name"
-                    onChange={handleChange}
-                    value={last_name}
-                />
-                <FormGroup>
-                    <Col smOffset={3} sm={8}>
-                        <Button type="submit" bsStyle="success" block>
-                            Save
-                        </Button>
+class ProfileSettings extends React.Component {
+    constructor(props) {
+        super(props);
+        const {profile: {first_name, last_name, username}} = this.props;
+
+        this.state = {
+            username,
+            first_name,
+            last_name,
+        };
+    }
+
+    handleChange = (fieldName) => (event) => {
+        this.setState({[fieldName]: event.target.value});
+    };
+
+    saveProfile = (event) => {
+        event.preventDefault();
+        const profileData = {
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+        };
+        const memberData = {
+            username: this.state.username,
+        };
+        this.props.saveProfile(profileData);
+        this.props.saveMember(memberData);
+    };
+
+
+    render() {
+        const { username, first_name, last_name } = this.state;
+
+        return (
+            <Panel>
+                <Row>
+                    <Col md={8} xs={12}>
+                        <h4>Personal data</h4>
+                        <ProfileSettingsForm
+                            saveProfile={this.saveProfile}
+                            handleChange={this.handleChange}
+                            first_name={first_name}
+                            last_name={last_name}
+                            username={username}
+                        />
                     </Col>
-                </FormGroup>
-            </fieldset>
-        </Form>
-    );
-};
+                </Row>
+            </Panel>
+        );
+    }
+}
 
 export default ProfileSettings;
