@@ -21,7 +21,9 @@ export default class ProfileChart extends Component {
                         display: false,
                     }
                 }]
-            }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
         };
         const ctx = this.chartDOM;
         const { profile: { exp_history } } = this.props;
@@ -69,7 +71,9 @@ export default class ProfileChart extends Component {
                         Object.keys(profile).length === 0 ?
                             <Loading /> :
                             exp_history ?
-                                <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
+                                <div id="profileChartWrapper">
+                                    <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} />
+                                </div>:
                                 <p>Sorry, user has no experience points history.</p>
                     }
             </Col>

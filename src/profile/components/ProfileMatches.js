@@ -26,7 +26,6 @@ const ProfileMatches = ({ matches = defaultData, onRemove, remove, params: {user
         onRemove(params);
         event.preventDefault();
     };
-    console.log(matches.count);
     return (
         <Panel>
             <h4>Matches</h4>

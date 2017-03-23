@@ -73,3 +73,9 @@ tr.selected {
     border-radius: 0 !important;
     margin-top: -21px;
 }
+
+@media (max-width:768px) {
+    #profileChartWrapper {
+        height: 300px;
+    }
+}
