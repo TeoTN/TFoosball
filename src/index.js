@@ -30,7 +30,9 @@ function requireAuth(nextState, replace, next) {
 }
 function homepage(nextState, replace, next) {
     const persistedState = loadState();
-    if (persistedState.hasOwnProperty('auth') && persistedState.auth.hasOwnProperty('token')) {
+    if (persistedState &&
+        persistedState.hasOwnProperty('auth') &&
+        persistedState.auth.hasOwnProperty('token')) {
         replace({
             pathname: "/match",
             state: {nextPathname: nextState.location.pathname}

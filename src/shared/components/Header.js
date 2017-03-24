@@ -2,14 +2,20 @@ import React from 'react';
 import { signIn, signOut } from '../auth/auth.actions';
 import { selectTeam } from '../teams/teams.actions';
 import { getSelectedTeam } from '../teams/teams.reducer';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import SignInButton from './SignInButton';
 import { connect } from 'react-redux';
 import HeaderDropdown from './HeaderDropdown';
 import Notifications from './Notifications';
+import Navigation from './Navigation';
 
-const mapStateToProps = ({auth, teams}) => ({auth, teams});
+
+const mapStateToProps = ({auth: {profile, token}, teams}) => ({
+    username: profile && profile.hasOwnProperty('username') ? profile.username : '',
+    isAuthenticated: !!token,
+    currentTeam: getSelectedTeam(teams),
+    joinedTeams: teams.joined,
+});
 const mapDispatchToProps = dispatch => ({
     signIn: () => dispatch(signIn()),
     signOut: () => dispatch(signOut()),
@@ -18,32 +24,12 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Header extends React.Component {
-    renderNavigation(username) {
-        return (
-            <Nav>
-                <LinkContainer to={{ pathname: `/match`}}>
-                    <NavItem eventKey={1} href="#">New match</NavItem>
-                </LinkContainer>
-                <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
-                    <NavItem eventKey={2} href="#">My profile</NavItem>
-                </LinkContainer>
-                <LinkContainer to={{ pathname: `/ranking`}}>
-                    <NavItem eventKey={3} href="#">Ranking</NavItem>
-                </LinkContainer>
-                <LinkContainer to={{ pathname: `/matches/1`}}>
-                    <NavItem eventKey={4} href="#">Matches</NavItem>
-                </LinkContainer>
-            </Nav>
-        );
-    }
-
     render() {
-        const { auth: {token, profile}, teams, signIn, signOut, selectTeam } = this.props;
-        const currentTeam = getSelectedTeam(teams);
-        const username = profile && profile.hasOwnProperty('username') ? profile.username : '';
+        const { signIn, signOut, selectTeam } = this.props;
+        const { username, currentTeam, isAuthenticated, joinedTeams } = this.props;
         return (
             <div>
-            <Navbar staticTop collapseOnSelect>
+            <Navbar staticTop collapseOnSelect defaultExpanded={!isAuthenticated}>
                 <Navbar.Header>
                     <Navbar.Brand>
                         <a href="/">TFoosball</a>
@@ -51,14 +37,14 @@ export default class Header extends React.Component {
                     <Navbar.Toggle />
                 </Navbar.Header>
                 <Navbar.Collapse>
-                    { username ? this.renderNavigation(username) : null }
+                    { username ? <Navigation username={username} /> : null }
                     <Nav pullRight>
                         {
-                            token && username ?
+                            isAuthenticated && username ?
                                 <HeaderDropdown
                                     signOut={signOut}
                                     username={username}
-                                    teams={teams.joined}
+                                    teams={joinedTeams}
                                     selectTeam={selectTeam}
                                     currentTeam={currentTeam}
                                 /> :

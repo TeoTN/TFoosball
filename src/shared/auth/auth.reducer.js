@@ -17,6 +17,7 @@ export const auth = (state = {}, action) => {
             return {
                 ...state,
                 token: action.token,
+                expires_at: action.expires_at,
             };
         case types.SIGNED_OUT:
             return {};

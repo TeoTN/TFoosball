@@ -14,8 +14,8 @@ export function* authenticate() {
     if (token) return { token };
     const promptWindow = prepareWindow();
     try {
-        const { token } = yield call([promptWindow, promptWindow.open]);
-        yield put(setToken(token));
+        const { token, expires_at } = yield call([promptWindow, promptWindow.open]);
+        yield put(setToken(token, expires_at));
         return { token };
     } catch (error) {
         const errorMsg = getOAuthErrorMsg(error);
