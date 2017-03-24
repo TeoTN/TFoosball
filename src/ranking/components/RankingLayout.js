@@ -21,12 +21,12 @@ export default class RankingLayout extends React.Component {
         return (
             <Grid>
                 <Row>
-                    <Col>
+                    <Col xs={12}>
                         <h1>Ranking</h1>
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col xs={12}>
                         <RankingList users={users} username={profile.username} sortBy={sortBy} ranking={ranking}/>
                     </Col>
                 </Row>

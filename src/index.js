@@ -28,6 +28,16 @@ function requireAuth(nextState, replace, next) {
     }
     next();
 }
+function homepage(nextState, replace, next) {
+    const persistedState = loadState();
+    if (persistedState.hasOwnProperty('auth') && persistedState.auth.hasOwnProperty('token')) {
+        replace({
+            pathname: "/match",
+            state: {nextPathname: nextState.location.pathname}
+        });
+    }
+    next();
+}
 
 function hasTeams(nextState, replace, next) {
     const persistedState = loadState();
@@ -50,7 +60,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route component={App}>
-                <Route path="/" component={IntroLayout} />
+                <Route path="/" component={IntroLayout} onEnter={homepage} />
                 <Route path="welcome" component={TeamAssignment} onEnter={chain([requireAuth, hasTeams])} />
                 <Route path="match" component={MatchLayout} onEnter={requireAuth} />
                 <Route path="profile/:username" component={ProfileLayout} onEnter={requireAuth}>

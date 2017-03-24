@@ -74,8 +74,6 @@ tr.selected {
     margin-top: -21px;
 }
 
-@media (max-width:768px) {
-    #profileChartWrapper {
-        height: 300px;
-    }
+#profileChartWrapper {
+    height: 300px;
 }
