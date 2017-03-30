@@ -211,8 +211,20 @@ describe('LoginFlow saga', () => {
             expect(iterator.next().value).toEqual(expected)
         });
 
-        it('should put RAISE_ERROR', () => {
-            expect(iterator.throw(error_msg).value).toEqual(put(raiseError(error_msg)));
+        it('should dispatch SIGNED_OUT action', () => {
+            expect(iterator.next().value).toEqual(put(AuthActions.signedOut()));
+        });
+
+        it('should clean notifications', () => {
+            expect(iterator.next().value).toEqual(put(clean()));
+        });
+
+        it('should clean localStorage', () => {
+            expect(iterator.next().value).toEqual(call(removeState));
+        });
+
+        it('should redirect to home page', () => {
+            expect(iterator.next().value).toEqual(call([browserHistory, browserHistory.push], '/'));
         });
 
         it('should restart the saga', () => {
