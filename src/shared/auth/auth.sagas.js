@@ -63,10 +63,7 @@ export function* loginFlow() {
         const logout_url = api.urls.logout();
         try {
             yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
-        } catch (error) {
-            yield put(raiseError(error));
-            continue;
-        }
+        } catch (error) {}
         yield put(signedOut());
         yield put(clean());
         yield call(removeState);
