@@ -1,17 +1,18 @@
-import { take, call, put, fork, cancel, select } from 'redux-saga/effects';
+import { take, call, put, fork, cancel, select, takeLatest } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import { setToken, setProfile, signedOut } from './auth.actions';
-import { raiseError, clean } from '../notifier.actions';
+import { raiseError, clean, RAISE_UNAUTHORIZED } from '../notifier.actions';
 import { initTeam, fetchTeams } from '../teams/teams.sagas';
 import { prepareWindow } from '../../api/oauth';
 import api from '../../api';
 import { removeState } from '../../persistence';
 import { getOAuthErrorMsg } from './auth.utils';
+import { showModalInfo, acceptModal } from '../modal.actions';
 
-export function* authenticate() {
+export function* authenticate(reauthenticate = false) {
     const token = yield select(state => state.auth.token);
-    if (token) return { token };
+    if (token && !reauthenticate) return { token };
     const promptWindow = prepareWindow();
     try {
         const { token, expires_at } = yield call([promptWindow, promptWindow.open]);
@@ -69,4 +70,20 @@ export function* loginFlow() {
         yield call(removeState);
         yield call([browserHistory, browserHistory.push], '/');
     }
+}
+
+export function* sessionExpired() {
+    const reauthenticate = function* () {
+        // TODO replay
+        const info = {
+            title: 'Unauthenticated',
+            text: 'Your session has expired, please log in again.',
+            onAccept: () => {},
+        };
+        yield put(showModalInfo(info));
+        yield call(authenticate, true);
+        yield put(acceptModal());
+        yield call([browserHistory, browserHistory.push], '/');
+    };
+    yield takeLatest(RAISE_UNAUTHORIZED, reauthenticate);
 }
