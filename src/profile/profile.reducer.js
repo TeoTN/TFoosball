@@ -17,6 +17,7 @@ const matches = (state = defaultData, action) => {
             return {
                 ...state,
                 list: state.list.filter(match => match.id !== action.id),
+                count: state.count - 1,
             };
         default:
             return state;

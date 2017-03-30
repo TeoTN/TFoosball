@@ -22,6 +22,7 @@ const ProfileMatches = ({ matches = defaultData, onRemove, remove, params: {user
             text: `${match.id}) ${match.red_def} ${match.red_att} [${match.red_score} - ${match.blue_score}] \
                    ${match.blue_att} ${match.blue_def}`,
             onAccept: () => remove(match.id),
+            onReject: () => {},
         };
         onRemove(params);
         event.preventDefault();

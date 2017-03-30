@@ -12,7 +12,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-class QuestionModal extends React.Component {
+class ModalMessage extends React.Component {
     onAccept = () => {
         const { accept, onAccept } = this.props;
         accept();   // Callee callback
@@ -39,11 +39,19 @@ class QuestionModal extends React.Component {
                     <p>{text}</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={this.onReject} bsStyle={'link'} className="text-danger">No</Button>
-                    <Button onClick={this.onAccept} bsStyle={'success'}>Yes</Button>
+                    { this.props.onReject ?
+                        <Button onClick={this.onReject} bsStyle={'link'} className="text-danger">
+                            Cancel
+                        </Button> :
+                        null
+                    }
+                    { this.props.onAccept ?
+                        <Button onClick={this.onAccept} bsStyle={'success'}>OK</Button> :
+                        null
+                    }
                 </Modal.Footer>
             </Modal>
         )
     }
 }
-export default QuestionModal;
+export default ModalMessage;

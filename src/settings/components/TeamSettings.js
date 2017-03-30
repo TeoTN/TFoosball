@@ -3,10 +3,6 @@ import { Panel} from 'react-bootstrap';
 import PendingMemberList from './PendingMemberList';
 
 class TeamSettings extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { pendingTeams, acceptMember, rejectMember, currentTeam } = this.props;
         return (

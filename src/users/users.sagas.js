@@ -1,4 +1,4 @@
-import { call, put, select } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 import api from '../api';
 import * as UserActions from './user.actions';
 import { raiseError } from '../shared/notifier.actions';

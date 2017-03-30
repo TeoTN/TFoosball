@@ -178,7 +178,7 @@ describe('ListMatches saga', () => {
             expect(iterator.next(currentTeamId).value).toEqual(select(stateTeamsSelectedSelector));
         });
         it('should call fetch data from API', () => {
-            expect(iterator.next(currentTeamId).value).toEqual(call(api.requests.get, url, params));
+            expect(iterator.next(currentTeamId).value).toEqual(call(api.requests.get, url, params, errorMsg));
         });
         it('should put matches to store', () => {
             expect(iterator.next(matches).value).toEqual(put(MatchActions.list(matches)));
@@ -195,7 +195,7 @@ describe('ListMatches saga', () => {
             expect(iterator.next(currentTeamId).value).toEqual(select(stateTeamsSelectedSelector));
         });
         it('should call fetch data from API', () => {
-            expect(iterator.next(currentTeamId).value).toEqual(call(api.requests.get, url, params));
+            expect(iterator.next(currentTeamId).value).toEqual(call(api.requests.get, url, params, errorMsg));
         });
         it('should display message on failure', () => {
             expect(iterator.throw(errorMsg).value).toEqual(put(raiseError(errorMsg)));

@@ -44,9 +44,9 @@ export function* listMatches({page}) {
     const currentTeamId = yield select(stateTeamsSelectedSelector);
     const url = api.urls.teamMatchList(currentTeamId);
     try {
-        const matches = yield call(api.requests.get, url, { page });
+        const matches = yield call(api.requests.get, url, { page }, 'Failed to retrieve a list of matches.');
         yield put(list(matches));
     } catch (error) {
-        yield put(raiseError('Failed to retrieve a list of matches.'));
+        yield put(raiseError(error));
     }
 }
