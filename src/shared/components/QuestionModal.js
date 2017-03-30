@@ -12,7 +12,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-class QuestionModal extends React.Component {
+class ModalMessage extends React.Component {
     onAccept = () => {
         const { accept, onAccept } = this.props;
         accept();   // Callee callback
@@ -54,4 +54,4 @@ class QuestionModal extends React.Component {
         )
     }
 }
-export default QuestionModal;
+export default ModalMessage;

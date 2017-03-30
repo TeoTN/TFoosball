@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../../shared/components/Header';
-import QuestionModal from '../../shared/components/QuestionModal';
+import ModalMessage from '../../shared/components/QuestionModal';
 
 export default class App extends React.Component {
     render() {
@@ -8,7 +8,7 @@ export default class App extends React.Component {
         return (
             <div>
                 <Header />
-                <QuestionModal />
+                <ModalMessage />
                 <main className="container-fluid">
                     {children}
                 </main>
