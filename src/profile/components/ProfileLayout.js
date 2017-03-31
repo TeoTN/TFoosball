@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
-import ProfileTeams from './ProfileTeams';
 import { Panel, NavItem, Nav, Glyphicon } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
-import FontAwesome from 'react-fontawesome';
+import Icon from 'react-fontawesome';
 import md5 from 'md5';
 
 const mapStateToProps = ({profile, auth}) => ({
@@ -43,7 +42,7 @@ export default class ProfileLayout extends React.Component {
                     { myUsername === username ?
                         <LinkContainer to={{pathname: `/profile/${username}/teams`}}>
                             <NavItem eventKey="3" href="#">
-                                <FontAwesome name="users"/><br/>Teams
+                                <Icon name="users"/><br/>Teams
                             </NavItem>
                         </LinkContainer> :
                         null }

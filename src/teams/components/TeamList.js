@@ -1,18 +1,19 @@
 import React from 'react'
 import { ListGroup } from 'react-bootstrap';
-import TeamItem from './TeamItem';
+import { SelectTeamItem } from './index';
 
 
-const TeamList = ({teams, onTeamSelect, selectedTeam}) => {
+const TeamList = ({teams, onTeamSelect, selectedTeam, editable}) => {
     return (
         <ListGroup>
             {
                 teams.map((team, idx) =>
-                    <TeamItem
+                    <SelectTeamItem
                         key={idx}
                         team={team}
                         onSelect={() => onTeamSelect(team)}
                         selected={selectedTeam === team.id}
+                        editable={editable}
                     />
                 )
             }

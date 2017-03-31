@@ -1,13 +1,15 @@
-import { call, take, put, select } from 'redux-saga/effects';
+import { call, take, put, select, takeEvery } from 'redux-saga/effects';
 import {
     REQUEST_CREATE_TEAM,
     REQUEST_JOIN_TEAM,
     SELECT_TEAM,
     MEMBER_ACCEPTANCE,
+    LEAVE_TEAM,
     teamCreated,
     setTeams,
     selectTeam,
     setPendingMembers,
+    teamLeft,
 } from './teams.actions.js';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
@@ -49,6 +51,20 @@ export function* createTeam(action) {
     yield put(showInfo(`Team ${action.name} created.`));
     yield put(selectTeam(response));
     return response;
+}
+
+export function* leaveTeam() {
+    const leave = function* ({team}) {
+        const url = api.urls.teamMemberEntity(team.id, team.member_id);
+        try {
+            yield call(api.requests['delete'], url, {}, `Failed to leave the team ${team.name}.`);
+        } catch (error) {
+            yield put(raiseError(error));
+        }
+        yield put(teamLeft(team));
+        yield put(showInfo(`Team ${team.name} was left.`));
+    };
+    yield takeEvery(LEAVE_TEAM, leave);
 }
 
 export function* teamCreationFlow() {
@@ -142,5 +158,6 @@ export function* teams() {
         handleSelectTeam(),
         handleJoinTeam(),
         memberAcceptance(),
+        leaveTeam(),
     ];
 }

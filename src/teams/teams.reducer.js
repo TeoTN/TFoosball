@@ -1,4 +1,4 @@
-import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM, PENDING_MEMBERS } from './teams.actions';
+import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM, PENDING_MEMBERS, TEAM_LEFT } from './teams.actions';
 import { UPDATE_PROFILE } from '../profile/profile.types';
 import { SIGNED_OUT } from '../shared/auth/auth.types';
 export const getSelectedTeam = (state) => state.joined.find(team => team.id === state.selected);
@@ -38,6 +38,11 @@ export const teams = (state = { joined: [], selected: 0, pending: [] }, action) 
             return {
                 ...state,
                 pending: action.list,
+            };
+        case TEAM_LEFT:
+            return {
+                ...state,
+                joined: state.joined.filter(t => t.id !== action.team.id),
             };
         default:
             return state;
