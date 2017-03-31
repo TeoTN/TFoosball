@@ -1,7 +1,7 @@
 import React from 'react';
 import { signIn, signOut } from '../auth/auth.actions';
-import { selectTeam } from '../teams/teams.actions';
-import { getSelectedTeam } from '../teams/teams.reducer';
+import { selectTeam } from '../../teams/teams.actions';
+import { getSelectedTeam } from '../../teams/teams.reducer';
 import { Navbar, Nav } from 'react-bootstrap';
 import SignInButton from './SignInButton';
 import { connect } from 'react-redux';

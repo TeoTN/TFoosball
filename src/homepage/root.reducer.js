@@ -7,7 +7,7 @@ import ranking from '../ranking/ranking.reducer';
 import modal from '../shared/modal.reducer';
 import matches from '../matches/matches.reducer';
 import play from '../play/play.reducer';
-import teams from '../shared/teams/teams.reducer';
+import teams from '../teams/teams.reducer';
 import {combineReducers} from 'redux';
 
 const reducer = combineReducers({

@@ -3,7 +3,7 @@ import api from '../api';
 import { raiseError, showInfo } from '../shared/notifier.actions';
 import { stateUsersPlayingSelector, fetchPlayScore, playScore } from '../play/play.sagas';
 import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/user.types';
-import { getCurrentTeam } from '../shared/teams/teams.sagas';
+import { getCurrentTeam } from '../teams/teams.sagas';
 import { requestStatsDone } from '../play/play.actions';
 
 describe('PlayScore saga', () => {

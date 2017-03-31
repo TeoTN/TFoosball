@@ -9,10 +9,10 @@ import {
     selectTeam,
     setPendingMembers,
 } from './teams.actions.js';
-import api from '../../api';
-import { showInfo, raiseError } from '../notifier.actions';
-import { authenticate, fetchProfile } from '../auth/auth.sagas';
-import { validateMember } from '../../settings/settings.sagas';
+import api from '../api';
+import { showInfo, raiseError } from '../shared/notifier.actions';
+import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
+import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
 import { getSelectedTeam } from './teams.reducer';
 

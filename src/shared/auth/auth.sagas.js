@@ -3,7 +3,7 @@ import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import { setToken, setProfile, signedOut } from './auth.actions';
 import { raiseError, clean, RAISE_UNAUTHORIZED } from '../notifier.actions';
-import { initTeam, fetchTeams } from '../teams/teams.sagas';
+import { initTeam, fetchTeams } from '../../teams/teams.sagas';
 import { prepareWindow } from '../../api/oauth';
 import api from '../../api';
 import { removeState } from '../../persistence';

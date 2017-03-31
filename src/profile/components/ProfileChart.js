@@ -66,16 +66,18 @@ export default class ProfileChart extends Component {
         const { profile: {exp_history}, profile } = this.props;
         return (
             <Col md={7}>
-                    <h4>History</h4>
-                    {
-                        Object.keys(profile).length === 0 ?
-                            <Loading /> :
-                            exp_history ?
-                                <div id="profileChartWrapper">
-                                    <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} />
-                                </div>:
-                                <p>Sorry, user has no experience points history.</p>
-                    }
+                <h4>History</h4>
+                {
+                    Object.keys(profile).length === 0 ?
+                        <Loading /> :
+                        exp_history ?
+                            <div id="profileChartWrapper">
+                                <canvas id="profileChart" ref={(chart) => {
+                                    this.chartDOM = chart;
+                                }}/>
+                            </div> :
+                            <p>Sorry, user has no experience points history.</p>
+                }
             </Col>
         );
     }

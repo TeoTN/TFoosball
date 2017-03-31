@@ -1,5 +1,5 @@
 import { call, put, take, select, fork, cancel } from 'redux-saga/effects';
-import { requestCreateTeam } from '../shared/teams/teams.actions';
+import { requestCreateTeam } from '../teams/teams.actions';
 import {
     teamCreationFlow,
     createTeam,
@@ -11,9 +11,9 @@ import {
     handleJoinTeam,
     fetchPendingMembers,
     getCurrentTeam
-} from '../shared/teams/teams.sagas';
+} from '../teams/teams.sagas';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
-import { requestJoinTeam } from '../shared/teams/teams.actions';
+import { requestJoinTeam } from '../teams/teams.actions';
 import { browserHistory } from 'react-router';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
@@ -26,7 +26,7 @@ import {
     setTeams,
     selectTeam,
     setPendingMembers,
-} from '../shared/teams/teams.actions.js';
+} from '../teams/teams.actions.js';
 
 describe('StateTokenSelector', () => {
     it('should return true when token is present', () => {

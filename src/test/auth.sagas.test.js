@@ -6,7 +6,7 @@ import * as AuthActions from '../shared/auth/auth.actions';
 import { clean, raiseError } from '../shared/notifier.actions';
 import { authenticate, loginFlow, signIn, fetchProfile } from '../shared/auth/auth.sagas';
 import { getOAuthErrorMsg } from '../shared/auth/auth.utils';
-import { fetchTeams, initTeam } from '../shared/teams/teams.sagas';
+import { fetchTeams, initTeam } from '../teams/teams.sagas';
 import { removeState } from '../persistence';
 import { browserHistory } from 'react-router'
 

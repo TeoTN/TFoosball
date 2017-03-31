@@ -2,7 +2,7 @@ import { call, put, take } from 'redux-saga/effects';
 import api from '../api';
 import { raiseError, showInfo } from '../shared/notifier.actions';
 import { saveProfile, saveMember, validateMember, settings } from '../settings/settings.sagas';
-import { getCurrentTeam, fetchPendingMembers } from '../shared/teams/teams.sagas';
+import { getCurrentTeam, fetchPendingMembers } from '../teams/teams.sagas';
 
 import {
     REQUEST_SAVE_PROFILE,
