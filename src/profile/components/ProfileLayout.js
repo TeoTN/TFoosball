@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
-import { Panel, NavItem, Nav } from 'react-bootstrap';
+import { Panel, NavItem, Nav, Glyphicon } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
+import FontAwesome from 'react-fontawesome';
 import md5 from 'md5';
 
 const mapStateToProps = ({profile}) => ({profile});
@@ -24,13 +25,23 @@ export default class ProfileLayout extends React.Component {
                     </picture>
                     { username } <small>{ profile.exp } XP</small>
                 </h1>
-                <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
+                <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">
                     <LinkContainer to={{ pathname: `/profile/${username}/stats`}}>
-                        <NavItem eventKey="1" href="#">Statistics</NavItem>
+                        <NavItem eventKey="1" href="#">
+                            <Glyphicon glyph="dashboard" /><br/>Statistics
+                        </NavItem>
                     </LinkContainer>
                     <LinkContainer to={{ pathname: `/profile/${username}/matches`}}>
-                        <NavItem eventKey="2" href="#">Matches played</NavItem>
+                        <NavItem eventKey="2" href="#">
+                            <Glyphicon glyph="list" /><br/>Matches
+                        </NavItem>
                     </LinkContainer>
+                    <NavItem eventKey="3" href="#">
+                        <FontAwesome name="users" /><br/>Teams
+                    </NavItem>
+                    <NavItem eventKey="4" href="#">
+                        <Glyphicon glyph="wrench"/><br/>Settings
+                    </NavItem>
                 </Nav>
                 { children ?
                     children :
