@@ -20,6 +20,11 @@
     padding: 0 !important;
 }
 
+.no-vertical-padding {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 .no-margin {
     margin: 0 !important;
 }
@@ -77,3 +82,4 @@ tr.selected {
 #profileChartWrapper {
     height: 300px;
 }
+

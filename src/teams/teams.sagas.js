@@ -17,6 +17,8 @@ import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
 import { getSelectedTeam } from './teams.reducer';
+import { showQuestionModal } from '../shared/modal.actions';
+
 
 export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
 export const stateTeamsSelector = state => state.hasOwnProperty('teams') ? state.teams : [];
@@ -112,7 +114,11 @@ export function* handleJoinTeam() {
         try {
             const errorMsg = 'Team doesn\'t exist or username already taken';
             const response = yield call(api.requests.post, url, action.data, errorMsg);
-            yield put(showInfo(response));
+            yield put(showQuestionModal({
+                title: 'Notice',
+                text: response,
+                onAccept: () => {},
+            }));
         } catch(error) {
             yield put(raiseError(error));
         }

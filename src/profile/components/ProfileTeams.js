@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Panel, Label, Button } from 'react-bootstrap';
+import { Panel, Label, Button, ButtonGroup } from 'react-bootstrap';
 import { TeamList, PendingMemberList } from '../../teams/components/';
 import { selectTeam, leaveTeam, memberAcceptance } from '../../teams/teams.actions';
 import { getSelectedTeam } from '../../teams/teams.reducer';
@@ -22,11 +22,16 @@ class ProfileTeams extends React.Component {
         super(props);
         this.state = {
             editMode: false,
+            joinMode: false,
         };
     }
 
     switchEditMode = () => {
         this.setState({ editMode: !this.state.editMode});
+    };
+
+    switchJoinMode = () => {
+        this.setState({ joinMode: !this.state.joinMode});
     };
 
     onTeamSelect = (team) => {
@@ -57,13 +62,17 @@ class ProfileTeams extends React.Component {
 
                 <h4 className="text-info">
                     Joined teams&nbsp;
-                    <Button bsSize="xsmall" href="#" onClick={this.switchEditMode}>edit</Button>
+                    <ButtonGroup>
+                        <Button bsSize="xsmall" href="#" onClick={this.switchEditMode} bsStyle="danger">Leave</Button>
+                        <Button bsSize="xsmall" href="#" onClick={this.switchJoinMode} bsStyle="success">Join</Button>
+                    </ButtonGroup>
                 </h4>
                 <TeamList
                     teams={teams.joined}
                     selectedTeam={teams.selected}
                     onTeamSelect={this.onTeamSelect}
                     editable={this.state.editMode}
+                    joinable={this.state.joinMode}
                 />
                 <hr />
 

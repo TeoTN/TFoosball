@@ -2,7 +2,7 @@ import React from 'react';
 import {Panel, Grid, Row} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import TeamCreationForm from './TeamCreationForm';
-import JoinTeamForm from './JoinTeamForm';
+import JoinTeamForm from '../../teams/components/JoinTeamForm';
 
 const mapStateToProps = ({teams}) => ({
     pending: teams.pending,

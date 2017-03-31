@@ -1,11 +1,12 @@
 import React from 'react'
 import { ListGroup } from 'react-bootstrap';
-import { SelectTeamItem } from './index';
+import { SelectTeamItem, JoinTeamItem } from './index';
 
 
-const TeamList = ({teams, onTeamSelect, selectedTeam, editable}) => {
+const TeamList = ({teams, onTeamSelect, selectedTeam, editable, joinable}) => {
     return (
-        <ListGroup>
+        <ListGroup fill>
+            { joinable ? <JoinTeamItem /> : null }
             {
                 teams.map((team, idx) =>
                     <SelectTeamItem
