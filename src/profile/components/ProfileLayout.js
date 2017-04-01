@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ProfileChart from './ProfileChart';
 import ProfileStats from './ProfileStats';
-import { Panel, NavItem, Nav, Glyphicon } from 'react-bootstrap';
+import { Row, Col, Panel, NavItem, Nav, Glyphicon } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import Icon from 'react-fontawesome';
@@ -56,8 +56,14 @@ export default class ProfileLayout extends React.Component {
                 { children ?
                     children :
                     <Panel>
-                        <ProfileStats profile={profile}/>
-                        <ProfileChart profile={profile}/>
+                        <Row>
+                            <Col md={5}>
+                                <ProfileStats profile={profile}/>
+                            </Col>
+                            <Col md={7}>
+                                <ProfileChart profile={profile}/>
+                            </Col>
+                        </Row>
                     </Panel>
                 }
             </div>

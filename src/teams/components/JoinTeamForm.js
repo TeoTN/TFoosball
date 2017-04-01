@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Row, Col, InputGroup, Form, FormGroup, FormControl, Button} from 'react-bootstrap';
+import {Col, InputGroup, Form, FormGroup, FormControl, Button} from 'react-bootstrap';
 import {requestJoinTeam} from '../teams.actions.js';
 import Icon from 'react-fontawesome';
 
@@ -30,34 +30,30 @@ export default class JoinTeamForm extends React.Component {
     };
 
     render() {
-
         return (
-            <Form horizontal>
-                <FormGroup className=" no-margin">
-                    <InputGroup>
-                        <Row>
-                            <Col xs={6}>
-                                <FormControl
-                                    placeholder="Username"
-                                    style={{border: 0}}
-                                    onChange={this.handleChange('username')}
-                                    value={this.state.username}
-                                />
-                            </Col>
-                            <Col xs={6}>
-                                <FormControl
-                                    placeholder="Team name"
-                                    style={{border: 0}}
-                                    onChange={this.handleChange('team')}
-                                    value={this.state.team}
-                                />
-                            </Col>
-                        </Row>
-                        <InputGroup.Button>
-                            <Button bsStyle="link" onClick={this.handleJoinTeam}>
-                                Join&nbsp;&nbsp;<Icon name="chevron-right"/>
-                            </Button>
-                        </InputGroup.Button>
+            <Form className="row" horizontal>
+                <FormGroup className="col-xs-12 row" style={{marginBottom: 0}}>
+                    <InputGroup style={{width: '100%'}}>
+                        <Col xs={12} sm={5}>
+                            <FormControl
+                                placeholder="Enter team name..."
+                                style={{border: 0}}
+                                onChange={this.handleChange('team')}
+                                value={this.state.team}
+                            />
+                        </Col>
+                        <Col xs={12} sm={6}>
+                            <FormControl
+                                placeholder="Enter new username..."
+                                style={{border: 0}}
+                                onChange={this.handleChange('username')}
+                                value={this.state.username}
+                            />
+                        </Col>
+                        <Button bsStyle="link" onClick={this.handleJoinTeam} className="pull-right"
+                                style={{marginRight: '-15px'}}>
+                            Join&nbsp;&nbsp;<Icon name="chevron-right"/>
+                        </Button>
                     </InputGroup>
                 </FormGroup>
             </Form>

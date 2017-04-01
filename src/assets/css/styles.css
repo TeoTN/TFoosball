@@ -46,10 +46,6 @@ tr.selected {
     cursor: pointer;
 }
 
-.align-r {
-    text-align: right;
-}
-
 .progress {
     background: #fff !important;
 }
@@ -83,3 +79,7 @@ tr.selected {
     height: 300px;
 }
 
+.text-ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Chart from 'chart.js';
-import { Col } from 'react-bootstrap';
 import Loading from '../../shared/components/Loading';
 
 export default class ProfileChart extends Component {
@@ -65,7 +64,7 @@ export default class ProfileChart extends Component {
     render() {
         const { profile: {exp_history}, profile } = this.props;
         return (
-            <Col md={7}>
+            <div>
                 <h4>History</h4>
                 {
                     Object.keys(profile).length === 0 ?
@@ -78,7 +77,7 @@ export default class ProfileChart extends Component {
                             </div> :
                             <p>Sorry, user has no experience points history.</p>
                 }
-            </Col>
+            </div>
         );
     }
 }
