@@ -2,7 +2,7 @@ import { call, put, take } from 'redux-saga/effects';
 import api from '../api';
 import { raiseError, showInfo } from '../shared/notifier.actions';
 import { saveProfile, saveMember, validateMember, settings } from '../settings/settings.sagas';
-import { getCurrentTeam, fetchPendingMembers } from '../teams/teams.sagas';
+import { getCurrentTeam } from '../teams/teams.sagas';
 
 import {
     REQUEST_SAVE_PROFILE,
@@ -175,7 +175,6 @@ describe('Test settings route saga', () => {
         const exp = [
             saveProfile(),
             saveMember(),
-            fetchPendingMembers(),
         ];
         expect(JSON.stringify(iterator.next().value)).toEqual(JSON.stringify(exp));
     });

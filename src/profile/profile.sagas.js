@@ -18,8 +18,8 @@ export function* profileStats({username}) {
     const currentTeamId = yield select(state => state.teams.selected);
     try {
         const url = `${api.urls.teamMemberList(currentTeamId)}?username=${username}`;
-        const profile = yield call(api.requests.get, url, null, `Failed to get ${username} profile.`);
-        yield put(receiveProfile(profile[0]));
+        const profiles = yield call(api.requests.get, url, null, `Failed to get ${username} profile.`);
+        yield put(receiveProfile(profiles));
     } catch (error) {
         yield put(raiseError(error))
     }
