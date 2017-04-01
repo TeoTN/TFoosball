@@ -1,4 +1,4 @@
-import { call, put, take, select, fork, cancel } from 'redux-saga/effects';
+import { call, put, take, select } from 'redux-saga/effects';
 import { requestCreateTeam } from '../teams/teams.actions';
 import {
     teamCreationFlow,
@@ -18,15 +18,16 @@ import { browserHistory } from 'react-router';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import {
-    REQUEST_CREATE_TEAM,
     REQUEST_JOIN_TEAM,
     SELECT_TEAM,
-    MEMBER_ACCEPTANCE,
     teamCreated,
     setTeams,
     selectTeam,
     setPendingMembers,
 } from '../teams/teams.actions.js';
+import { showQuestionModal } from '../shared/modal.actions';
+
+
 
 describe('StateTokenSelector', () => {
     it('should return true when token is present', () => {
@@ -347,10 +348,15 @@ describe('HandleJoinTeam saga', () => {
             expect(iter).toEqual(call(api.requests.post, url, action.data, errorMsg));
         });
 
-        it('should put SHOW_INFO with success message', () => {
+        it('should show modal with a response message', () => {
             const response = 'OK';
             const iter = iterator.next(response).value;
-            expect(iter).toEqual(put(showInfo(response)));
+            const expected = put(showQuestionModal({
+                title: 'Notice',
+                text: response,
+                onAccept: () => {},
+            }));
+            expect(JSON.stringify(iter)).toEqual(JSON.stringify(expected));
         });
 
         it('should not return from the saga', () => {
