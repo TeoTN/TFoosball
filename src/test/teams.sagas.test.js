@@ -153,6 +153,7 @@ describe('HandleSelectTeam saga', () => {
     const team = {
         id: 7,
         member_id: 15,
+        username: 'Axis'
     };
 
     it('should wait to take SELECT_TEAM', () => {
@@ -165,9 +166,9 @@ describe('HandleSelectTeam saga', () => {
         expect(iter).toEqual(call(fetchProfile, team.id, team.member_id));
     });
 
-    it('should redirect to /match', () => {
+    it('should redirect to new profile teams', () => {
         const iter = iterator.next().value;
-        expect(iter).toEqual(call([browserHistory, browserHistory.push], '/match'));
+        expect(iter).toEqual(call([browserHistory, browserHistory.push], `/profile/${team.username}/teams`));
     });
 
     it('should not return from saga', () => {

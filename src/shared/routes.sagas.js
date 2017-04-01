@@ -4,7 +4,7 @@ import { profileMatches, profileStats } from '../profile/profile.sagas';
 import { fetchUsers } from '../users/users.sagas';
 import { listMatches } from '../matches/matches.sagas';
 import { settings } from '../settings/settings.sagas';
-import { fetchPendingMembers } from '../teams/teams.sagas';
+import { fetchPendingMembers, fetchTeams } from '../teams/teams.sagas';
 
 
 const options = {
@@ -14,7 +14,7 @@ const options = {
 const routes = {
     '/profile/:username/*': profileStats,
     '/profile/:username/matches/:page?': profileMatches,
-    '/profile/:username/teams': fetchPendingMembers,
+    '/profile/:username/teams': function*() { yield [fetchPendingMembers, fetchTeams ]; },
     '/matches/:page': listMatches,
     '/match': fetchUsers,
     '/ranking': fetchUsers,
