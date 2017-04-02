@@ -4,6 +4,7 @@ import rootSaga from './homepage/root.sagas';
 import reducer from './homepage/root.reducer'
 import { loadState, saveState } from './persistence';
 
+
 const createLoggingDispatch = (store) => {
     const rawDispatch = store.dispatch;
     if (!console.group) {

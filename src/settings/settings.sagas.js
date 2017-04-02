@@ -1,8 +1,10 @@
-import { call, take, put } from 'redux-saga/effects';
+import { call, take, put, takeLatest } from 'redux-saga/effects';
 import api from '../api';
-import { REQUEST_SAVE_MEMBER, REQUEST_SAVE_PROFILE } from './settings.actions';
+import { REQUEST_SAVE_MEMBER, REQUEST_SAVE_PROFILE, REQUEST_SAVE_SETTINGS, settingsSaved } from './settings.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { getCurrentTeam } from '../teams/teams.sagas';
+import { browserHistory } from 'react-router'
+
 
 // TODO move it somewhere
 export const validateMember = (data) => {
@@ -14,6 +16,9 @@ export const validateMember = (data) => {
     }
     return data;
 };
+
+const profileSettingsFilter = ({ first_name, last_name }) => ({ first_name, last_name });
+const memberSettingsFilter = ({ username }) => ({ username });
 
 export function* saveProfile() {
     const url = api.urls.profile();
@@ -40,6 +45,38 @@ export function* saveMember() {
         } catch(error) {
             yield put(raiseError(error));
         }
+    }
+}
+
+export function* saveSettings({values}) {
+    const successMsg = 'Profile settings were saved';
+    const errorMsg = 'Failed to save profile settings';
+    if (values.first_name || values.last_name) {
+        const profileUrl = api.urls.profile();
+        const profileSettings = profileSettingsFilter(values);
+        yield call(api.requests.patch, profileUrl, profileSettings, errorMsg);
+    }
+
+    if (values.username) {
+        const currentTeam = yield call(getCurrentTeam);
+        const memberUrl = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
+        const memberSettings = memberSettingsFilter(values);
+        yield call(api.requests.patch, memberUrl, memberSettings, errorMsg);
+    }
+    yield put(showInfo(successMsg));
+    yield put(settingsSaved(values));
+    if (values.username) {
+        yield call([browserHistory, browserHistory.push], `/profile/${values.username}/settings`);
+    }
+}
+
+export function* onRequestSaveSettings() {
+    const errorMsg = 'Failed to save profile settings';
+    try {
+        yield takeLatest(REQUEST_SAVE_SETTINGS, saveSettings);
+    } catch(error) {
+        yield put(raiseError(errorMsg));
+        yield takeLatest(REQUEST_SAVE_SETTINGS, saveSettings);
     }
 }
 

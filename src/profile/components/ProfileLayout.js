@@ -13,6 +13,7 @@ const mapStateToProps = ({profile, auth}) => ({
     myUsername: auth.profile.username,
 });
 
+
 @withRouter
 @connect(mapStateToProps, null)
 export default class ProfileLayout extends React.Component {
