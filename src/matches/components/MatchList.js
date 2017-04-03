@@ -11,7 +11,7 @@ export default class MatchList extends React.Component {
                 <Table striped hover>
                     <thead>
                     <Row componentClass="tr">
-                        <Col xs={4} className="align-r" componentClass="td">
+                        <Col xs={4} className="text-right" componentClass="td">
                             <strong> Red team</strong>
                         </Col>
                         <Col xs={1} componentClass="td">

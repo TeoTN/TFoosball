@@ -4,7 +4,7 @@ import response from '../assets/mocks/users.json';
 import * as UserActions from '../users/user.actions';
 import { raiseError } from '../shared/notifier.actions';
 import { fetchUsers, fetchUpdateUsers } from '../users/users.sagas.js';
-import { getCurrentTeam } from '../shared/teams/teams.sagas';
+import { getCurrentTeam } from '../teams/teams.sagas';
 
 describe('FetchUsers saga ', () => {
     const iterator = fetchUsers();

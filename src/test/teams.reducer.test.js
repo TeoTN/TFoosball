@@ -1,7 +1,7 @@
-import * as actions from '../shared/teams/teams.actions';
+import * as actions from '../teams/teams.actions';
 import { signedOut } from '../shared/auth/auth.actions';
 import { profileUpdate } from '../profile/profile.actions';
-import { teams, getSelectedTeam } from '../shared/teams/teams.reducer';
+import { teams, getSelectedTeam } from '../teams/teams.reducer';
 import deepFreeze from 'deep-freeze';
 
 describe('Teams teams', () => {

@@ -4,15 +4,15 @@ import App from './homepage/components/App';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import store from './store';
-import MatchLayout from './play/components/PlayLayout';
-import ProfileLayout from './profile/components/ProfileLayout';
+import PlayLayout from './play/components/PlayLayout';
+import { ProfileLayout, ProfileMatches, ProfileTeams } from './profile/components';
 import RankingLayout from './ranking/components/RankingLayout';
 import MatchesLayout from './matches/components/MatchesLayout';
 import SettingsLayout from './settings/components/SettingsLayout';
 import TeamAssignment  from './homepage/components/TeamAssignment';
 import IntroLayout from './homepage/components/IntroLayout';
-import ProfileMatches from './profile/components/ProfileMatches';
 import './assets/css/bootstrap.min.css';
+import './assets/css/font-awesome.min.css';
 import './assets/css/styles.css';
 import './utils/object';
 import './utils/doughnutText';
@@ -64,10 +64,11 @@ ReactDOM.render(
             <Route component={App}>
                 <Route path="/" component={IntroLayout} onEnter={homepage} />
                 <Route path="welcome" component={TeamAssignment} onEnter={chain([requireAuth, hasTeams])} />
-                <Route path="match" component={MatchLayout} onEnter={requireAuth} />
+                <Route path="match" component={PlayLayout} onEnter={requireAuth} />
                 <Route path="profile/:username" component={ProfileLayout} onEnter={requireAuth}>
                     <Route path="stats" />
                     <Route path="matches(/:page)" component={ProfileMatches} />
+                    <Route path="teams" component={ProfileTeams} />
                 </Route>
                 <Route path="ranking" component={RankingLayout} onEnter={requireAuth} />
                 <Route path="matches/(:page)" component={MatchesLayout} onEnter={requireAuth} />

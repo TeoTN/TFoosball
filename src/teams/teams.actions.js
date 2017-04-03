@@ -5,6 +5,9 @@ export const SET_TEAMS = 'TEAMS::SET_TEAMS';
 export const SELECT_TEAM = 'TEAMS::SELECT';
 export const PENDING_MEMBERS = 'TEAMS::PENDING_MEMBERS';
 export const MEMBER_ACCEPTANCE = 'TEAMS::MEMBER_ACCEPTANCE';
+export const LEAVE_TEAM = 'TEAMS::LEAVE';
+export const TEAM_LEFT = 'TEAMS::LEFT';
+
 
 export const requestCreateTeam = (name, username) => ({
     type: REQUEST_CREATE_TEAM,
@@ -25,6 +28,16 @@ export const setTeams = ({ teams, pending }) => ({
 
 export const selectTeam = (team) => ({
     type: SELECT_TEAM,
+    team
+});
+
+export const leaveTeam = (team) => ({
+    type: LEAVE_TEAM,
+    team
+});
+
+export const teamLeft = (team) => ({
+    type: TEAM_LEFT,
     team
 });
 

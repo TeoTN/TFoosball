@@ -11,7 +11,7 @@ const MatchItem = (params) => {
     );
     return (
         <Row componentClass="tr" className={highlight ? 'selected' : 'default'}>
-            <Col xs={4} className="text-danger align-r" componentClass="td">
+            <Col xs={4} className="text-danger text-right" componentClass="td">
                 {params.red_def}, {params.red_att}
             </Col>
             <Col xs={1} componentClass="td">

@@ -2,10 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Row, Col, Tab, NavItem, Nav} from 'react-bootstrap';
 import {requestSaveMember, requestSaveProfile} from '../settings.actions';
-import { memberAcceptance } from '../../shared/teams/teams.actions';
+import { memberAcceptance } from '../../teams/teams.actions';
 import ProfileSettings from './ProfileSettings';
 import TeamSettings from './TeamSettings';
-import {getSelectedTeam} from '../../shared/teams/teams.reducer';
+import {getSelectedTeam} from '../../teams/teams.reducer';
 
 const mapStateToProps = ({auth: {profile}, teams}) => ({
     profile,

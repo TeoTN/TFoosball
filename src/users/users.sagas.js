@@ -2,7 +2,7 @@ import { call, put } from 'redux-saga/effects';
 import api from '../api';
 import * as UserActions from './user.actions';
 import { raiseError } from '../shared/notifier.actions';
-import { getCurrentTeam } from '../shared/teams/teams.sagas';
+import { getCurrentTeam } from '../teams/teams.sagas';
 
 export function* fetchUsers() {
     const currentTeam = yield call(getCurrentTeam);

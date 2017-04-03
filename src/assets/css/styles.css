@@ -20,6 +20,11 @@
     padding: 0 !important;
 }
 
+.no-vertical-padding {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 .no-margin {
     margin: 0 !important;
 }
@@ -39,10 +44,6 @@ tr.selected {
 
 .clickable {
     cursor: pointer;
-}
-
-.align-r {
-    text-align: right;
 }
 
 .progress {
@@ -76,4 +77,10 @@ tr.selected {
 
 #profileChartWrapper {
     height: 300px;
+}
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

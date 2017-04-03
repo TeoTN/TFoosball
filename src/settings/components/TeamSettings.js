@@ -1,6 +1,6 @@
 import React from 'react';
 import { Panel} from 'react-bootstrap';
-import PendingMemberList from './PendingMemberList';
+import PendingMemberList from '../../teams/components/PendingMemberList';
 
 class TeamSettings extends React.Component {
     render() {

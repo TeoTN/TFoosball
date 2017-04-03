@@ -13,7 +13,6 @@ const ProfileStats = ({
     const att = Math.round(att_ratio * 100);
     const win = Math.round(win_ratio * 100);
     return (
-        <Col md={5}>
         <Well>
             <h4>User statistics</h4>
             <Row>
@@ -40,7 +39,6 @@ const ProfileStats = ({
                 <Widget label="Lowest EXP" value={lowest_exp} />
             </Row>
         </Well>
-        </Col>
     );
 };
 

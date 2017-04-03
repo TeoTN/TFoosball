@@ -2,7 +2,7 @@ import { call, take, put } from 'redux-saga/effects';
 import api from '../api';
 import { REQUEST_SAVE_MEMBER, REQUEST_SAVE_PROFILE } from './settings.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
-import { fetchPendingMembers, getCurrentTeam } from '../shared/teams/teams.sagas';
+import { getCurrentTeam } from '../teams/teams.sagas';
 
 // TODO move it somewhere
 export const validateMember = (data) => {
@@ -47,6 +47,5 @@ export function* settings() {
     yield [
         saveProfile(),
         saveMember(),
-        fetchPendingMembers(),
     ];
 }

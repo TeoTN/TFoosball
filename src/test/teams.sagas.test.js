@@ -1,5 +1,5 @@
-import { call, put, take, select, fork, cancel } from 'redux-saga/effects';
-import { requestCreateTeam } from '../shared/teams/teams.actions';
+import { call, put, take, select } from 'redux-saga/effects';
+import { requestCreateTeam } from '../teams/teams.actions';
 import {
     teamCreationFlow,
     createTeam,
@@ -11,22 +11,23 @@ import {
     handleJoinTeam,
     fetchPendingMembers,
     getCurrentTeam
-} from '../shared/teams/teams.sagas';
+} from '../teams/teams.sagas';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
-import { requestJoinTeam } from '../shared/teams/teams.actions';
+import { requestJoinTeam } from '../teams/teams.actions';
 import { browserHistory } from 'react-router';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import {
-    REQUEST_CREATE_TEAM,
     REQUEST_JOIN_TEAM,
     SELECT_TEAM,
-    MEMBER_ACCEPTANCE,
     teamCreated,
     setTeams,
     selectTeam,
     setPendingMembers,
-} from '../shared/teams/teams.actions.js';
+} from '../teams/teams.actions.js';
+import { showQuestionModal } from '../shared/modal.actions';
+
+
 
 describe('StateTokenSelector', () => {
     it('should return true when token is present', () => {
@@ -152,6 +153,7 @@ describe('HandleSelectTeam saga', () => {
     const team = {
         id: 7,
         member_id: 15,
+        username: 'Axis'
     };
 
     it('should wait to take SELECT_TEAM', () => {
@@ -164,9 +166,9 @@ describe('HandleSelectTeam saga', () => {
         expect(iter).toEqual(call(fetchProfile, team.id, team.member_id));
     });
 
-    it('should redirect to /match', () => {
+    it('should redirect to new profile teams', () => {
         const iter = iterator.next().value;
-        expect(iter).toEqual(call([browserHistory, browserHistory.push], '/match'));
+        expect(iter).toEqual(call([browserHistory, browserHistory.push], `/profile/${team.username}/teams`));
     });
 
     it('should not return from saga', () => {
@@ -347,10 +349,15 @@ describe('HandleJoinTeam saga', () => {
             expect(iter).toEqual(call(api.requests.post, url, action.data, errorMsg));
         });
 
-        it('should put SHOW_INFO with success message', () => {
+        it('should show modal with a response message', () => {
             const response = 'OK';
             const iter = iterator.next(response).value;
-            expect(iter).toEqual(put(showInfo(response)));
+            const expected = put(showQuestionModal({
+                title: 'Notice',
+                text: response,
+                onAccept: () => {},
+            }));
+            expect(JSON.stringify(iter)).toEqual(JSON.stringify(expected));
         });
 
         it('should not return from the saga', () => {

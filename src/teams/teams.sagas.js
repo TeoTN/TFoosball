@@ -1,20 +1,24 @@
-import { call, take, put, select } from 'redux-saga/effects';
+import { call, take, put, select, takeEvery } from 'redux-saga/effects';
 import {
     REQUEST_CREATE_TEAM,
     REQUEST_JOIN_TEAM,
     SELECT_TEAM,
     MEMBER_ACCEPTANCE,
+    LEAVE_TEAM,
     teamCreated,
     setTeams,
     selectTeam,
     setPendingMembers,
+    teamLeft,
 } from './teams.actions.js';
-import api from '../../api';
-import { showInfo, raiseError } from '../notifier.actions';
-import { authenticate, fetchProfile } from '../auth/auth.sagas';
-import { validateMember } from '../../settings/settings.sagas';
+import api from '../api';
+import { showInfo, raiseError } from '../shared/notifier.actions';
+import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
+import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
 import { getSelectedTeam } from './teams.reducer';
+import { showQuestionModal } from '../shared/modal.actions';
+
 
 export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
 export const stateTeamsSelector = state => state.hasOwnProperty('teams') ? state.teams : [];
@@ -28,7 +32,7 @@ export function* handleSelectTeam() {
     while (true) {
         const { team } = yield take(SELECT_TEAM);
         yield call(fetchProfile, team.id, team.member_id);
-        yield call([browserHistory, browserHistory.push], '/match');
+        yield call([browserHistory, browserHistory.push], `/profile/${team.username}/teams`);
     }
 }
 
@@ -49,6 +53,20 @@ export function* createTeam(action) {
     yield put(showInfo(`Team ${action.name} created.`));
     yield put(selectTeam(response));
     return response;
+}
+
+export function* leaveTeam() {
+    const leave = function* ({team}) {
+        const url = api.urls.teamMemberEntity(team.id, team.member_id);
+        try {
+            yield call(api.requests['delete'], url, {}, `Failed to leave the team ${team.name}.`);
+        } catch (error) {
+            yield put(raiseError(error));
+        }
+        yield put(teamLeft(team));
+        yield put(showInfo(`Team ${team.name} was left.`));
+    };
+    yield takeEvery(LEAVE_TEAM, leave);
 }
 
 export function* teamCreationFlow() {
@@ -96,7 +114,11 @@ export function* handleJoinTeam() {
         try {
             const errorMsg = 'Team doesn\'t exist or username already taken';
             const response = yield call(api.requests.post, url, action.data, errorMsg);
-            yield put(showInfo(response));
+            yield put(showQuestionModal({
+                title: 'Notice',
+                text: response,
+                onAccept: () => {},
+            }));
         } catch(error) {
             yield put(raiseError(error));
         }
@@ -142,5 +164,6 @@ export function* teams() {
         handleSelectTeam(),
         handleJoinTeam(),
         memberAcceptance(),
+        leaveTeam(),
     ];
 }
