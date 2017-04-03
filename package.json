@@ -77,7 +77,7 @@
     "redux": "^3.6.0",
     "redux-form": "^6.6.1",
     "redux-saga": "^0.14.3",
-    "redux-saga-router": "file:///D:\\Piotr\\Projekty\\redux-saga-router"
+    "redux-saga-router": "file:./redux-saga-router"
   },
   "scripts": {
     "start": "node scripts/start.js",
