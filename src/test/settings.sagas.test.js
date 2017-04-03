@@ -53,7 +53,7 @@ describe('Save settings saga', () => {
         });
 
         it('should dispatch action SETTINGS_SAVED', () => {
-            expect(iterator.next().value).toEqual(put(settingsSaved(values)));
+            expect(iterator.next().value).toEqual(put(settingsSaved(action.values)));
         });
     });
 
@@ -76,7 +76,7 @@ describe('Save settings saga', () => {
         });
 
         it('should dispatch action SETTINGS_SAVED', () => {
-            expect(iterator.next().value).toEqual(put(settingsSaved(values)));
+            expect(iterator.next().value).toEqual(put(settingsSaved(action.values)));
         });
 
         it('should redir to new profile url', () => {
@@ -110,7 +110,7 @@ describe('Save settings saga', () => {
         });
 
         it('should dispatch action SETTINGS_SAVED', () => {
-            expect(iterator.next().value).toEqual(put(settingsSaved(values)));
+            expect(iterator.next().value).toEqual(put(settingsSaved(action.values)));
         });
 
         it('should redir to new profile url', () => {
