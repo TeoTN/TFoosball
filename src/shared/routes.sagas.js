@@ -5,10 +5,11 @@ import { fetchUsers } from '../users/users.sagas';
 import { listMatches } from '../matches/matches.sagas';
 import { settings } from '../settings/settings.sagas';
 import { fetchPendingMembers, fetchTeams } from '../teams/teams.sagas';
-
+import { cleanNotifications } from './shared.sagas';
 
 const options = {
     shouldFallThrough: true,
+    beforeRouteChange: cleanNotifications,
 };
 
 const routes = {
