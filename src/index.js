@@ -18,9 +18,18 @@ import './utils/object';
 import './utils/doughnutText';
 import {loadState} from './persistence';
 
+const hasToken = (state) => state &&
+    state.hasOwnProperty('auth') &&
+    state.auth.hasOwnProperty('token');
+
+const hasJoinedTeam = (state) => state &&
+    state.hasOwnProperty('teams') &&
+    state.teams.hasOwnProperty('joined') &&
+    state.teams.joined.length >= 1;
+
 function requireAuth(nextState, replace, next) {
     const persistedState = loadState();
-    if (!(persistedState.hasOwnProperty('auth') && persistedState.auth.hasOwnProperty('token'))) {
+    if (!hasToken(persistedState)) {
         replace({
             pathname: "/",
             state: {nextPathname: nextState.location.pathname}
@@ -30,11 +39,16 @@ function requireAuth(nextState, replace, next) {
 }
 function homepage(nextState, replace, next) {
     const persistedState = loadState();
-    if (persistedState &&
-        persistedState.hasOwnProperty('auth') &&
-        persistedState.auth.hasOwnProperty('token')) {
+    const isToken = hasToken(persistedState);
+    const isJoinedTeam = hasJoinedTeam(persistedState)
+    if (isToken && isJoinedTeam) {
         replace({
             pathname: "/match",
+            state: {nextPathname: nextState.location.pathname}
+        });
+    } else if (isToken && !isJoinedTeam) {
+        replace({
+            pathname: "/welcome",
             state: {nextPathname: nextState.location.pathname}
         });
     }
@@ -43,11 +57,7 @@ function homepage(nextState, replace, next) {
 
 function hasTeams(nextState, replace, next) {
     const persistedState = loadState();
-    if (
-        persistedState.hasOwnProperty('teams') &&
-        persistedState.teams.hasOwnProperty('joined') &&
-        persistedState.teams.joined.length >= 1
-    ) {
+    if (hasJoinedTeam(persistedState)) {
         replace({
             pathname: "/match",
             state: {nextPathname: nextState.location.pathname}

@@ -6,7 +6,7 @@ import { Row, Col, Panel, NavItem, Nav, Glyphicon } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import Icon from 'react-fontawesome';
-import md5 from 'md5';
+import Gravatar from './Gravatar';
 
 const mapStateToProps = ({profile, auth}) => ({
     profile,
@@ -19,14 +19,11 @@ const mapStateToProps = ({profile, auth}) => ({
 export default class ProfileLayout extends React.Component {
     render() {
         const { children, profile, params: {username}, myUsername} = this.props;
-        const avatarURL = !profile.email ? '' : `https://www.gravatar.com/avatar/${md5(profile.email )}`;
 
         return (
             <div className="container">
                 <h1>
-                    <picture className="profile-photo">
-                        <img src={avatarURL} type="image/jpeg" alt="avatar" />
-                    </picture>
+                    <Gravatar email={profile.email} />
                     { username } <small>{ profile.exp } XP</small>
                 </h1>
                 <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">

@@ -61,6 +61,12 @@ tr.selected {
     margin: 0 16px 16px 0;
 }
 
+nav .profile-photo img {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+}
+
 .container-fluid {
     padding: 0 !important;
 }
