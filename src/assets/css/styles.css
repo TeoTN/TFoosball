@@ -67,6 +67,10 @@ nav .profile-photo img {
     margin: 10px;
 }
 
+.winners-stand .profile-photo img {
+    margin: 10px auto;
+}
+
 .container-fluid {
     padding: 0 !important;
 }
@@ -102,4 +106,8 @@ nav .profile-photo img {
 
 .pager li.left a {
     border-radius: 15px 0 0 15px;
+}
+
+.winners-stand {
+    margin-bottom: 15px;
 }

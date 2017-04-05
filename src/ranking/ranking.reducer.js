@@ -5,13 +5,13 @@ const model = {
         "username": "Username",
         "first_name": "First name",
         "last_name": "Last name",
-        "exp": "Experience",
+        "exp": "EXP",
         "att_ratio": "Attack ratio",
         "def_ratio": "Defense ratio",
         "lose_streak": "Lose streak",
         "win_streak": "Win streak",
-        "lowest_exp": "Lowest experience",
-        "highest_exp": "Highest experience"
+        "lowest_exp": "Lowest EXP",
+        "highest_exp": "Highest EXP"
     },
     "mobile": {
         "username": "Username",
