@@ -8,12 +8,16 @@ const NaivePager = ({page, totalPages, prefix}) => {
         <Pager>
             {
                 page > 1 ?
-                    <Pager.Item previous onClick={onClick(`${prefix}/${page - 1}`)}>&laquo; Previous Page</Pager.Item> :
+                    <Pager.Item previous onClick={onClick(`${prefix}/${page - 1}`)} className="left">
+                        &laquo; Previous Page
+                    </Pager.Item> :
                     null
             }
             {
                 page < totalPages ?
-                    <Pager.Item next onClick={onClick(`${prefix}/${page + 1}`)}>Next Page &raquo;</Pager.Item> :
+                    <Pager.Item next onClick={onClick(`${prefix}/${page + 1}`)} className="right">
+                        Next Page &raquo;
+                    </Pager.Item> :
                     null
             }
         </Pager>

@@ -42,6 +42,7 @@ const ProfileMatches = ({ matches = defaultData, onRemove, remove, params: {user
                     /> :
                     <Loading />
             }
+            <NaivePager page={matches.page} prefix={`/profile/${username}/matches`} totalPages={matches.totalPages} />
         </Panel>
     );
 };

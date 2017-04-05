@@ -90,3 +90,16 @@ nav .profile-photo img {
     white-space: nowrap;
     overflow: hidden;
 }
+
+.pager {
+    background-color: #ecf0f1;
+    border-radius: 15px;
+}
+
+.pager li.right a {
+    border-radius: 0 15px 15px 0;
+}
+
+.pager li.left a {
+    border-radius: 15px 0 0 15px;
+}

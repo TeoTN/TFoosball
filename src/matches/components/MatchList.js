@@ -46,7 +46,7 @@ export default class MatchList extends React.Component {
                         }
                     </tbody>
                 </Table>
-                <p className="col-xs-12">
+                <p className="text-center text-primary">
                     Total matches: { count }
                 </p>
             </div>
