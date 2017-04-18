@@ -18,7 +18,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at red_def won', () => {
         const match = mockMatch(username, 'BSauron2', 'CSaruman3', 'DGandalf4', 10, 5);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('15');
     });
@@ -26,7 +26,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at red_def lost', () => {
         const match = mockMatch(username, 'BSauron2', 'CSaruman3', 'DGandalf4', 5, 10);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('-15');
     });
@@ -34,7 +34,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at red_att won', () => {
         const match = mockMatch('BSauron2', username, 'CSaruman3', 'DGandalf4', 10, 5);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('15');
     });
@@ -42,7 +42,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at red_att lost', () => {
         const match = mockMatch('BSauron2', username, 'CSaruman3', 'DGandalf4', 5, 10);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('-15');
     });
@@ -50,7 +50,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at blue_att won', () => {
         const match = mockMatch('BSauron2', 'CSaruman3', username, 'DGandalf4', 5, 10);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('15');
     });
@@ -58,7 +58,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at blue_att lost', () => {
         const match = mockMatch('BSauron2', 'CSaruman3', username, 'DGandalf4', 10, 5);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('-15');
     });
@@ -66,7 +66,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at blue_def won', () => {
         const match = mockMatch('BSauron2', 'CSaruman3', 'DGandalf4', username, 5, 10);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('15');
     });
@@ -74,7 +74,7 @@ describe('MatchItem component in ProfileMatches', () => {
     it('should display correct exp for user at blue_def lost', () => {
         const match = mockMatch('BSauron2', 'CSaruman3', 'DGandalf4', username, 10, 5);
         const component = render(
-            <MatchItem {...match} withOptions={true} onRemove={()=>{}} username={username} />
+            <MatchItem match={match} withOptions={true} onRemove={()=>{}} username={username} />
         );
         expect(component.find('.points').text()).toEqual('-15');
     });

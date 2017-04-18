@@ -14,7 +14,6 @@ const ProfileStats = ({
     const win = Math.round(win_ratio * 100);
     return (
         <Well>
-            <h4>User statistics</h4>
             <Row>
                 <Col sm={4} xs={4} smOffset={1}>
                     <Doughnut value={win} bsStyle="success" label="Win rate" />

@@ -65,7 +65,7 @@ export default class ProfileChart extends Component {
         const { profile: {exp_history}, profile } = this.props;
         return (
             <div>
-                <h4>History</h4>
+                <h4>Exp history</h4>
                 {
                     Object.keys(profile).length === 0 ?
                         <Loading /> :

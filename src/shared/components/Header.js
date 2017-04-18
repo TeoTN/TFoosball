@@ -9,7 +9,6 @@ import Navigation from './Navigation';
 
 const mapStateToProps = ({auth: {profile, token}}) => ({
     username: profile && profile.hasOwnProperty('username') ? profile.username : '',
-    email: profile && profile.hasOwnProperty('email') ? profile.email: '',
     isAuthenticated: !!token,
 });
 const mapDispatchToProps = dispatch => ({
@@ -21,7 +20,7 @@ const mapDispatchToProps = dispatch => ({
 export default class Header extends React.Component {
     render() {
         const { signIn, signOut } = this.props;
-        const { username, email, isAuthenticated } = this.props;
+        const { username, isAuthenticated } = this.props;
         return (
             <div>
             <Navbar staticTop collapseOnSelect defaultExpanded={!isAuthenticated}>

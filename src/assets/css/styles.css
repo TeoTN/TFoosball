@@ -12,6 +12,11 @@
     margin: 15px !important;
 }
 
+.with-horizontal-margin {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+}
+
 .with-padding {
     padding: 15px !important;
 }
@@ -110,4 +115,26 @@ nav .profile-photo img {
 
 .winners-stand {
     margin-bottom: 15px;
+}
+
+.list-group-item-lt-info {
+    background-color: #d6efff;
+}
+
+.list-group-item-lt-success {
+    background-color: #d6fff6;
+}
+
+.list-group-item {
+    overflow: hidden !important;
+}
+
+.col-options {
+    display: block;
+    width: 40px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
 }

@@ -6,7 +6,7 @@ const NaivePager = ({page, totalPages, prefix}) => {
     const onClick = (url) => () => browserHistory.push(url);
     return (
         <div>
-            <div>&nbsp;</div>
+            <span className="clearfix"/>
             <Pager>
                 {
                     page > 1 ?

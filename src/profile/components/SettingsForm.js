@@ -9,7 +9,6 @@ const SettingsForm = ({ handleSubmit, pristine }) => {
     return (
         <Row>
             <Col xs={12} sm={8}>
-                <h4>Profile settings</h4>
                 <Form onSubmit={handleSubmit} horizontal>
                     <Field component={SettingsInput} label="Username" name="username" validate={isUsername} />
                     <Field component={SettingsInput} label="First name" name="first_name" validate={isName} />
