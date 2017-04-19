@@ -56,6 +56,7 @@ export default class ProfileMatches extends React.Component {
                             count={matches.count}
                             withOptions={deleteMode}
                             switchDeleteMode={this.switchDeleteMode}
+                            signed={true}
                         /> :
                         <Loading />
                 }

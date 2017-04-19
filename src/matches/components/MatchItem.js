@@ -1,7 +1,9 @@
 import React from 'react';
 import {Col, Glyphicon, Button, ListGroupItem} from 'react-bootstrap';
+import Icon from 'react-fontawesome';
 
-const MatchItem = ({match, username, onRemove, withOptions}) => {
+
+const MatchItem = ({match, username, onRemove, withOptions, signed}) => {
     const highlight = (
             match.red_score > match.blue_score &&
             (username === match.red_att || username === match.red_def)
@@ -10,25 +12,32 @@ const MatchItem = ({match, username, onRemove, withOptions}) => {
             (username === match.blue_att || username === match.blue_def)
         );
     return (
-        <ListGroupItem bsStyle={highlight ? 'lt-success' : 'default'} listItem>
+        <ListGroupItem style={{padding: '5px'}} listItem>
             { withOptions &&
-                <Button bsSize="sm" bsStyle="danger" onClick={onRemove(match)} className="col-options">
-                    <Glyphicon glyph="trash"/>
-                </Button>
+            <Button bsSize="xsmall"  bsStyle="danger" onClick={onRemove(match)} className="col-options">
+                <Glyphicon glyph="trash"/>
+            </Button>
             }
-            <Col md={5} xs={4} className="text-danger text-right">
-                <span className="h6 with-horizontal-margin">{match.red_def}</span>
-                <span className="h6">{match.red_att}</span>
+            <Col xs={8} className="visible-xs">
+                <h6 className="text-danger">{match.red_def}&nbsp;[D], {match.red_att}&nbsp;[A]</h6>
+                <h6 className="text-info">{match.blue_def}&nbsp;[D], {match.blue_att}&nbsp;[A]</h6>
             </Col>
-            <Col md={1} xs={2} className="text-center">
-                <strong> {match.red_score}&nbsp;-&nbsp;{match.blue_score}</strong>
+            <Col sm={5} xsHidden>
+                <h6 className="text-danger text-right h6-large">{match.red_def} [D], {match.red_att} [A]</h6>
             </Col>
-            <Col md={5} xs={4} className="text-info">
-                <span className="h6">{match.blue_att}</span>
-                <span className="h6 with-horizontal-margin">{match.blue_def}</span>
+            <Col xs={4} sm={2}>
+                <h4 className="text-center">
+                    <span className="text-danger">{match.red_score}</span>
+                    &nbsp;-&nbsp;
+                    <span className="text-info">{match.blue_score}</span><br/>
+                    <small>
+                        {Math.abs(match.points) * (!highlight && signed ? -1 : 1)}xp&nbsp;
+                        { highlight && <Icon name="trophy" className="text-warning" title="Won match" /> }
+                    </small>
+                </h4>
             </Col>
-            <Col xs={1} className="points">
-                {Math.abs(match.points) * (!highlight ? -1 : 1)}
+            <Col sm={5} xsHidden>
+                <h6 className="text-info h6-large">{match.blue_def} [D], {match.blue_att} [A]</h6>
             </Col>
         </ListGroupItem>
     );

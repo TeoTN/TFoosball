@@ -117,24 +117,31 @@ nav .profile-photo img {
     margin-bottom: 15px;
 }
 
+.list-group-item {
+    overflow: hidden !important;
+    padding-left: 30px !important;
+}
+
 .list-group-item-lt-info {
     background-color: #d6efff;
 }
 
-.list-group-item-lt-success {
-    background-color: #d6fff6;
-}
-
-.list-group-item {
-    overflow: hidden !important;
-}
-
 .col-options {
     display: block;
-    width: 40px;
+    width: 30px;
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
+    top: 15px;
+    left: 10px;
+    bottom: 15px;
+    z-index: 150;
+}
+
+@media (min-width: 768px) {
+    .h6-large {
+        font-size: 16px;
+    }
+}
+
+.text-lt-success {
+    color: #d6fff6;
 }
