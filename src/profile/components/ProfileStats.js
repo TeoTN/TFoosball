@@ -26,16 +26,12 @@ const ProfileStats = ({
                 </Col>
             </Row>
             <Row>
-                <Widget label="Longest winning streak" value={win_streak} />
-                <Widget label="Longest losing streak" value={lose_streak} />
+                <Widget label="Winning streak" value={curr_win_streak} altValue={win_streak} style="success" />
+                <Widget label="Losing streak" value={curr_lose_streak} altValue={lose_streak} style="danger" />
             </Row>
             <Row>
-                <Widget label="Winning streak" value={curr_win_streak} />
-                <Widget label="Losing streak" value={curr_lose_streak} />
-            </Row>
-            <Row>
-                <Widget label="Highest EXP" value={highest_exp} />
-                <Widget label="Lowest EXP" value={lowest_exp} />
+                <Widget label="Highest EXP" value={highest_exp} style="primary" />
+                <Widget label="Lowest EXP" value={lowest_exp} style="primary" />
             </Row>
         </Well>
     );
