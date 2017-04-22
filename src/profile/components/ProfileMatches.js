@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, Button, Col, Row } from 'react-bootstrap';
+import { Panel } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import MatchList from '../../matches/components/MatchList';
 import * as ModalActions from '../../shared/modal.actions';
@@ -23,8 +23,8 @@ export default class ProfileMatches extends React.Component {
         };
     }
 
-    switchDeleteMode = () => {
-        this.setState({deleteMode: !this.state.deleteMode});
+    switchDeleteMode = ({target: {checked}}) => {
+        this.setState({deleteMode: checked});
     };
 
     askToRemove = (match) => (event) => {

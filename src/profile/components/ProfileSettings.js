@@ -5,7 +5,7 @@ import SettingsForm from './SettingsForm';
 import { requestSaveSettings } from '../../settings/settings.actions';
 
 
-const mapStateToProps = ({ auth: {profile}, form: {} }) => ({profile});
+const mapStateToProps = ({ auth: {profile} }) => ({profile});
 const mapDispatchToProps = (dispatch) => ({
     saveSettings: (initialValues, values) => dispatch(requestSaveSettings(initialValues, values)),
 });

@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Panel, Label, Button, ButtonGroup } from 'react-bootstrap';
+import { Panel, Label, Row } from 'react-bootstrap';
 import { TeamList, PendingMemberList } from '../../teams/components/';
 import { selectTeam, leaveTeam, memberAcceptance } from '../../teams/teams.actions';
 import { getSelectedTeam } from '../../teams/teams.reducer';
 import { showQuestionModal } from '../../shared/modal.actions';
+import Switch from '../../shared/components/Switch';
 
 
-const mapStateToProps = ({teams}) => ({ teams });
+const mapStateToProps = ({teams}) => ({teams});
 const mapDispatchToProps = (dispatch) => ({
     selectTeam: (team) => dispatch(selectTeam(team)),
     leaveTeam: (team) => dispatch(leaveTeam(team)),
@@ -26,22 +27,23 @@ class ProfileTeams extends React.Component {
         };
     }
 
-    switchEditMode = () => {
-        this.setState({ editMode: !this.state.editMode});
+    switchEditMode = ({target: {checked}}) => {
+        this.setState({editMode: checked});
     };
 
-    switchJoinMode = () => {
-        this.setState({ joinMode: !this.state.joinMode});
+    switchJoinMode = ({target: {checked}}) => {
+        this.setState({joinMode: checked});
     };
 
     onTeamSelect = (team) => {
-        const { selectTeam, leaveTeam, showModal } = this.props;
+        const {selectTeam, leaveTeam, showModal} = this.props;
         if (this.state.editMode) {
             showModal({
                 title: 'Are you sure?',
                 text: `You are about to leave team ${team.name}. Proceed?`,
                 onAccept: () => leaveTeam(team),
-                onReject: () => {},
+                onReject: () => {
+                },
             });
         } else {
             selectTeam(team);
@@ -61,12 +63,12 @@ class ProfileTeams extends React.Component {
                 <hr />
 
                 <h4 className="text-info">
-                    Joined teams&nbsp;
-                    <ButtonGroup>
-                        <Button bsSize="xsmall" href="#" onClick={this.switchEditMode} bsStyle="danger">Leave</Button>
-                        <Button bsSize="xsmall" href="#" onClick={this.switchJoinMode} bsStyle="success">Join</Button>
-                    </ButtonGroup>
+                    Joined teams
                 </h4>
+                <Row className="with-vertical-margin">
+                    <Switch bsStyle="success" onChange={this.switchJoinMode}>Join team mode</Switch>
+                    <Switch bsStyle="danger" onChange={this.switchEditMode}>Leave team mode</Switch>
+                </Row>
                 <TeamList
                     teams={teams.joined}
                     selectedTeam={teams.selected}

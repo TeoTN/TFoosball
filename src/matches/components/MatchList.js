@@ -1,6 +1,7 @@
 import React from 'react';
-import {ListGroup, ListGroupItem, Col, Button} from 'react-bootstrap';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 import MatchItem from './MatchItem';
+import Switch from '../../shared/components/Switch';
 
 
 export default class MatchList extends React.Component {
@@ -13,6 +14,7 @@ export default class MatchList extends React.Component {
                 match={match}
                 withOptions={withOptions}
                 onRemove={onRemove}
+                signed={signed}
             />
         );
     };
@@ -24,10 +26,8 @@ export default class MatchList extends React.Component {
             <ListGroup componentClass="ul">
                 { matches.map(this.getMatchItem()) }
                 <ListGroupItem className="text-primary text-right">
-                    <Button bsSize="xs" bsStyle="danger" onClick={switchDeleteMode} className="with-horizontal-margin">
-                        Toggle delete
-                    </Button>
-                    <strong>Total matches: { count }</strong>
+                    <Switch bsStyle="danger" onChange={switchDeleteMode}>Delete mode</Switch>
+                    <strong className="with-horizontal-margin">Total matches: { count }</strong>
                 </ListGroupItem>
             </ListGroup>
         );

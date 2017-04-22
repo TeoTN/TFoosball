@@ -5,7 +5,7 @@ import { ControlLabel, FormControl, FormGroup, Col } from 'react-bootstrap';
 export default class SettingsInput extends React.Component {
 
     render () {
-        const { placeholder, type, input, meta: {error, touched, warning}, label } = this.props;
+        const { placeholder, type, input, meta: {error}, label } = this.props;
 
         return (
             <FormGroup controlId={input.name} validationState={ error ? 'error' : null }>
