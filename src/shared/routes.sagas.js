@@ -8,7 +8,7 @@ import { fetchPendingMembers, fetchTeams } from '../teams/teams.sagas';
 import { cleanNotifications } from './shared.sagas';
 
 const options = {
-    shouldFallThrough: true,
+    matchAll: true,
     beforeRouteChange: cleanNotifications,
 };
 

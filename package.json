@@ -80,6 +80,7 @@
     "redux-saga-router": "file:./redux-saga-router"
   },
   "scripts": {
+    "heroku-prebuild": "npm install -g babel-cli rimraf && cd redux-saga-router && npm install && cd ..",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
