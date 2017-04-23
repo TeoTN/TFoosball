@@ -12,6 +12,7 @@ import SettingsLayout from './settings/components/SettingsLayout';
 import TeamAssignment  from './homepage/components/TeamAssignment';
 import IntroLayout from './homepage/components/IntroLayout';
 import '@tfoosball/tfoostrap';
+import './assets/css/react-select.css';
 import './utils/object';
 import './utils/doughnutText';
 import {loadState} from './persistence';

@@ -1,20 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Panel, Label, Row } from 'react-bootstrap';
-import { TeamList, PendingMemberList } from '../../teams/components/';
+import { TeamList, PendingMemberList, TeamInvite } from '../../teams/components/';
 import { selectTeam, leaveTeam, memberAcceptance } from '../../teams/teams.actions';
 import { getSelectedTeam } from '../../teams/teams.reducer';
 import { showQuestionModal } from '../../shared/modal.actions';
 import Switch from '../../shared/components/Switch';
+import { fetchEmailAutocompletion } from '../../users/user.actions';
 
 
-const mapStateToProps = ({teams}) => ({teams});
+const mapStateToProps = ({teams, usersAutocompletion: {emailAutocompletion, loadingEmailAutocompletion}}) => ({
+    teams,
+    emailAutocompletion,
+    loadingEmailAutocompletion,
+});
 const mapDispatchToProps = (dispatch) => ({
     selectTeam: (team) => dispatch(selectTeam(team)),
     leaveTeam: (team) => dispatch(leaveTeam(team)),
     acceptMember: (id) => dispatch(memberAcceptance(id, true)),
     rejectMember: (id) => dispatch(memberAcceptance(id, false)),
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
+    fetchEmailAutocompletion: (input) => dispatch(fetchEmailAutocompletion(input)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -51,7 +57,14 @@ class ProfileTeams extends React.Component {
     };
 
     render() {
-        const {teams, acceptMember, rejectMember} = this.props;
+        const {
+            teams,
+            acceptMember,
+            rejectMember,
+            fetchEmailAutocompletion,
+            emailAutocompletion,
+            loadingEmailAutocompletion,
+        } = this.props;
         return (
             <Panel>
                 <h4 className="text-info">Current team</h4>
@@ -87,6 +100,15 @@ class ProfileTeams extends React.Component {
                     /> :
                     <h6 className="text-muted">There are no pending team members</h6>
                 }
+                <hr />
+
+                <h4 className="text-info">Invite player</h4>
+                <h6><strong>Notice</strong> user must be already registered.</h6>
+                <TeamInvite
+                    fetchEmailAutocompletion={fetchEmailAutocompletion}
+                    loadingEmailAutocompletion={loadingEmailAutocompletion}
+                    emailAutocompletion={emailAutocompletion}
+                />
             </Panel>
         );
     }
