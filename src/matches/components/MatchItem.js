@@ -31,7 +31,8 @@ const MatchItem = ({match, username, onRemove, withOptions, signed}) => {
                     &nbsp;-&nbsp;
                     <span className="text-info">{match.blue_score}</span><br/>
                     <small>
-                        {Math.abs(match.points) * (!highlight && signed ? -1 : 1)}xp&nbsp;
+                        <span className="points">{Math.abs(match.points) * (!highlight && signed ? -1 : 1)}xp</span>
+                        &nbsp;
                         { highlight && <Icon name="trophy" className="text-warning" title="Won match" /> }
                     </small>
                 </h4>
