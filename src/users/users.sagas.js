@@ -1,8 +1,8 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import api from '../api';
 import * as UserActions from './user.actions';
-import { FETCH_AUTOCOMPLETION } from './user.types';
-import { raiseError } from '../shared/notifier.actions';
+import { FETCH_AUTOCOMPLETION, INVITE } from './user.types';
+import { raiseError, showInfo } from '../shared/notifier.actions';
 import { getCurrentTeam } from '../teams/teams.sagas';
 
 export function* fetchUsers() {
@@ -42,8 +42,20 @@ export function* emailAutocompletion({input}) {
     yield put(UserActions.receivedEmailAutocompletion(cbData))
 }
 
+export function* userInvitation({email}) {
+    const currentTeam = yield call(getCurrentTeam);
+    const url = ''; // api.urls.teamInvite(currentTeam);
+    try {
+        yield call(api.requests.post, url, {email}, `Failed to send invitation to ${email}`);
+        yield put(showInfo('Invitation sent'));
+    } catch(error) {
+        yield put(raiseError(error));
+    }
+}
+
 export function* users() {
     yield [
         takeLatest(FETCH_AUTOCOMPLETION, emailAutocompletion),
+        takeEvery(INVITE, userInvitation)
     ];
 }

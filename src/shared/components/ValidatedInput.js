@@ -53,4 +53,4 @@ const withValidation = (InputComponent) => class extends React.Component {
 export const StaticValidatedInput = withValidation(FormControl);
 export const ValidatedInput = withValidation(withLabel(withErrorTooltip(FormControl)));
 export const StaticValidatedAsyncInput = withValidation(Select);
-export const ValidatedAsyncInput = withValidation(withLabel(withErrorTooltip(Select)));
+export const ValidatedAsyncInput = withValidation(withLabel(withErrorTooltip(Select.Creatable)));

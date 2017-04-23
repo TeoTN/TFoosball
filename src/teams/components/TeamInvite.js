@@ -13,7 +13,13 @@ class TeamInvite extends React.Component {
     }
 
     render() {
-        const {pristine, loadingEmailAutocompletion, emailAutocompletion, fetchEmailAutocompletion} = this.props;
+        const {
+            pristine,
+            invalid,
+            loadingEmailAutocompletion,
+            emailAutocompletion,
+            fetchEmailAutocompletion
+        } = this.props;
         const isEmailWrapped = (value, allValues, props) => isEmail(value ? value.value : '', allValues, props);
         return (
             <Row>
@@ -29,11 +35,12 @@ class TeamInvite extends React.Component {
                             isLoading={loadingEmailAutocompletion}
                             smLabel={3}
                             placeholder="Friend's email"
+                            promptTextCreator={label => `Send invitation to ${label}`}
                         />
                         <FormGroup>
                             <Col smOffset={3} sm={9}>
-                                <Button type="submit" bsStyle={pristine ? 'default' : 'success'} block
-                                        disabled={pristine}>
+                                <Button type="submit" bsStyle={pristine || invalid ? 'default' : 'success'} block
+                                        disabled={pristine || invalid}>
                                     Invite
                                 </Button>
                             </Col>
