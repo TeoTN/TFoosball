@@ -3,6 +3,7 @@ import api from '../api';
 import { receiveUserMatches, receiveProfile } from './profile.actions';
 import { raiseError } from '../shared/notifier.actions';
 
+
 export function* profileMatches({username, page=1}) {
     const currentTeamId = yield select(state => state.teams.selected);
     const url = api.urls.teamMatchList(currentTeamId);

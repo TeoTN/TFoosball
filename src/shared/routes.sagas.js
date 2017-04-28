@@ -15,7 +15,7 @@ const options = {
 const routes = {
     '/profile/:username/*': profileStats,
     '/profile/:username/matches/:page?': profileMatches,
-    '/profile/:username/teams': function*() { yield [fetchPendingMembers, fetchTeams ]; },
+    '/profile/:username/teams': function*() { yield [fetchPendingMembers(), fetchTeams() ]; },
     '/matches/:page': listMatches,
     '/match': fetchUsers,
     '/ranking': fetchUsers,

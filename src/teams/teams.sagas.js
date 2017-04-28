@@ -159,7 +159,6 @@ export function* memberAcceptance() {
 
 export function* teams() {
     yield [
-        fetchTeams(),
         teamCreationFlow(),
         handleSelectTeam(),
         handleJoinTeam(),

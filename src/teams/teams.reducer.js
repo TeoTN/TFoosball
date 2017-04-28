@@ -14,7 +14,7 @@ export const teams = (state = { joined: [], selected: 0, pending: [] }, action) 
             return {
                 ...state,
                 joined: action.teams || [],
-                pending: action.pending || [],
+                my_pending: action.my_pending || [],
             };
         case SELECT_TEAM:
             return {

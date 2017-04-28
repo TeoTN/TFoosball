@@ -23,7 +23,7 @@ export const teamCreated = (team) => ({
 export const setTeams = ({ teams, pending }) => ({
     type: SET_TEAMS,
     teams,
-    pending
+    my_pending: pending
 });
 
 export const selectTeam = (team) => ({
