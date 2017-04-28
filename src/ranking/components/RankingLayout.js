@@ -4,10 +4,12 @@ import {sortBy} from '../../users/user.actions';
 import {connect} from 'react-redux';
 import RankingList from './RankingList';
 import WinnersStand from './WinnersStand';
+import {getSortedUsers} from '../../users/users.reducer';
+
 
 const mapStateToProps = ({users, ranking, auth}) => ({
     users, ranking, auth,
-    winners: users.sort((u1, u2) => u1.exp < u2.exp ? 1 : u1.exp === u2.exp ? 0 : -1).slice(0, 3),
+    winners: getSortedUsers(users, 'exp', false).slice(0, 3),
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
