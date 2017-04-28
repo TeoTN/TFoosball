@@ -50,12 +50,14 @@ describe('Teams teams', () => {
         const stateBefore = {
             selected: 0,
             pending: [],
+            my_pending: 0,
             joined: [],
         };
         const action = actions.setTeams({teams: teamList,});
         const stateAfter = {
             selected: 0,
             pending: [],
+            my_pending: 0,
             joined: teamList,
         };
 
