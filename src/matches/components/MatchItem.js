@@ -1,37 +1,46 @@
 import React from 'react';
-import { Row, Col, Glyphicon, Button } from 'react-bootstrap';
+import {Col, Glyphicon, Button, ListGroupItem} from 'react-bootstrap';
+import Icon from 'react-fontawesome';
 
-const MatchItem = (params) => {
+
+const MatchItem = ({match, username, onRemove, withOptions, signed}) => {
     const highlight = (
-        params.red_score > params.blue_score &&
-        (params.username === params.red_att || params.username === params.red_def)
-    ) || (
-        params.red_score < params.blue_score &&
-        (params.username === params.blue_att || params.username === params.blue_def)
-    );
+            match.red_score > match.blue_score &&
+            (username === match.red_att || username === match.red_def)
+        ) || (
+            match.red_score < match.blue_score &&
+            (username === match.blue_att || username === match.blue_def)
+        );
     return (
-        <Row componentClass="tr" className={highlight ? 'selected' : 'default'}>
-            <Col xs={4} className="text-danger align-r" componentClass="td">
-                {params.red_def}, {params.red_att}
-            </Col>
-            <Col xs={1} componentClass="td">
-                <strong> {params.red_score} - {params.blue_score}</strong>
-            </Col>
-            <Col xs={4} className="text-info" componentClass="td">
-                {params.blue_att}, {params.blue_def}
-            </Col>
-            <Col xs={1} componentClass="td" className="points">
-                {Math.abs(params.points) * (!highlight && params.withOptions ? -1 : 1)}
-            </Col>
-            { params.withOptions ?
-                <Col xs={2} componentClass="td">
-                    <Button bsSize="xs" bsStyle="danger" onClick={params.onRemove(params)}>
-                        <Glyphicon glyph="trash"/>
-                    </Button>
-                </Col> :
-                null
+        <ListGroupItem style={{padding: '5px'}} listItem>
+            { withOptions &&
+            <Button bsSize="xsmall"  bsStyle="danger" onClick={onRemove(match)} className="col-options">
+                <Glyphicon glyph="trash"/>
+            </Button>
             }
-        </Row>
+            <Col xs={8} className="visible-xs">
+                <h6 className="text-danger">{match.red_def}&nbsp;[D], {match.red_att}&nbsp;[A]</h6>
+                <h6 className="text-info">{match.blue_def}&nbsp;[D], {match.blue_att}&nbsp;[A]</h6>
+            </Col>
+            <Col sm={5} xsHidden>
+                <h6 className="text-danger text-right h6-large">{match.red_def} [D], {match.red_att} [A]</h6>
+            </Col>
+            <Col xs={4} sm={2}>
+                <h4 className="text-center">
+                    <span className="text-danger">{match.red_score}</span>
+                    &nbsp;-&nbsp;
+                    <span className="text-info">{match.blue_score}</span><br/>
+                    <small>
+                        <span className="points">{Math.abs(match.points) * (!highlight && signed ? -1 : 1)}xp</span>
+                        &nbsp;
+                        { highlight && <Icon name="trophy" className="text-warning" title="Won match" /> }
+                    </small>
+                </h4>
+            </Col>
+            <Col sm={5} xsHidden>
+                <h6 className="text-info h6-large">{match.blue_def} [D], {match.blue_att} [A]</h6>
+            </Col>
+        </ListGroupItem>
     );
 };
 

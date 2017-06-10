@@ -2,17 +2,16 @@ import * as types from '../users/user.types';
 
 const model = {
     "desktop": {
-        "id": "ID",
         "username": "Username",
         "first_name": "First name",
         "last_name": "Last name",
-        "exp": "Experience",
+        "exp": "EXP",
         "att_ratio": "Attack ratio",
         "def_ratio": "Defense ratio",
         "lose_streak": "Lose streak",
         "win_streak": "Win streak",
-        "lowest_exp": "Lowest experience",
-        "highest_exp": "Highest experience"
+        "lowest_exp": "Lowest EXP",
+        "highest_exp": "Highest EXP"
     },
     "mobile": {
         "username": "Username",
@@ -20,7 +19,7 @@ const model = {
     }
 };
 
-export default (state = {sorting: {column: "exp", isAscendingOrder: true}, model}, action) => {
+export default (state = {sorting: {column: "exp", isAscendingOrder: false}, model}, action) => {
     switch (action.type) {
         case types.SORT:
             return {

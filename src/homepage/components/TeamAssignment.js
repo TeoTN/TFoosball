@@ -2,10 +2,10 @@ import React from 'react';
 import {Panel, Grid, Row} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import TeamCreationForm from './TeamCreationForm';
-import JoinTeamForm from './JoinTeamForm';
+import JoinTeamForm from '../../teams/components/JoinTeamForm';
 
 const mapStateToProps = ({teams}) => ({
-    pending: teams.pending,
+    my_pending: teams.my_pending,
 });
 
 const TeamAssignment = (props) => (
@@ -18,8 +18,8 @@ const TeamAssignment = (props) => (
                 </p>
 
                 {
-                    props.pending > 0 ?
-                        <h5>Number of pending join requests: <span className="text-info h4">{props.pending}</span></h5> :
+                    props.my_pending > 0 ?
+                        <h5>Number of pending join requests: <span className="text-info h4">{props.my_pending}</span></h5> :
                         null
                 }
                 <h3>Create team:</h3>

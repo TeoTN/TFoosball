@@ -16,14 +16,14 @@ export default class MatchesLayout extends React.Component {
         return (
             <Grid>
                 <Row>
-                    <Col>
+                    <Col xs={12}>
                         <h1>Matches</h1>
                     </Col>
                     <NaivePager page={matches.page} prefix={`/matches`} totalPages={matches.totalPages} />
                 </Row>
                 <Row>
-                    <Col>
-                        <MatchList matches={matches.list} />
+                    <Col xs={12}>
+                        <MatchList matches={matches.list} count={matches.count} />
                     </Col>
                 </Row>
                 <Row>

@@ -6,6 +6,7 @@ import * as ModalActions from '../../shared/modal.actions';
 import * as MatchActions from '../../matches/match.actions';
 import NaivePager from '../../shared/components/NaivePager';
 import Loading from '../../shared/components/Loading';
+import { defaultData } from '../../matches/matches.reducer';
 
 const mapStateToProps = ({ profile: { matches } }) => ({ matches });
 const mapDispatchToProps = (dispatch) => ({
@@ -13,29 +14,54 @@ const mapDispatchToProps = (dispatch) => ({
     remove: (id) => dispatch(MatchActions.remove(id)),
 });
 
-const ProfileMatches = ({ matches = {list: [], page: 1, totalPages:1}, onRemove, remove, params: {username} }) => {
-    const askToRemove = (match) => (event) => {
+@connect(mapStateToProps, mapDispatchToProps)
+export default class ProfileMatches extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            deleteMode: false,
+        };
+    }
+
+    switchDeleteMode = ({target: {checked}}) => {
+        this.setState({deleteMode: checked});
+    };
+
+    askToRemove = (match) => (event) => {
+        const {onRemove, remove} = this.props;
         const params = {
             title: 'Are you sure?',
-                heading: 'You are about to remove the following match:',
+            heading: 'You are about to remove the following match:',
             text: `${match.id}) ${match.red_def} ${match.red_att} [${match.red_score} - ${match.blue_score}] \
-                   ${match.blue_att} ${match.blue_def}`,
+                       ${match.blue_att} ${match.blue_def}`,
             onAccept: () => remove(match.id),
+            onReject: () => {},
         };
         onRemove(params);
         event.preventDefault();
     };
-    return (
-        <Panel>
-            <h4>Matches</h4>
-            <NaivePager page={matches.page} prefix={`/profile/${username}/matches`} totalPages={matches.totalPages} />
-            {
-                matches.list ?
-                    <MatchList withOptions onRemove={askToRemove} matches={matches.list} username={username} /> :
-                    <Loading />
-            }
-        </Panel>
-    );
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileMatches);
+    render() {
+        const { matches = defaultData, params: {username} } = this.props;
+        const { deleteMode } = this.state;
+        return (
+            <Panel>
+                <NaivePager page={matches.page} prefix={`/profile/${username}/matches`} totalPages={matches.totalPages} />
+                {
+                    matches.list ?
+                        <MatchList
+                            onRemove={this.askToRemove}
+                            matches={matches.list}
+                            username={username}
+                            count={matches.count}
+                            withOptions={deleteMode}
+                            switchDeleteMode={this.switchDeleteMode}
+                            signed={true}
+                        /> :
+                        <Loading />
+                }
+                <NaivePager page={matches.page} prefix={`/profile/${username}/matches`} totalPages={matches.totalPages} />
+            </Panel>
+        );
+    }
+}

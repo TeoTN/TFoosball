@@ -1,8 +1,9 @@
 import * as types from './auth.types';
 
-export const setToken = (token) => ({
+export const setToken = (token, expires_at) => ({
     type: types.SET_TOKEN,
     token,
+    expires_at,
 });
 
 export const setProfile = (response) => ({

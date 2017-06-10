@@ -1,15 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Panel, Col } from 'react-bootstrap';
 
-export default class Widget extends Component {
-    render() {
-        return (
-            <Col xs={12} md={6}>
-                <Panel className="inline-block widget">
-                    <span className="h6">{this.props.label}</span>
-                    <h3 className="no-margin">{this.props.value}</h3>
-                </Panel>
-            </Col>
-        );
-    }
-}
+
+const Widget = ({label, value, altValue, style}) => (
+    <Col xs={12} md={6}>
+        <Panel className={`inline-block text-center widget ${style ? `text-${style}` : ''}`}>
+            <h1 className="no-margin">
+                {value}
+                { altValue ?
+                    <small>&nbsp;/&nbsp;{altValue}</small> :
+                    null
+                }
+            </h1>
+            <span className="h6">{label}</span>
+        </Panel>
+    </Col>
+);
+
+export default Widget;

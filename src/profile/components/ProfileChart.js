@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Chart from 'chart.js';
-import { Col } from 'react-bootstrap';
 import Loading from '../../shared/components/Loading';
 
 export default class ProfileChart extends Component {
@@ -21,7 +20,9 @@ export default class ProfileChart extends Component {
                         display: false,
                     }
                 }]
-            }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
         };
         const ctx = this.chartDOM;
         const { profile: { exp_history } } = this.props;
@@ -63,16 +64,20 @@ export default class ProfileChart extends Component {
     render() {
         const { profile: {exp_history}, profile } = this.props;
         return (
-            <Col md={7}>
-                    <h4>History</h4>
-                    {
-                        Object.keys(profile).length === 0 ?
-                            <Loading /> :
-                            exp_history ?
-                                <canvas id="profileChart" ref={(chart) => { this.chartDOM = chart; }} /> :
-                                <p>Sorry, user has no experience points history.</p>
-                    }
-            </Col>
+            <div>
+                <h4>Exp history</h4>
+                {
+                    Object.keys(profile).length === 0 ?
+                        <Loading /> :
+                        exp_history ?
+                            <div id="profileChartWrapper">
+                                <canvas id="profileChart" ref={(chart) => {
+                                    this.chartDOM = chart;
+                                }}/>
+                            </div> :
+                            <p>Sorry, user has no experience points history.</p>
+                }
+            </div>
         );
     }
 }

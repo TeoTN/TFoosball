@@ -2,12 +2,13 @@ import users from '../users/users.reducer';
 import notifications from '../shared/notifier.reducer';
 import profile from '../profile/profile.reducer';
 import tournaments from '../tournament/tournaments.reducer';
-import auth from '../shared/auth.reducer';
+import auth from '../shared/auth/auth.reducer';
 import ranking from '../ranking/ranking.reducer';
 import modal from '../shared/modal.reducer';
 import matches from '../matches/matches.reducer';
 import play from '../play/play.reducer';
-import teams from '../shared/teams/teams.reducer';
+import teams from '../teams/teams.reducer';
+import { reducer as form } from 'redux-form'
 import {combineReducers} from 'redux';
 
 const reducer = combineReducers({
@@ -21,6 +22,7 @@ const reducer = combineReducers({
     matches,        // A state for matches list
     play,           // Currently played match
     teams,          // Available teams
+    form,           // Current state of forms across the app
 });
 
 export default reducer;

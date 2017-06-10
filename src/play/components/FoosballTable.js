@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, ButtonGroup, Image, Well } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { publish } from '../../matches/match.actions';
 import UserPicker from '../../users/components/UserPicker';
 import PlayResult from './PlayResult';
 import PlayStats from './PlayStats';
@@ -17,12 +18,13 @@ const mapDispatchToProps = (dispatch) => ({
         try { dispatch(choosePlayersForMatch()) }
         catch(err) { dispatch(raiseError(err.message)); }
     },
+    publishMatch: (data, callback) => dispatch(publish(data, callback)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 class FoosballTable extends Component {
     render() {
-        const { users, swapSides, swapPositions, regenerate } = this.props;
+        const { users, swapSides, swapPositions, regenerate, publishMatch } = this.props;
         const playing = users.filter(u => u.playing);
 
         return (
@@ -31,23 +33,23 @@ class FoosballTable extends Component {
                 <Col xs={12} style={{ marginBottom: '15px'}}>
                     <PlayToolbar onSwapSides={swapSides} onSwapPositions={swapPositions} onRegenerate={regenerate} />
                 </Col>
-                <Col sm={9} xs={12}>
-                    <ButtonGroup justified>
-                        <UserPicker team={'red'} position={'def'} />
-                        <UserPicker team={'red'} position={'att'} />
-                    </ButtonGroup>
-                </Col>
-                <Col xs={12}>
-                    <Image src={table} rounded responsive thumbnail />
-                </Col>
                 <Col smOffset={3} sm={9} xs={12}>
                     <ButtonGroup justified>
                         <UserPicker team={'blue'} position={'att'} />
                         <UserPicker team={'blue'} position={'def'} />
                     </ButtonGroup>
                 </Col>
+                <Col xs={12}>
+                    <Image src={table} rounded responsive thumbnail />
+                </Col>
+                <Col sm={9} xs={12}>
+                    <ButtonGroup justified>
+                        <UserPicker team={'red'} position={'def'} />
+                        <UserPicker team={'red'} position={'att'} />
+                    </ButtonGroup>
+                </Col>
             </Row>
-            <PlayResult />
+            <PlayResult onPublish={publishMatch} players={playing} />
             { playing.length === 4 ? <PlayStats players={ playing } /> : null }
         </Well>
         );

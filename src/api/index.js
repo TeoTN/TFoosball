@@ -1,6 +1,6 @@
 import { API_ROOT } from './config';
 import { loadState } from '../persistence';
-import { ensureJSON, ensureSuccessOr, checkIfForbiddenOr } from './helpers';
+import { ensureJSON, ensureSuccessOr } from './helpers';
 
 const getDefaultHeaders = () => {
     const persistedState = loadState();
@@ -25,7 +25,6 @@ const api = {
                 headers: getDefaultHeaders(),
             });
             return fetch(request)
-                .then(checkIfForbiddenOr('Access denied'))
                 .then(ensureSuccessOr(error_msg))
                 .then(ensureJSON);
         },
@@ -36,7 +35,6 @@ const api = {
                 body: JSON.stringify(body),
             });
             return fetch(request)
-                .then(checkIfForbiddenOr('Access denied'))
                 .then(ensureSuccessOr(error_msg))
                 .then(ensureJSON);
         },
@@ -47,7 +45,6 @@ const api = {
                 body: JSON.stringify(body),
             });
             return fetch(request)
-                .then(checkIfForbiddenOr('Access denied'))
                 .then(ensureSuccessOr(error_msg))
                 .then(ensureJSON);
         },
@@ -57,7 +54,6 @@ const api = {
                 headers: getDefaultHeaders(),
             });
             return fetch(request)
-                .then(checkIfForbiddenOr('Access denied'))
                 .then(ensureSuccessOr(error_msg));
         },
     },

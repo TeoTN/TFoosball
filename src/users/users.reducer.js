@@ -2,7 +2,7 @@ import * as types from "./user.types";
 import choice from "../utils/choice";
 import getRoles from "../utils/roles";
 
-const user = (state, action) => {
+export const user = (state = {}, action) => {
     switch (action.type) {
         case types.ADD:
             return {
@@ -10,18 +10,19 @@ const user = (state, action) => {
             };
         case types.CHOOSE:
         case types.UPDATE:
+        case types.ASSIGN:
             if (state.id !== action.id) return state;
             return Object.assign({}, state, action.userData);
         case types.UPDATE_LIST:
-            return Object.assign(state, action.userList.find(u => u.id === state.id));
+            return Object.assign({}, state, action.userList.find(u => u.id === state.id));
         case types.SWAP_POSITIONS:
             if (state.playing) {
-                return Object.assign(state, { position: state.position === 'att' ? 'def' : 'att'});
+                return Object.assign({}, state, { position: state.position === 'att' ? 'def' : 'att'});
             }
             return state;
         case types.SWAP_SIDES:
             if (state.playing) {
-                return Object.assign(state, { team: state.team === 'red' ? 'blue' : 'red' })
+                return Object.assign({}, state, { team: state.team === 'red' ? 'blue' : 'red' })
             }
             return state;
         default:
@@ -35,7 +36,7 @@ export const getSortedUsers = (state, column, isAscendingOrder) =>
         return isAscendingOrder ? comparison : -comparison;
     });
 
-const clean = (state = [], action) => {
+export const clean = (state = [], action) => {
     switch (action.type) {
         case types.CHOOSE:
             return state.map(u => ({
@@ -49,7 +50,7 @@ const clean = (state = [], action) => {
     }
 };
 
-export default (state = [], action) => {
+export const users = (state = [], action) => {
     switch (action.type) {
         case types.ADD:
             return [
@@ -59,6 +60,7 @@ export default (state = [], action) => {
         case types.UPDATE:
         case types.SWAP_POSITIONS:
         case types.SWAP_SIDES:
+        case types.ASSIGN:
             return state.map(u => user(u, action));
         case types.DELETE:
             return state.filter(user => user.id !== action.id);
@@ -68,8 +70,7 @@ export default (state = [], action) => {
             if (selected.length < 4) { //TODO Feature request 1-1 matches
                 throw new Error("Insufficient number of players selected.");
             }
-            const chosen = choice(selected, 4);
-            const playing = getRoles(chosen);
+            const playing = getRoles(choice(selected, 4));
             return intermediateState.map(u => (playing[u.username]) ? playing[u.username] : u);
         case types.SORT:
             return getSortedUsers(state, action.column, action.isAscendingOrder);
@@ -83,3 +84,5 @@ export default (state = [], action) => {
             return state;
     }
 };
+
+export default users;

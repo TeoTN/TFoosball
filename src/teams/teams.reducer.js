@@ -1,9 +1,9 @@
-import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM, PENDING_MEMBERS } from './teams.actions';
-import { UPDATE_PROFILE } from '../../profile/profile.types';
-import { SIGNED_OUT } from '../auth.types';
+import { TEAM_CREATED, SET_TEAMS, SELECT_TEAM, PENDING_MEMBERS, TEAM_LEFT } from './teams.actions';
+import { UPDATE_PROFILE } from '../profile/profile.types';
+import { SIGNED_OUT } from '../shared/auth/auth.types';
 export const getSelectedTeam = (state) => state.joined.find(team => team.id === state.selected);
 
-export default (state = { joined: [], selected: 0, pending: [] }, action) => {
+export const teams = (state = { joined: [], selected: 0, pending: [] }, action) => {
     switch (action.type) {
         case TEAM_CREATED:
             return {
@@ -13,8 +13,8 @@ export default (state = { joined: [], selected: 0, pending: [] }, action) => {
         case SET_TEAMS:
             return {
                 ...state,
-                joined: action.teams,
-                pending: action.pending,
+                joined: action.teams || [],
+                my_pending: action.my_pending || 0,
             };
         case SELECT_TEAM:
             return {
@@ -29,17 +29,24 @@ export default (state = { joined: [], selected: 0, pending: [] }, action) => {
             return {
                 ...state,
                 joined: state.joined.map(
-                    t => t.id !== state.selected ? t : Object.assign(t, {username: action.response.username})
+                    t => t.id !== state.selected ? t : Object.assign({}, t, {username: action.response.username})
                 ),
             };
         case SIGNED_OUT:
-            return { joined: [], selected: 0 };
+            return { joined: [], selected: 0, pending: [] };
         case PENDING_MEMBERS:
             return {
                 ...state,
                 pending: action.list,
             };
+        case TEAM_LEFT:
+            return {
+                ...state,
+                joined: state.joined.filter(t => t.id !== action.team.id),
+            };
         default:
             return state;
     }
-}
+};
+
+export default teams;

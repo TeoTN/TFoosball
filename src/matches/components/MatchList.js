@@ -1,50 +1,36 @@
 import React from 'react';
-import {Table, Row, Col} from 'react-bootstrap';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 import MatchItem from './MatchItem';
+import Switch from '../../shared/components/Switch';
+
 
 export default class MatchList extends React.Component {
+    getMatchItem = () => {
+        const { withOptions, onRemove, username, signed } = this.props;
+        return (match, idx) => (
+            <MatchItem
+                key={idx}
+                username={username}
+                match={match}
+                withOptions={withOptions}
+                onRemove={onRemove}
+                signed={signed}
+            />
+        );
+    };
+
     render() {
-        const { matches, withOptions, onRemove, username } = this.props;
+        const {matches, count, switchDeleteMode} = this.props;
 
         return (
-            <Table striped hover>
-                <thead>
-                <Row componentClass="tr">
-                    <Col xs={4} className="align-r" componentClass="td">
-                        <strong> Red team</strong>
-                    </Col>
-                    <Col xs={1} componentClass="td">
-                        <strong> Score </strong>
-                    </Col>
-                    <Col xs={4} componentClass="td">
-                        <strong> Blue team </strong>
-                    </Col>
-                    <Col xs={1} componentClass="td">
-                        <strong> EXP </strong>
-                    </Col>
-                    {
-                        withOptions ?
-                        <Col xs={2} componentClass="td">
-                            <strong> Options </strong>
-                        </Col> :
-                        null
-                    }
-                </Row>
-                </thead>
-                <tbody>
-                    {
-                        matches.map((match, idx) =>
-                            <MatchItem
-                                key={idx}
-                                username={username}
-                                withOptions={withOptions}
-                                onRemove={onRemove}
-                                {...match}
-                            />
-                        )
-                    }
-                </tbody>
-            </Table>
+            <ListGroup componentClass="ul">
+                { matches.map(this.getMatchItem()) }
+                <ListGroupItem className="text-primary text-right">
+                    <Switch bsStyle="danger" onChange={switchDeleteMode}>Delete mode</Switch>
+                    <strong className="with-horizontal-margin">Total matches: { count }</strong>
+                </ListGroupItem>
+            </ListGroup>
         );
+
     };
 }

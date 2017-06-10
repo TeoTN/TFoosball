@@ -1,8 +1,9 @@
 import * as types from './profile.types';
-import * as authTypes from '../shared/auth.types';
+import * as authTypes from '../shared/auth/auth.types';
 import * as MatchTypes from '../matches/match.types';
+import {defaultData} from '../matches/matches.reducer';
 
-const matches = (state = { page: 1, totalPages: 1, list: [] }, action) => {
+const matches = (state = defaultData, action) => {
     switch (action.type) {
         case types.RECEIVE_MATCHES:
             return {
@@ -10,11 +11,13 @@ const matches = (state = { page: 1, totalPages: 1, list: [] }, action) => {
                 list: action.response.results,
                 page: parseInt(action.response.page, 10),
                 totalPages: Math.ceil(action.response.count / action.response.page_size),
+                count: action.response.count,
             };
         case MatchTypes.DELETED:
             return {
                 ...state,
                 list: state.list.filter(match => match.id !== action.id),
+                count: state.count - 1,
             };
         default:
             return state;

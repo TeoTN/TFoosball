@@ -5,9 +5,9 @@ export const profileUpdate = (response) => ({
     response,
 });
 
-export const receiveProfile = (response) => ({
+export const receiveProfile = (profiles) => ({
     type: types.RECEIVE_PROFILE,
-    response,
+    response: profiles[0],
 });
 
 export const receiveUserMatches = (response) => ({

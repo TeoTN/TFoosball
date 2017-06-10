@@ -1,6 +1,12 @@
 import React from 'react';
 import Header from '../../shared/components/Header';
-import QuestionModal from '../../shared/components/QuestionModal';
+import ModalMessage from '../../shared/components/QuestionModal';
+import { ListGroupItem } from 'react-bootstrap';
+import {utils} from 'react-bootstrap';
+
+utils.bootstrapUtils.addStyle(ListGroupItem, 'lt-success');
+utils.bootstrapUtils.addStyle(ListGroupItem, 'default');
+
 
 export default class App extends React.Component {
     render() {
@@ -8,7 +14,7 @@ export default class App extends React.Component {
         return (
             <div>
                 <Header />
-                <QuestionModal />
+                <ModalMessage />
                 <main className="container-fluid">
                     {children}
                 </main>

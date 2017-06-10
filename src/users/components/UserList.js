@@ -18,7 +18,7 @@ const UserList = ({users, select}) => (
             <MatchToolbar/>
         </Row>
         <ListGroup>
-            <ListGroupItem onClick={()=>{}}>
+            <ListGroupItem listItem>
                 <Col xs={8}>
                     <strong> Username </strong>
                 </Col>

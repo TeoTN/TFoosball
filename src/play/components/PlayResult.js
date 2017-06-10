@@ -1,14 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import * as MatchActions from '../../matches/match.actions';
 import { Button, Row, Col, FormControl } from 'react-bootstrap';
 
-const mapStateToProps = ({users}) => ({users});
-const mapDispatchToProps = (dispatch) => ({
-    publish: (data, callback) => dispatch(MatchActions.publish(data, callback)),
-});
 
-@connect(mapStateToProps, mapDispatchToProps)
 class PlayResult extends React.Component {
     constructor(props) {
         super(props);
@@ -21,14 +14,13 @@ class PlayResult extends React.Component {
     onInputChange = (team) => (event) => this.setState({ [team]: event.target.value });
 
     handleFinish = () => {
-        const { users, publish } = this.props;
-        const players = users.filter(u => u.playing);
+        const { players, onPublish } = this.props;
         const requestData = {
             ...(players.reduce((o, p) => Object.assign(o, {[`${p.team}_${p.position}`]: p.username}), {})),
             red_score: this.state.red,
             blue_score: this.state.blue,
         };
-        publish(requestData, this.clear);
+        onPublish(requestData, this.clear);
     };
 
     clear = () => this.setState({ blue: 0, red: 0, });
@@ -41,11 +33,11 @@ class PlayResult extends React.Component {
             </Col>
             <Col sm={4}>
                 <FormControl
-                    style={{ borderColor: '#e74c3c' }}
-                    type="text"
-                    placeholder="Red"
-                    onChange={this.onInputChange('red')}
-                    value={this.state.red}
+                    style={{ borderColor: '#3498db' }}
+                    type="number"
+                    placeholder="Blue"
+                    onChange={this.onInputChange('blue')}
+                    value={this.state.blue}
                 />
             </Col>
             <Col xsHidden sm={1}>
@@ -53,11 +45,11 @@ class PlayResult extends React.Component {
             </Col>
             <Col sm={4}>
                 <FormControl
-                    style={{ borderColor: '#3498db' }}
-                    type="text"
-                    placeholder="Blue"
-                    onChange={this.onInputChange('blue')}
-                    value={this.state.blue}
+                    style={{ borderColor: '#e74c3c' }}
+                    type="number"
+                    placeholder="Red"
+                    onChange={this.onInputChange('red')}
+                    value={this.state.red}
                 />
             </Col>
             <Col sm={3}>

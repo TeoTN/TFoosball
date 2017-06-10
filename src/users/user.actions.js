@@ -29,8 +29,15 @@ export const userUpdate = (id, userData) => ({
     userData,
 });
 
-export const choosePlayersForMatch = () => ({
-    type: types.CHOOSE
+export const userAssign = (id, userData) => ({
+    type: types.ASSIGN,
+    id,
+    userData,
+});
+
+export const choosePlayersForMatch = (preset) => ({
+    type: types.CHOOSE,
+    preset,
 });
 
 export const sortByExp = () => ({
