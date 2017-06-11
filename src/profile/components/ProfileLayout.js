@@ -24,7 +24,7 @@ export default class ProfileLayout extends React.Component {
             <div className="container">
                 <h1>
                     <Gravatar email={profile.email} />
-                    { username } <small>{ profile.exp } XP</small>
+                    { username } <small>{ profile.exp }&nbsp;XP</small>
                 </h1>
                 <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">
                     <LinkContainer to={{pathname: `/profile/${username}/stats`}}>

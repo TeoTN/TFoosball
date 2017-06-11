@@ -1,8 +1,24 @@
+html, body, #root, #root-react {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 .jumbotron {
     background: black url('../img/jumbotron.jpg') no-repeat scroll right;
     color: white;
-    background-size: 85%;
+    background-size: cover;
 }
+
+@media (max-width: 991px) {
+    .jumbotron {
+        background: #2c3e50;
+        color: white;
+        flex: 1 0 100%;
+        margin: 0;
+    }
+}
+
 .jumbotron p {
     font-weight: 100 !important;
     font-size: 20px;
