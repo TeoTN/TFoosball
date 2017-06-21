@@ -1,0 +1,27 @@
+.container-fluid {
+  padding: 0;
+}
+
+.container .jumbotron,
+.container-fluid .jumbotron {
+  background: black url('../img/jumbotron.jpg') no-repeat scroll right;
+  color: white;
+  background-size: cover;
+  border-radius: 0;
+  margin-top: -21px;
+
+  & p {
+    font-weight: 100 !important;
+    font-size: 20px;
+  }
+
+  @media (max-width: 991px) {
+    & {
+      background: #2c3e50;
+      color: white;
+      flex: 1 0 100%;
+      margin: 0;
+    }
+  }
+}
+

@@ -45,6 +45,7 @@
     "http-proxy-middleware": "0.17.2",
     "jest": "17.0.2",
     "json-loader": "0.5.4",
+    "npm-run-all": "^4.0.2",
     "object-assign": "4.1.0",
     "path-exists": "2.1.0",
     "postcss-loader": "1.0.0",
@@ -80,7 +81,9 @@
     "redux-saga-router": "^2.1.0"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "npm-run-all --parallel start:webserver start:tfoostrap",
+    "start:webserver": "node scripts/start.js",
+    "start:tfoostrap": "cd tfoostrap && npm start",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
