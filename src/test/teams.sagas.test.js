@@ -54,7 +54,7 @@ describe('StateTeamsSelector', () => {
 
     it('should return empty list when teams is not present', () => {
         const state = {};
-        expect(stateTeamsSelector(state)).toEqual([]);
+        expect(stateTeamsSelector(state)).toEqual({ joined: [] });
     });
 });
 
