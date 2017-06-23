@@ -12,10 +12,10 @@ export default class App extends React.Component {
     render() {
         const { children } = this.props;
         return (
-            <div>
+            <div id="root-react">
                 <Header />
                 <ModalMessage />
-                <main className="container-fluid">
+                <main className="container-fluid" style={{display: 'flex', flexFlow: 'column', height: '100%'}}>
                     {children}
                 </main>
             </div>

@@ -1,0 +1,51 @@
+@import "../variables";
+
+.with-margin {
+  margin: @padding-base-vertical @padding-base-horizontal;
+}
+
+.with-horizontal-margin {
+  margin-left: @padding-base-horizontal;
+  margin-right: @padding-base-horizontal;
+}
+
+.with-vertical-margin {
+  margin-top: @padding-base-vertical;
+  margin-bottom: @padding-base-vertical;
+}
+
+.with-padding {
+  padding: @padding-base-vertical @padding-base-horizontal;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.no-vertical-padding {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.list-group-item {
+  overflow: hidden !important;
+  padding-left: 30px !important;
+}

@@ -1,0 +1,35 @@
+@import "./node_modules/bootstrap/less/bootstrap";
+@import "./variables";
+@import "./bootswatch";
+@import "./css/font-awesome";
+@icon-font-path: "../node_modules/bootstrap/fonts/";
+@import "./less/switch";
+@import "./less/widget";
+@import "./less/homepage";
+@import "./less/profile";
+
+html, body, #root, #root-react {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.alert {
+  margin-top: -21px;
+}
+
+.progress {
+  background: #fff;
+}
+
+.col-options {
+  display: block;
+  width: 30px;
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  bottom: 15px;
+  z-index: 150;
+}
+
+@import "./less/helpers";

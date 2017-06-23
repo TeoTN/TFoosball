@@ -23,12 +23,12 @@ export default class Header extends React.Component {
         const {username, isAuthenticated} = this.props;
         return (
             <div>
-                <Navbar staticTop collapseOnSelect defaultExpanded={!isAuthenticated}>
+                <Navbar staticTop collapseOnSelect defaultExpanded={false}>
                     <Navbar.Header>
                         <Navbar.Brand>
                             <a href="/">TFoosball</a>
                         </Navbar.Brand>
-                        <Navbar.Toggle />
+                        { isAuthenticated ? <Navbar.Toggle /> : null }
                     </Navbar.Header>
                     <Navbar.Collapse>
                         { username && <Navigation username={username}/> }

@@ -21,7 +21,7 @@ import { showQuestionModal } from '../shared/modal.actions';
 
 
 export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
-export const stateTeamsSelector = state => state.hasOwnProperty('teams') ? state.teams : [];
+export const stateTeamsSelector = state => state.hasOwnProperty('teams') ? state.teams : { joined: [] };
 
 export function* getCurrentTeam() {
     const teamsState = yield select(stateTeamsSelector);
