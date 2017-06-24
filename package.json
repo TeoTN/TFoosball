@@ -82,6 +82,7 @@
     "redux-saga-router": "^2.1.0"
   },
   "scripts": {
+    "heroku-prebuild": "cd tfoostrap && npm i && npm run build && npm link && cd .. && npm link @tfoosball/tfoostrap",
     "start": "npm-run-all --parallel start:webserver start:tfoostrap",
     "start:webserver": "node scripts/start.js",
     "start:tfoostrap": "cd tfoostrap && npm start",

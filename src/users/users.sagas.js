@@ -46,8 +46,8 @@ export function* userInvitation({email}) {
     const currentTeam = yield call(getCurrentTeam);
     const url = api.urls.teamInvite(currentTeam.id);
     try {
-        yield call(api.requests.post, url, {email}, `Failed to send invitation to ${email}`);
-        yield put(showInfo('Invitation sent'));
+        const {message} = yield call(api.requests.post, url, {email}, `Failed to send invitation to ${email}`);
+        yield put(showInfo(message));
     } catch(error) {
         yield put(raiseError(error));
     }
