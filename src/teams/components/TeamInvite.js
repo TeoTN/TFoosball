@@ -18,13 +18,15 @@ class TeamInvite extends React.Component {
             invalid,
             loadingEmailAutocompletion,
             emailAutocompletion,
-            fetchEmailAutocompletion
+            fetchEmailAutocompletion,
+            submitInvitation,
+            handleSubmit,
         } = this.props;
         const isEmailWrapped = (value, allValues, props) => isEmail(value ? value.value : '', allValues, props);
         return (
             <Row>
                 <Col xs={12} sm={8}>
-                    <Form onSubmit={this.handleSubmit} horizontal>
+                    <Form onSubmit={handleSubmit(submitInvitation)} horizontal>
                         <Field
                             name='email'
                             label="Email"

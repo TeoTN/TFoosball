@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch) => ({
     rejectMember: (id) => dispatch(memberAcceptance(id, false)),
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
     fetchEmailAutocompletion: (input) => dispatch(fetchEmailAutocompletion(input)),
-    submitInvitation: (email) => dispatch(inviteUser(email)),
+    submitInvitation: ({email}) => dispatch(inviteUser(email.value)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)

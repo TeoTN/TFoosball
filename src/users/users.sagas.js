@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import api from '../api';
 import * as UserActions from './user.actions';
 import { FETCH_AUTOCOMPLETION, INVITE } from './user.types';
@@ -44,7 +44,7 @@ export function* emailAutocompletion({input}) {
 
 export function* userInvitation({email}) {
     const currentTeam = yield call(getCurrentTeam);
-    const url = ''; // api.urls.teamInvite(currentTeam);
+    const url = api.urls.teamInvite(currentTeam.id);
     try {
         yield call(api.requests.post, url, {email}, `Failed to send invitation to ${email}`);
         yield put(showInfo('Invitation sent'));
