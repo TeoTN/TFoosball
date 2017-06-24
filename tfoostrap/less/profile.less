@@ -1,20 +1,69 @@
-.profile-photo img {
+@import '../variables';
+
+.profile-head {
+  margin: @padding-base-vertical @padding-base-horizontal;
+
+  & h1 {
+    display: inline-block;
+    margin: @padding-base-vertical @padding-base-horizontal;
+  }
+
+  @media (max-width: 768px) {
+    text-align: center;
+
+    & h1 {
+      display: block;
+      font-size: @font-size-h3;
+    }
+  }
+}
+
+.profile-photo {
+  display: inline-block;
   width: 64px;
   height: 64px;
-  border-radius: 32px;
-  margin: 0 16px 16px 0;
 
-  nav & {
-    width: 40px;
-    height: 40px;
-    margin: 10px;
+  @media (max-width: 768px) {
+    & {
+      margin: 0 auto;
+    }
   }
 
   .winners-stand & {
     margin: 10px auto;
   }
+
+  img {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    margin: 0 16px 16px 0;
+
+    nav & {
+      width: 40px;
+      height: 40px;
+      margin: 10px;
+    }
+  }
 }
 
 #profileChartWrapper {
   height: 300px;
+}
+
+.nav.nav-tabs li a p {
+  margin-bottom: 0;
+}
+
+.xs-text-small {
+  @media (max-width: 768px) {
+    & {
+      font-size: 0.6 * @font-size-base;
+    }
+  }
+  @media (max-width: 640px) {
+    & {
+      display: none;
+    }
+  }
 }
