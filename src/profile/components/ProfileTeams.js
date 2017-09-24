@@ -7,6 +7,7 @@ import { getSelectedTeam } from '../../teams/teams.reducer';
 import { showQuestionModal } from '../../shared/modal.actions';
 import Switch from '../../shared/components/Switch';
 import { fetchEmailAutocompletion, inviteUser } from '../../users/user.actions';
+import {FS_INVITATIONS} from "../../api/config";
 
 
 const mapStateToProps = ({teams, usersAutocompletion: {emailAutocompletion, loadingEmailAutocompletion}}) => ({
@@ -98,13 +99,13 @@ class ProfileTeams extends React.Component {
                 }
                 <hr />
 
-                <h4 className="text-info">Invite player to {selectedTeam}</h4>
-                <TeamInvite
+                { FS_INVITATIONS ? <h4 className="text-info">Invite player to {selectedTeam}</h4> : null }
+                { FS_INVITATIONS ? <TeamInvite
                     fetchEmailAutocompletion={fetchEmailAutocompletion}
                     loadingEmailAutocompletion={loadingEmailAutocompletion}
                     emailAutocompletion={emailAutocompletion}
                     submitInvitation={submitInvitation}
-                />
+                /> : null }
             </Panel>
         );
     }

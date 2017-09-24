@@ -48,7 +48,7 @@ const api = {
                 .then(ensureSuccessOr(error_msg))
                 .then(ensureJSON);
         },
-        ['delete'](url, error_msg='Failed to delete data on server') {
+        ['delete'](url, error_msg='Failed to delete data on server') {  // eslint-disable-line no-useless-computed-key
             const request = new Request(url, {
                 method: 'DELETE',
                 headers: getDefaultHeaders(),

@@ -6,3 +6,4 @@ export const AUTH_REDIR_URL = `${API_SERVER}auth/callback`;
 export const OAUTH_CLIENT_ID = process.env.REACT_APP_OAUTH_CLIENT_ID ||
     '907377379670-suvgso3siks409qfqgmqvfk2c18g4buh.apps.googleusercontent.com';
 export const IS_MOBILE = checkMobile();
+export const FS_INVITATIONS = process.env.REACT_APP_FS_INVITATIONS === 'true';
