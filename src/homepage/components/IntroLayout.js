@@ -27,6 +27,7 @@ const IntroLayout = ({signIn, children}) =>
                     </p>
                     <TeamCreationForm />
                     {children}
+                    <footer>Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a></footer>
                 </Col>
                 <Col mdHidden lgHidden xs={12} sm={12}>
                     <h5 className="text-right" style={{margin: '40px 0'}}>
@@ -35,6 +36,7 @@ const IntroLayout = ({signIn, children}) =>
                     <SignInButton signIn={signIn} block/>
                     <OrBall />
                     <TeamCreationForm />
+                    <footer>Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a></footer>
                 </Col>
             </Row>
         </Grid>

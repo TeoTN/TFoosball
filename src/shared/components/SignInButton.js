@@ -2,7 +2,7 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 import checkMobile from '../../utils/checkMobile';
 
-const SignInButton = ({signIn, ...props}) => (
+const SignInButton = ({signIn, activeKey, activeHref, ...props}) => (
     <Button
         onClick={signIn}
         bsStyle="danger"
