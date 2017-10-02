@@ -18,8 +18,9 @@ export default class App extends React.Component {
                 <main className="container-fluid" style={{display: 'flex', flexFlow: 'column', height: '100%'}}>
                     {children}
                 </main>
+                <div className="filler"/>
                 <footer className="footer-app">
-                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>
+                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>. [v2.2.0-beta.1]
                 </footer>
             </div>
         );

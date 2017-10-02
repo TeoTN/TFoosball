@@ -8,11 +8,14 @@
 @import "./less/widget";
 @import "./less/homepage";
 @import "./less/profile";
+@import "./less/forms";
 
 html, body, #root, #root-react {
   height: 100%;
   margin: 0;
   padding: 0;
+  //background-color: #ECEFF1;
+  background-color: rgba(245, 247, 250, 1);
 }
 
 .alert {
@@ -31,6 +34,13 @@ html, body, #root, #root-react {
   left: 10px;
   bottom: 15px;
   z-index: 150;
+}
+.brand-icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: url("../img/T.png");
+  background-size: 100% 100%;
 }
 
 @import "./less/helpers";

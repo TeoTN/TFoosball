@@ -26,7 +26,7 @@ export default class Header extends React.Component {
                 <Navbar staticTop collapseOnSelect defaultExpanded={false}>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <a href="/">TFoosball</a>
+                            <a href="/" style={{verticalAlign: 'middle'}}><div className="brand-icon" />&nbsp;TFoosball</a>
                         </Navbar.Brand>
                         { isAuthenticated ? <Navbar.Toggle /> : null }
                     </Navbar.Header>

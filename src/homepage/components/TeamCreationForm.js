@@ -29,7 +29,7 @@ export default class TeamCreationForm extends React.Component {
 
     render() {
         return (
-            <Form>
+            <Form className="form-team-creation">
                 <FormGroup>
                     <Row>
                         <Col xs={12} sm={12} md={3}>

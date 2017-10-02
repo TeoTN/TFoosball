@@ -5,6 +5,7 @@ import SignInButton from "../../shared/components/SignInButton";
 import {connect} from "react-redux";
 import {signIn} from "../../shared/auth/auth.actions";
 import OrBall from "../../shared/components/OrBall";
+import PromoBar from "./PromoBar";
 
 
 const mapDispatchToProps = dispatch => ({
@@ -27,7 +28,6 @@ const IntroLayout = ({signIn, children}) =>
                     </p>
                     <TeamCreationForm />
                     {children}
-                    <footer>Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a></footer>
                 </Col>
                 <Col mdHidden lgHidden xs={12} sm={12}>
                     <h5 className="text-right" style={{margin: '40px 0'}}>
@@ -36,9 +36,9 @@ const IntroLayout = ({signIn, children}) =>
                     <SignInButton signIn={signIn} block/>
                     <OrBall />
                     <TeamCreationForm />
-                    <footer>Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a></footer>
                 </Col>
             </Row>
+            <PromoBar />
         </Grid>
     </Jumbotron>;
 

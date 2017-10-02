@@ -15,6 +15,7 @@ import '@tfoosball/tfoostrap';
 import './utils/object';
 import './utils/doughnutText';
 import {loadState} from './persistence';
+import HomeLayout from "./homepage/components/HomeLayout";
 
 const hasToken = (state) => state &&
     state.hasOwnProperty('auth') &&
@@ -70,7 +71,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route component={App}>
-                <Route path="/" component={IntroLayout} onEnter={homepage} />
+                <Route path="/" component={HomeLayout} onEnter={homepage} />
                 <Route path="welcome" component={TeamAssignment} onEnter={chain([requireAuth, hasTeams])} />
                 <Route path="match" component={PlayLayout} onEnter={requireAuth} />
                 <Route path="profile/:username" component={ProfileLayout} onEnter={requireAuth}>
