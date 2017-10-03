@@ -2,15 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './homepage/components/App';
 import { Provider } from 'react-redux';
-import { Router, Route, browserHistory } from 'react-router';
+import {Router, Route, browserHistory, Redirect} from 'react-router';
 import store from './store';
 import PlayLayout from './play/components/PlayLayout';
 import { ProfileLayout, ProfileMatches, ProfileTeams, ProfileSettings } from './profile/components';
 import RankingLayout from './ranking/components/RankingLayout';
 import MatchesLayout from './matches/components/MatchesLayout';
-import SettingsLayout from './settings/components/SettingsLayout';
 import TeamAssignment  from './homepage/components/TeamAssignment';
-import IntroLayout from './homepage/components/IntroLayout';
 import '@tfoosball/tfoostrap';
 import './utils/object';
 import './utils/doughnutText';
@@ -82,9 +80,6 @@ ReactDOM.render(
                 </Route>
                 <Route path="ranking" component={RankingLayout} onEnter={requireAuth} />
                 <Route path="matches/(:page)" component={MatchesLayout} onEnter={requireAuth} />
-                <Route path="settings" component={SettingsLayout} onEnter={requireAuth} />
-                {/*<Redirect from="settings" to="/profile/username/settings" />*/}
-
                 {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>
         </Router>

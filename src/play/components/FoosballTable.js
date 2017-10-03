@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, ButtonGroup, Image, Well } from 'react-bootstrap';
+import {Row, Col, ButtonGroup, Image, Well, Panel} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { publish } from '../../matches/match.actions';
 import UserPicker from '../../users/components/UserPicker';
@@ -28,7 +28,7 @@ class FoosballTable extends Component {
         const playing = users.filter(u => u.playing);
 
         return (
-        <Well>
+        <Panel className="ui-card">
             <Row>
                 <Col xs={12} style={{ marginBottom: '15px'}}>
                     <PlayToolbar onSwapSides={swapSides} onSwapPositions={swapPositions} onRegenerate={regenerate} />
@@ -51,7 +51,7 @@ class FoosballTable extends Component {
             </Row>
             <PlayResult onPublish={publishMatch} players={playing} />
             { playing.length === 4 ? <PlayStats players={ playing } /> : null }
-        </Well>
+        </Panel>
         );
     }
 }

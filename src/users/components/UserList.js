@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 });
 
 const UserList = ({users, select}) => (
-    <div>
+    <div className="ui-card">
         <Row>
             <MatchToolbar/>
         </Row>
