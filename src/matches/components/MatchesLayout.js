@@ -29,6 +29,7 @@ export default class MatchesLayout extends React.Component {
                 <Row>
                     <NaivePager page={matches.page} prefix={`/matches`} totalPages={matches.totalPages} />
                 </Row>
+                <div className="filler" />
             </Grid>
         );
     };

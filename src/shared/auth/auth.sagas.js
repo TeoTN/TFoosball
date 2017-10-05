@@ -2,7 +2,7 @@ import { take, call, put, fork, cancel, select, takeLatest } from 'redux-saga/ef
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import { setToken, setProfile, signedOut } from './auth.actions';
-import { raiseError, clean, RAISE_UNAUTHORIZED } from '../notifier.actions';
+import {raiseError, clean, RAISE_UNAUTHORIZED, showInfo} from '../notifier.actions';
 import { initTeam, fetchTeams } from '../../teams/teams.sagas';
 import { prepareWindow } from '../../api/oauth';
 import api from '../../api';
@@ -29,6 +29,9 @@ export function* fetchProfile(team_id, member_id) {
     const profile_url = api.urls.teamMemberEntity(team_id, member_id);
     try {
         const profile = yield call(api.requests.get, profile_url, {}, 'Failed to load user profile');
+        if (profile.hidden) {
+            yield put(showInfo('You have been marked as inactive player. You can change that in profile settings.'));
+        }
         yield put(setProfile(profile));
     } catch(error) {
         yield put(raiseError(error));

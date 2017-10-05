@@ -3,7 +3,7 @@ import {ButtonGroup, Button, Glyphicon} from 'react-bootstrap';
 
 const PlayToolbar = ({ onSwapSides, onSwapPositions, onRegenerate }) => {
     return (
-        <ButtonGroup justified>
+        <ButtonGroup className="ui-card" justified>
             <ButtonGroup>
                 <Button bsStyle="primary" bsSize="small" onClick={onSwapSides}>
                     <Glyphicon glyph="refresh"/>&nbsp;Sides

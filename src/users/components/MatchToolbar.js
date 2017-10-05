@@ -34,15 +34,15 @@ class MatchToolbar extends React.Component {
         const { sortByName, sortByExp, handlePlay } = this.props;
         return (
             <Col xs={12}>
-                <ButtonGroup justified>
+                <ButtonGroup justified className="ui-card">
                     <ButtonGroup>
-                        <Button bsStyle="primary" onClick={() => this.sort(sortByName)}>By name</Button>
+                        <Button bsStyle="primary" bsSize="small" onClick={() => this.sort(sortByName)}>By name</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="primary" onClick={() => this.sort(sortByExp)}>By XP</Button>
+                        <Button bsStyle="primary" bsSize="small" onClick={() => this.sort(sortByExp)}>By XP</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="success" onClick={handlePlay}>Play!</Button>
+                        <Button bsStyle="success" bsSize="small" onClick={handlePlay}>Play!</Button>
                     </ButtonGroup>
                 </ButtonGroup>
             </Col>

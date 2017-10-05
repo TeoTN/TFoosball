@@ -14,14 +14,14 @@ const ProfileStats = ({
     const win = Math.round(win_ratio * 100);
     return (
         <Well>
-            <Row>
-                <Col sm={4} xs={4} smOffset={1}>
+            <Row className="with-vertical-margin">
+                <Col sm={4} xs={4} style={{width: '33%'}}>
                     <Doughnut value={win} bsStyle="success" label="Win rate" />
                 </Col>
-                <Col sm={3} xs={4}>
+                <Col sm={3} xs={4} style={{width: '33%'}}>
                     <Doughnut value={att} bsStyle="danger" label="Offence wins"/>
                 </Col>
-                <Col sm={3} xs={4}>
+                <Col sm={3} xs={4} style={{width: '33%'}}>
                     <Doughnut value={def} bsStyle="info" label="Defence wins"/>
                 </Col>
             </Row>

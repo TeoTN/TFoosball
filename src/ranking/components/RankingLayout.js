@@ -24,14 +24,13 @@ export default class RankingLayout extends React.Component {
 
         return (
             <Grid>
-                <Panel>
                 <WinnersStand winners={winners} />
-                </Panel>
                 <Row>
                     <Col xs={12}>
                         <RankingList users={users} username={profile.username} sortBy={sortBy} ranking={ranking}/>
                     </Col>
                 </Row>
+                <div className="filler" />
             </Grid>
         );
     };

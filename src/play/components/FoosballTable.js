@@ -28,11 +28,13 @@ class FoosballTable extends Component {
         const playing = users.filter(u => u.playing);
 
         return (
-        <Panel className="ui-card">
+        <div>
             <Row>
-                <Col xs={12} style={{ marginBottom: '15px'}}>
+                <Col xs={12}>
                     <PlayToolbar onSwapSides={swapSides} onSwapPositions={swapPositions} onRegenerate={regenerate} />
                 </Col>
+            </Row>
+            <Row className="with-vertical-margin">
                 <Col smOffset={3} sm={9} xs={12}>
                     <ButtonGroup justified>
                         <UserPicker team={'blue'} position={'att'} />
@@ -51,7 +53,7 @@ class FoosballTable extends Component {
             </Row>
             <PlayResult onPublish={publishMatch} players={playing} />
             { playing.length === 4 ? <PlayStats players={ playing } /> : null }
-        </Panel>
+        </div>
         );
     }
 }

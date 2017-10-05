@@ -85,6 +85,7 @@ class ProfileTeams extends React.Component {
                     onTeamSelect={this.onTeamSelect}
                     editable={this.state.editMode}
                     joinable={this.state.joinMode}
+                    className="with-vertical-margin"
                 />
                 <hr />
 

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './homepage/components/App';
 import { Provider } from 'react-redux';
-import {Router, Route, browserHistory, Redirect} from 'react-router';
+import {Router, Route, browserHistory} from 'react-router';
 import store from './store';
 import PlayLayout from './play/components/PlayLayout';
 import { ProfileLayout, ProfileMatches, ProfileTeams, ProfileSettings } from './profile/components';

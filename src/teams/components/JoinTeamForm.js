@@ -40,6 +40,7 @@ export default class JoinTeamForm extends React.Component {
                                 style={{border: 0}}
                                 onChange={this.handleChange('team')}
                                 value={this.state.team}
+                                className="no-horizontal-padding"
                             />
                         </Col>
                         <Col xs={12} sm={6}>
@@ -48,6 +49,7 @@ export default class JoinTeamForm extends React.Component {
                                 style={{border: 0}}
                                 onChange={this.handleChange('username')}
                                 value={this.state.username}
+                                className="no-horizontal-padding"
                             />
                         </Col>
                         <Button bsStyle="link" onClick={this.handleJoinTeam} className="pull-right"

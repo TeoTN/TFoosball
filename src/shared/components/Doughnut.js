@@ -48,7 +48,7 @@ export default class Doughnut extends React.Component {
             tooltips: {
                 enabled: false,
             },
-            cutoutPercentage: 70,
+            cutoutPercentage: 85,
             rotation: Math.PI*1.5 - Math.PI*value/100,
         };
 
