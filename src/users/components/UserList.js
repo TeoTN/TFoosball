@@ -15,9 +15,15 @@ const mapDispatchToProps = (dispatch, props) => ({
 const UserList = ({users, select}) => (
     <div>
         <Row>
-            <MatchToolbar/>
+            <MatchToolbar canPlay={users.length >= 4} />
         </Row>
         <ListGroup>
+            {
+                users.length > 0 && users.length < 4 ?
+                    <ListGroupItem className="text-muted text-center" disabled>
+                        At least 4 players are required
+                    </ListGroupItem> : null
+            }
             <ListGroupItem listItem>
                 <Col xs={8}>
                     <strong> Username </strong>
