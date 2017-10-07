@@ -9,18 +9,13 @@ const mapDispatchToProps = dispatch => ({
     signIn: () => dispatch(signIn()),
 });
 
-const HomeLayout = ({signIn}) => {
-    return (
+const HomeLayout = ({signIn}) => (
+    window.matchMedia("(min-width: 769px)").matches ?
         <div>
-            <div className="hidden-xs hidden-sm">
-                <HomeJumbotron />
-                <PromoBar />
-            </div>
-            <div className="hidden-md hidden-lg">
-                <MobileHomepage onSignIn={signIn} />
-            </div>
-        </div>
-    );
-};
+            <HomeJumbotron />
+            <PromoBar />
+        </div> :
+        <MobileHomepage onSignIn={signIn} />
+);
 
 export default connect(null, mapDispatchToProps)(HomeLayout)
