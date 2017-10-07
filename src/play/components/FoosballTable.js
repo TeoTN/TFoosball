@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Row, Col, ButtonGroup, Image, Well, Panel} from 'react-bootstrap';
+import {Row, Col, ButtonGroup, Image} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { publish } from '../../matches/match.actions';
 import UserPicker from '../../users/components/UserPicker';
@@ -9,8 +9,12 @@ import PlayToolbar from './PlayToolbar';
 import { choosePlayersForMatch, swapPositions, swapSides } from '../../users/user.actions';
 import { raiseError } from '../../shared/notifier.actions';
 import table from '../../assets/img/table.jpg';
+import {getSelectedTeam} from "../../teams/teams.reducer";
 
-const mapStateToProps = ({users}) => ({users});
+const mapStateToProps = ({users, teams}) => ({
+    users,
+    selectedTeam: getSelectedTeam(teams).name,
+});
 const mapDispatchToProps = (dispatch) => ({
     swapSides: () => dispatch(swapSides()),
     swapPositions: () => dispatch(swapPositions()),
@@ -43,6 +47,9 @@ class FoosballTable extends Component {
                 </Col>
                 <Col xs={12}>
                     <Image src={table} rounded responsive thumbnail />
+                    <h2 className="team-title">
+                        {this.props.selectedTeam}
+                    </h2>
                 </Col>
                 <Col sm={9} xs={12}>
                     <ButtonGroup justified>

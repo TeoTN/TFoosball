@@ -32,7 +32,7 @@ class PlayResult extends React.Component {
                     <Col xs={12}>
                         <h3 style={{marginTop: 0}}>Score</h3>
                     </Col>
-                    <Col sm={4}>
+                    <Col xs={6} sm={4}>
                         <FormControl
                             style={{borderColor: '#3498db'}}
                             type="number"
@@ -44,7 +44,7 @@ class PlayResult extends React.Component {
                     <Col xsHidden sm={1}>
                         <h4>vs</h4>
                     </Col>
-                    <Col sm={4}>
+                    <Col xs={6} sm={4}>
                         <FormControl
                             style={{borderColor: '#e74c3c'}}
                             type="number"
