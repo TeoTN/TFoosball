@@ -9,13 +9,33 @@ const mapDispatchToProps = dispatch => ({
     signIn: () => dispatch(signIn()),
 });
 
-const HomeLayout = ({signIn}) => (
-    window.matchMedia("(min-width: 769px)").matches ?
-        <div>
-            <HomeJumbotron />
-            <PromoBar />
-        </div> :
-        <MobileHomepage onSignIn={signIn} />
-);
+class HomeLayout extends React.Component {
+    constructor(props) {
+        super(props);
+        // TODO Extract isMobile to global state
+        this.mediaQuery = window.matchMedia('(min-width: 769px');
+        this.state = {
+            isMobile: this.mediaQuery.matches,
+        };
+    }
+
+    componentDidMount() {
+        this.mediaQuery.addListener(this.onMediaChange);
+    }
+
+    onMediaChange = ({matches}) => this.setState({isMobile: matches});
+
+    render() {
+        const {signIn} = this.props;
+        return (
+            window.matchMedia("(min-width: 769px)").matches ?
+                <div>
+                    <HomeJumbotron />
+                    <PromoBar />
+                </div> :
+                <MobileHomepage onSignIn={signIn} />
+        );
+    }
+}
 
 export default connect(null, mapDispatchToProps)(HomeLayout)
