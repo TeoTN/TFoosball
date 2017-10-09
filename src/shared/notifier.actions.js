@@ -12,7 +12,7 @@ export const showInfo = (msg) => ({
 });
 
 export const raiseError = (error) => {
-    // TODO pass action that failed
+    // TODO pass action that caused the failure
     if (error.constructor === APIUnauthorizedError) {
         return { type: RAISE_UNAUTHORIZED };
     }

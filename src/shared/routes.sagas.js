@@ -6,6 +6,7 @@ import { listMatches } from '../matches/matches.sagas';
 import { settings } from '../settings/settings.sagas';
 import { fetchPendingMembers, fetchTeams } from '../teams/teams.sagas';
 import { cleanNotifications } from './shared.sagas';
+import {acceptInvitation} from "./auth/auth.sagas";
 
 const options = {
     matchAll: true,
@@ -20,6 +21,7 @@ const routes = {
     '/match': fetchUsers,
     '/ranking': fetchUsers,
     '/settings': settings,
+    '/accept/:activation_code': acceptInvitation,
 };
 
 export function* routerSaga() {

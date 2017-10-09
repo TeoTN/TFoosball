@@ -1,5 +1,5 @@
 import * as types from './auth.types';
-import { REQUEST_SAVE_PROFILE, REQUEST_SAVE_MEMBER, SETTINGS_SAVED} from '../../settings/settings.actions';
+import {REQUEST_SAVE_PROFILE, REQUEST_SAVE_MEMBER, SETTINGS_SAVED} from '../../settings/settings.actions';
 
 export const profile = (state = {}, action) => {
     switch (action.type) {
@@ -13,7 +13,20 @@ export const profile = (state = {}, action) => {
     }
 };
 
-export const auth = (state = {}, action) => {
+export const activate = (state = {pending: true, success: false}, action={}) => {
+    switch (action.type) {
+        case types.ACTIVATE_REQUEST:
+            return { pending: true, success: false };
+        case types.ACTIVATE_SUCCESS:
+            return { pending: false, success: true };
+        case types.ACTIVATE_FAILURE:
+            return { pending: false, success: false };
+        default:
+            return state;
+    }
+};
+
+export const auth = (state = {activate: activate()}, action) => {
     switch (action.type) {
         case types.SET_TOKEN:
             return {
@@ -34,6 +47,13 @@ export const auth = (state = {}, action) => {
             return {
                 ...state,
                 profile: profile(state.profile, action),
+            };
+        case types.ACTIVATE_REQUEST:
+        case types.ACTIVATE_SUCCESS:
+        case types.ACTIVATE_FAILURE:
+            return {
+                ...state,
+                activate: activate(state.activate, action),
             };
         default:
             return state;

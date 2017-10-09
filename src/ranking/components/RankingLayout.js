@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Row, Col, Panel} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import {sortBy} from '../../users/user.actions';
 import {connect} from 'react-redux';
 import RankingList from './RankingList';

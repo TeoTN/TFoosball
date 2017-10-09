@@ -1,7 +1,7 @@
 import { take, call, put, fork, cancel, select, takeLatest } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
-import { setToken, setProfile, signedOut } from './auth.actions';
+import {setToken, setProfile, signedOut, activateRequest, activateSuccess, activateFailure} from './auth.actions';
 import {raiseError, clean, RAISE_UNAUTHORIZED, showInfo} from '../notifier.actions';
 import { initTeam, fetchTeams } from '../../teams/teams.sagas';
 import { prepareWindow } from '../../api/oauth';
@@ -89,4 +89,26 @@ export function* sessionExpired() {
         yield call([browserHistory, browserHistory.push], '/');
     };
     yield takeLatest(RAISE_UNAUTHORIZED, reauthenticate);
+}
+
+export function* acceptInvitation({activation_code}) {
+    const token = yield select(state => state.auth.token);
+
+    if (!token) {
+        yield call(authenticate, false);
+    }
+    const url = api.urls.teamAccept();
+    yield put(activateRequest());
+    try {
+        yield call(api.requests.post, url, {activation_code}, 'Failed to activate with given code.');
+    } catch (error) {
+        yield put(raiseError(error));
+        yield put(activateFailure());
+        return;
+    }
+    yield put(activateSuccess());
+    yield call(fetchTeams);
+    const currentTeam = yield call(initTeam);
+    yield call(fetchProfile, currentTeam.id, currentTeam.member_id);
+    yield call([browserHistory, browserHistory.push], '/');
 }

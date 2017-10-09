@@ -1,21 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './homepage/components/App';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import {Router, Route, browserHistory} from 'react-router';
 import store from './store';
-import PlayLayout from './play/components/PlayLayout';
-import { ProfileLayout, ProfileMatches, ProfileTeams, ProfileSettings } from './profile/components';
-import RankingLayout from './ranking/components/RankingLayout';
-import MatchesLayout from './matches/components/MatchesLayout';
+import {PlayLayout, ProfileLayout, RankingLayout, MatchesLayout, HomeLayout, InvitationLayout} from './layouts';
+import {ProfileMatches, ProfileTeams, ProfileSettings} from './profile/components';
 import TeamAssignment  from './homepage/components/TeamAssignment';
 import '@tfoosball/tfoostrap';
 import './utils/object';
 import './utils/doughnutText';
 import {loadState} from './persistence';
-import HomeLayout from "./homepage/components/HomeLayout";
 
-const hasToken = (state) => state &&
+
+export const hasToken = (state) => state &&
     state.hasOwnProperty('auth') &&
     state.auth.hasOwnProperty('token');
 
@@ -37,7 +35,7 @@ function requireAuth(nextState, replace, next) {
 function homepage(nextState, replace, next) {
     const persistedState = loadState();
     const isToken = hasToken(persistedState);
-    const isJoinedTeam = hasJoinedTeam(persistedState)
+    const isJoinedTeam = hasJoinedTeam(persistedState);
     if (isToken && isJoinedTeam) {
         replace({
             pathname: "/match",
@@ -69,17 +67,18 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route component={App}>
-                <Route path="/" component={HomeLayout} onEnter={homepage} />
-                <Route path="welcome" component={TeamAssignment} onEnter={chain([requireAuth, hasTeams])} />
-                <Route path="match" component={PlayLayout} onEnter={requireAuth} />
+                <Route path="/" component={HomeLayout} onEnter={homepage}/>
+                <Route path="welcome" component={TeamAssignment} onEnter={chain([requireAuth, hasTeams])}/>
+                <Route path="match" component={PlayLayout} onEnter={requireAuth}/>
                 <Route path="profile/:username" component={ProfileLayout} onEnter={requireAuth}>
-                    <Route path="stats" />
-                    <Route path="matches(/:page)" component={ProfileMatches} />
-                    <Route path="teams" component={ProfileTeams} />
-                    <Route path="settings" component={ProfileSettings} />
+                    <Route path="stats"/>
+                    <Route path="matches(/:page)" component={ProfileMatches}/>
+                    <Route path="teams" component={ProfileTeams}/>
+                    <Route path="settings" component={ProfileSettings}/>
                 </Route>
-                <Route path="ranking" component={RankingLayout} onEnter={requireAuth} />
-                <Route path="matches/(:page)" component={MatchesLayout} onEnter={requireAuth} />
+                <Route path="ranking" component={RankingLayout} onEnter={requireAuth}/>
+                <Route path="matches/(:page)" component={MatchesLayout} onEnter={requireAuth}/>
+                <Route path="accept/(:activation_code)" component={InvitationLayout}/>
                 {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>
         </Router>
