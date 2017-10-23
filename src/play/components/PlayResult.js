@@ -53,7 +53,7 @@ class PlayResult extends React.Component {
                             value={this.state.red}
                         />
                     </Col>
-                    <Col sm={3}>
+                    <Col xs={12} sm={3}>
                         <Button onClick={this.handleFinish} bsStyle={'success'} block>
                             Send
                         </Button>
