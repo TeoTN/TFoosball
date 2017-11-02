@@ -20,7 +20,7 @@ export default class App extends React.Component {
                 </main>
                 <div className="filler"/>
                 <footer className="footer-app">
-                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>. [v2.2.0]
+                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>. [v2.2.1]
                 </footer>
             </div>
         );

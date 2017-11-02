@@ -28,6 +28,7 @@ export function* whatsNewModal() {
         • Fix new match bug on mobile
         • Fix infinite authentication loop bug
         • Fix match deletion permissions bug
+        • Fix what's new modal bug
         `,
         onAccept: () => {
         },
