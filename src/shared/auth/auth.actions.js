@@ -26,3 +26,5 @@ export const signOut = () => ({
 export const activateRequest = () => ({type: types.ACTIVATE_REQUEST});
 export const activateSuccess = () => ({type: types.ACTIVATE_SUCCESS});
 export const activateFailure = () => ({type: types.ACTIVATE_FAILURE});
+
+export const whatsNewShown = (version) => ({type: types.WHATS_NEW_SHOWN, version});

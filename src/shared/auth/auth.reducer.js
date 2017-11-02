@@ -1,5 +1,8 @@
 import * as types from './auth.types';
-import {REQUEST_SAVE_PROFILE, REQUEST_SAVE_MEMBER, SETTINGS_SAVED} from '../../settings/settings.actions';
+import {
+    REQUEST_SAVE_PROFILE, REQUEST_SAVE_MEMBER, SETTINGS_SAVED,
+    WHATS_NEW_SHOWN
+} from '../../settings/settings.actions';
 
 export const profile = (state = {}, action) => {
     switch (action.type) {
@@ -8,6 +11,8 @@ export const profile = (state = {}, action) => {
             return Object.assign({}, state, action.partialData);
         case SETTINGS_SAVED:
             return Object.assign({}, state, action.values);
+        case WHATS_NEW_SHOWN:
+            return Object.assign({}, state, {whats_new_version: action.version});
         default:
             return state;
     }

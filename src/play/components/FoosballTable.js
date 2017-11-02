@@ -11,10 +11,14 @@ import { raiseError } from '../../shared/notifier.actions';
 import table from '../../assets/img/table.jpg';
 import {getSelectedTeam} from "../../teams/teams.reducer";
 
-const mapStateToProps = ({users, teams}) => ({
-    users,
-    selectedTeam: getSelectedTeam(teams).name,
-});
+const mapStateToProps = ({users, teams}) => {
+    const selectedTeam = getSelectedTeam(teams);
+    return {
+        users,
+        selectedTeam: selectedTeam ? selectedTeam.name : '',
+    };
+};
+
 const mapDispatchToProps = (dispatch) => ({
     swapSides: () => dispatch(swapSides()),
     swapPositions: () => dispatch(swapPositions()),

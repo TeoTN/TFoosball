@@ -10,7 +10,7 @@ import Gravatar from './Gravatar';
 
 const mapStateToProps = ({profile, auth}) => ({
     profile,
-    myUsername: auth.profile.username,
+    myUsername: auth.profile ? auth.profile.username : '',
 });
 
 

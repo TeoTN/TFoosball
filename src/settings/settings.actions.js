@@ -32,4 +32,4 @@ export const requestToggleActive = (value) => ({
     value,
 });
 
-export const settingsSaved = (values) => ({ type: SETTINGS_SAVED, values });
+export const settingsSaved = (values) => ({type: SETTINGS_SAVED, values});
