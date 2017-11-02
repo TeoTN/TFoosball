@@ -100,13 +100,14 @@ class ProfileTeams extends React.Component {
                 }
                 <hr />
 
-                { FS_INVITATIONS ? <h4 className="text-info">Invite player to {selectedTeam}</h4> : null }
-                { FS_INVITATIONS ? <TeamInvite
+                { FS_INVITATIONS && <h4 className="text-info">Invite player to {selectedTeam}</h4>}
+                { FS_INVITATIONS && <h6>Only Google-based emails are supported now.</h6>}
+                { FS_INVITATIONS && <TeamInvite
                     fetchEmailAutocompletion={fetchEmailAutocompletion}
                     loadingEmailAutocompletion={loadingEmailAutocompletion}
                     emailAutocompletion={emailAutocompletion}
                     submitInvitation={submitInvitation}
-                /> : null }
+                />}
             </Panel>
         );
     }
