@@ -1,23 +1,23 @@
-import { take, call, put, fork, cancel, select, takeLatest } from 'redux-saga/effects';
-import { browserHistory } from 'react-router'
-import { SIGN_IN, SIGN_OUT } from './auth.types';
+import {take, call, put, fork, cancel, select, takeLatest} from 'redux-saga/effects';
+import {browserHistory} from 'react-router'
+import {SIGN_IN, SIGN_OUT} from './auth.types';
 import {setToken, setProfile, signedOut, activateRequest, activateSuccess, activateFailure} from './auth.actions';
 import {raiseError, clean, RAISE_UNAUTHORIZED, showInfo} from '../notifier.actions';
-import { initTeam, fetchTeams } from '../../teams/teams.sagas';
-import { prepareWindow } from '../../api/oauth';
+import {initTeam, fetchTeams} from '../../teams/teams.sagas';
+import {prepareWindow} from '../../api/oauth';
 import api from '../../api';
-import { removeState } from '../../persistence';
-import { getOAuthErrorMsg } from './auth.utils';
-import { showModalInfo, acceptModal } from '../modal.actions';
+import {removeState} from '../../persistence';
+import {getOAuthErrorMsg} from './auth.utils';
+import {showModalInfo, ACCEPT} from '../modal.actions';
 
 export function* authenticate(reauthenticate = false) {
     const token = yield select(state => state.auth.token);
-    if (token && !reauthenticate) return { token };
+    if (token && !reauthenticate) return {token};
     const promptWindow = prepareWindow();
     try {
-        const { token, expires_at } = yield call([promptWindow, promptWindow.open]);
+        const {token, expires_at} = yield call([promptWindow, promptWindow.open]);
         yield put(setToken(token, expires_at));
-        return { token };
+        return {token};
     } catch (error) {
         const errorMsg = getOAuthErrorMsg(error);
         yield put(raiseError(errorMsg));
@@ -33,7 +33,7 @@ export function* fetchProfile(team_id, member_id) {
             yield put(showInfo('You have been marked as inactive player. You can change that in profile settings.'));
         }
         yield put(setProfile(profile));
-    } catch(error) {
+    } catch (error) {
         yield put(raiseError(error));
     }
 }
@@ -50,11 +50,11 @@ export function* signIn() {
     // try {
     yield call(fetchProfile, currentTeam.id, currentTeam.member_id);
     // } catch (error) {
-        // TODO What if the entry belongs to the other user that was previously logged in?
-        // yield call(removeTeamState);
-        // yield chooseTeam();
-        // yield fetchProfile();
-        // console.error(error);
+    // TODO What if the entry belongs to the other user that was previously logged in?
+    // yield call(removeTeamState);
+    // yield chooseTeam();
+    // yield fetchProfile();
+    // console.error(error);
     // }
     yield call([browserHistory, browserHistory.push], `/match`);
 }
@@ -67,7 +67,8 @@ export function* loginFlow() {
         const logout_url = api.urls.logout();
         try {
             yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
-        } catch (error) {}
+        } catch (error) {
+        }
         yield put(signedOut());
         yield put(clean());
         yield call(removeState);
@@ -81,11 +82,12 @@ export function* sessionExpired() {
         const info = {
             title: 'Unauthenticated',
             text: 'Your session has expired, please log in again.',
-            onAccept: () => {},
+            onAccept: () => {
+            },
         };
         yield put(showModalInfo(info));
+        yield take(ACCEPT);
         yield call(authenticate, true);
-        yield put(acceptModal());
         yield call([browserHistory, browserHistory.push], '/');
     };
     yield takeLatest(RAISE_UNAUTHORIZED, reauthenticate);
