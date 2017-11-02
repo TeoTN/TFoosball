@@ -1,6 +1,6 @@
 {
   "name": "tfoosball",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",
@@ -45,6 +45,7 @@
     "http-proxy-middleware": "0.17.2",
     "jest": "17.0.2",
     "json-loader": "0.5.4",
+    "npm-run-all": "^4.0.2",
     "object-assign": "4.1.0",
     "path-exists": "2.1.0",
     "postcss-loader": "1.0.0",
@@ -74,14 +75,17 @@
     "react-redux": "^5.0.3",
     "react-router": "^3.0.2",
     "react-router-bootstrap": "^0.23.1",
+    "react-select": "^1.0.0-rc.5",
     "redux": "^3.6.0",
     "redux-form": "^6.6.1",
     "redux-saga": "^0.14.3",
-    "redux-saga-router": "file:./redux-saga-router"
+    "redux-saga-router": "^2.1.0"
   },
   "scripts": {
-    "heroku-prebuild": "npm install -g babel-cli rimraf && cd redux-saga-router && npm install && cd ..",
-    "start": "node scripts/start.js",
+    "heroku-prebuild": "cd tfoostrap && npm i && npm run build && npm link && cd .. && npm link @tfoosball/tfoostrap",
+    "start": "npm-run-all --parallel start:webserver start:tfoostrap",
+    "start:webserver": "node scripts/start.js",
+    "start:tfoostrap": "cd tfoostrap && npm start",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },

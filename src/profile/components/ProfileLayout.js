@@ -10,7 +10,7 @@ import Gravatar from './Gravatar';
 
 const mapStateToProps = ({profile, auth}) => ({
     profile,
-    myUsername: auth.profile.username,
+    myUsername: auth.profile ? auth.profile.username : '',
 });
 
 
@@ -22,32 +22,36 @@ export default class ProfileLayout extends React.Component {
 
         return (
             <div className="container">
-                <h1>
+                <div className="profile-head">
                     <Gravatar email={profile.email} />
-                    { username } <small>{ profile.exp } XP</small>
-                </h1>
+                    <h1>{ username } <small>{ profile.exp }&nbsp;XP</small></h1>
+                </div>
                 <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">
                     <LinkContainer to={{pathname: `/profile/${username}/stats`}}>
                         <NavItem eventKey="1" href="#">
-                            <Glyphicon glyph="dashboard"/><br/>Statistics
+                            <Glyphicon glyph="dashboard"/>
+                            <p className="xs-text-small">Statistics</p>
                         </NavItem>
                     </LinkContainer>
                     <LinkContainer to={{pathname: `/profile/${username}/matches`}}>
                         <NavItem eventKey="2" href="#">
-                            <Glyphicon glyph="list"/><br/>Matches
+                            <Glyphicon glyph="list"/>
+                            <p className="xs-text-small">Matches</p>
                         </NavItem>
                     </LinkContainer>
                     { myUsername === username ?
                         <LinkContainer to={{pathname: `/profile/${username}/teams`}}>
                             <NavItem eventKey="3" href="#">
-                                <Icon name="users"/><br/>Teams
+                                <Icon name="users"/>
+                                <p className="xs-text-small">Teams</p>
                             </NavItem>
                         </LinkContainer> :
                         null }
                     { myUsername === username ?
                         <LinkContainer to={{pathname: `/profile/${username}/settings`}}>
                             <NavItem eventKey="4" href="#">
-                                <Glyphicon glyph="wrench"/><br/>Settings
+                                <Glyphicon glyph="wrench"/>
+                                <p className="xs-text-small">Settings</p>
                             </NavItem>
                         </LinkContainer> : null }
                 </Nav>

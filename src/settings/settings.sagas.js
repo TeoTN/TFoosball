@@ -18,7 +18,7 @@ export const validateMember = (data) => {
 };
 
 const profileSettingsFilter = ({ first_name, last_name }) => ({ first_name, last_name });
-const memberSettingsFilter = ({ username }) => ({ username });
+const memberSettingsFilter = ({ username, hidden }) => ({ username, hidden });
 
 export function* saveProfile() {
     const url = api.urls.profile();
@@ -51,19 +51,19 @@ export function* saveMember() {
 export function* saveSettings({values}) {
     const successMsg = 'Profile settings were saved';
     const errorMsg = 'Failed to save profile settings';
-    if (values.first_name || values.last_name) {
+    if (values.first_name || values.last_name) { // TODO Remove that stupid thing
         const profileUrl = api.urls.profile();
         const profileSettings = profileSettingsFilter(values);
         yield call(api.requests.patch, profileUrl, profileSettings, errorMsg);
     }
 
-    if (values.username) {
+    if (values.username || values.hasOwnProperty('hidden')) { // TODO Remove that stupid thing
         const currentTeam = yield call(getCurrentTeam);
         const memberUrl = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
         const memberSettings = memberSettingsFilter(values);
         yield call(api.requests.patch, memberUrl, memberSettings, errorMsg);
     }
-    yield put(showInfo(successMsg));
+    yield put(showInfo(successMsg)); // TODO don't do this unless request is OK
     yield put(settingsSaved(values));
     if (values.username) {
         yield call([browserHistory, browserHistory.push], `/profile/${values.username}/settings`);

@@ -29,25 +29,25 @@ export default class TeamCreationForm extends React.Component {
 
     render() {
         return (
-            <Form>
+            <Form className="form-team-creation">
                 <FormGroup>
                     <Row>
-                        <Col xs={12} sm={3}>
+                        <Col xs={12} sm={12} md={3}>
                             <FormControl
                                 placeholder="Username"
                                 onChange={this.handleChange('username')}
                                 value={this.state.username}
                             />
                         </Col>
-                        <Col xs={12} sm={3}>
+                        <Col xs={12} sm={12} md={3}>
                             <FormControl
                                 placeholder="Team name"
                                 onChange={this.handleChange('team')}
                                 value={this.state.team}
                             />
                         </Col>
-                        <Col xs={12} sm={4}>
-                            <Button bsStyle="success" onClick={this.handleCreateTeam}>Create a new team</Button>
+                        <Col xs={12} sm={12} md={3} lg={2}>
+                            <Button bsStyle="success" onClick={this.handleCreateTeam} block>Create a new team</Button>
                         </Col>
                     </Row>
                     <Row>

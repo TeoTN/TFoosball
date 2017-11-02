@@ -1,0 +1,55 @@
+@import "./node_modules/bootstrap/less/bootstrap";
+@import "./variables";
+@import "./bootswatch";
+@import "./css/font-awesome";
+@import "./css/react-select";
+@icon-font-path: "../node_modules/bootstrap/fonts/";
+@import "./less/homepage";
+@import "./less/forms";
+@import "./less/play";
+@import "./less/profile";
+@import "./less/switch";
+@import "./less/ui-card";
+@import "./less/widget";
+
+html, body, #root, #root-react {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(245, 247, 250, 1);
+  //background-color: #ECEFF1;
+}
+
+.progress {
+  background: #fff;
+}
+
+.col-options {
+  display: block;
+  width: 30px;
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  bottom: 15px;
+  z-index: 150;
+}
+.brand-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-top: -12px;
+  background: url("../img/T.png");
+  background-size: 100% 100%;
+}
+
+.brand-text,
+.navbar-brand {
+  color: white;
+  font-size: 23px;
+  &:hover {
+    text-decoration: none;
+    color: white;
+  }
+}
+
+@import "./less/helpers";

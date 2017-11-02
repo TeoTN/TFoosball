@@ -14,6 +14,7 @@ const PlayLayout = () => (
                 <UserList />
             </Col>
         </Row>
+        <div className="filler" />
     </Grid>
 );
 

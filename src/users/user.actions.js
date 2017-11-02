@@ -1,5 +1,22 @@
 import * as types from './user.types';
 
+
+export const inviteUser = (email) => ({
+    type: types.INVITE,
+    email,
+});
+
+export const fetchEmailAutocompletion = (input) => ({
+    type: types.FETCH_AUTOCOMPLETION,
+    input,
+});
+
+export const receivedEmailAutocompletion = (data) => ({
+    type: types.RECEIVED_AUTOCOMPLETION,
+    data,
+});
+
+
 export const userDelete = (id) => ({
     type: types.DELETE,
     id

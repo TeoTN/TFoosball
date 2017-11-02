@@ -13,10 +13,10 @@ class Notifications extends React.Component {
     render() {
         const { notifications, dismiss } = this.props;
         return (
-            <div className="container-fluid">
+            <div className="container-fluid ui-card">
                 {
                     notifications.map(({id, style, msg}) => (
-                        <Alert key={id} bsStyle={ style } onClick={() => dismiss(id)} className="clickable">
+                        <Alert key={id} bsStyle={ style } onClick={() => dismiss(id)} className="clickable no-margin">
                             <p>
                                 { msg.toString() } <small>(Click to dismiss)</small>
                             </p>

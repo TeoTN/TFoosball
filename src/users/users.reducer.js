@@ -85,4 +85,20 @@ export const users = (state = [], action) => {
     }
 };
 
+const defaultUsersAutocompletion = {
+    loadingEmailAutocompletion: false,
+    emailAutocompletion: [],
+};
+
+export const usersAutocompletion = (state = defaultUsersAutocompletion, action) => {
+    switch (action.type) {
+        case types.FETCH_AUTOCOMPLETION:
+            return { ...state, loadingEmailAutocompletion: true, emailAutocompletion: defaultUsersAutocompletion.emailAutocompletion};
+        case types.RECEIVED_AUTOCOMPLETION:
+            return { ...state, loadingEmailAutocompletion: false, emailAutocompletion: action.data };
+        default:
+            return state;
+    }
+};
+
 export default users;

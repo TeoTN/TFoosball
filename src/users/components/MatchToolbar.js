@@ -4,18 +4,21 @@ import * as UserActions from '../user.actions';
 import { raiseError } from '../../shared/notifier.actions';
 import { Button, ButtonGroup, Col } from 'react-bootstrap';
 
-const mapStateToProps = state => ({...state});
 const mapDispatchToProps = (dispatch) => ({
     handlePlay: () => {
-        try { dispatch(UserActions.choosePlayersForMatch()) }
-        catch(err) { dispatch(raiseError(err.message)); }
+        try {
+            dispatch(UserActions.choosePlayersForMatch())
+        }
+        catch(err) {
+            dispatch(raiseError(err.message));
+        }
         window.scrollTo(0, 0);
     },
     sortByExp: (direction) => dispatch(UserActions.sortBy("exp", direction)),
     sortByName: (direction) => dispatch(UserActions.sortBy("username", direction)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(null, mapDispatchToProps)
 class MatchToolbar extends React.Component {
     constructor(props) {
         super(props);
@@ -31,18 +34,18 @@ class MatchToolbar extends React.Component {
     };
 
     render() {
-        const { sortByName, sortByExp, handlePlay } = this.props;
+        const { sortByName, sortByExp, handlePlay, canPlay } = this.props;
         return (
             <Col xs={12}>
-                <ButtonGroup justified>
+                <ButtonGroup justified className="ui-card">
                     <ButtonGroup>
-                        <Button bsStyle="primary" onClick={() => this.sort(sortByName)}>By name</Button>
+                        <Button bsStyle="primary" bsSize="small" onClick={() => this.sort(sortByName)}>By name</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="primary" onClick={() => this.sort(sortByExp)}>By XP</Button>
+                        <Button bsStyle="primary" bsSize="small" onClick={() => this.sort(sortByExp)}>By XP</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="success" onClick={handlePlay}>Play!</Button>
+                        <Button bsStyle="success" bsSize="small" onClick={handlePlay} disabled={!canPlay}>Play!</Button>
                     </ButtonGroup>
                 </ButtonGroup>
             </Col>

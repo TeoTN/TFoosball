@@ -36,7 +36,7 @@ class ModalMessage extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     <strong>{heading}</strong>
-                    <p>{text}</p>
+                    <p style={{whiteSpace: 'pre-line'}}>{text}</p>
                 </Modal.Body>
                 <Modal.Footer>
                     { this.props.onReject ?

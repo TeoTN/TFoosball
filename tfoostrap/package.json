@@ -1,0 +1,28 @@
+{
+  "name": "@tfoosball/tfoostrap",
+  "version": "1.0.0",
+  "description": "Bootstrap stylesheet package crafted for TFoosball",
+  "main": "build/index.css",
+  "scripts": {
+    "build": "lessc index.less build/index.css",
+    "start": "npm-watch build"
+  },
+  "author": "Piotr Staniów",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "less": "^2.7.2"
+  },
+  "devDependencies": {
+    "npm-watch": "^0.1.9"
+  },
+  "watch": {
+    "build": {
+      "patterns": [
+        "*"
+      ],
+      "extensions": "less",
+      "quiet": true
+    }
+  }
+}

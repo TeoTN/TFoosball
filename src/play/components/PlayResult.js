@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Row, Col, FormControl } from 'react-bootstrap';
+import {Button, Row, Col, FormControl, Panel} from 'react-bootstrap';
 
 
 class PlayResult extends React.Component {
@@ -11,10 +11,10 @@ class PlayResult extends React.Component {
         };
     }
 
-    onInputChange = (team) => (event) => this.setState({ [team]: event.target.value });
+    onInputChange = (team) => (event) => this.setState({[team]: event.target.value});
 
     handleFinish = () => {
-        const { players, onPublish } = this.props;
+        const {players, onPublish} = this.props;
         const requestData = {
             ...(players.reduce((o, p) => Object.assign(o, {[`${p.team}_${p.position}`]: p.username}), {})),
             red_score: this.state.red,
@@ -23,41 +23,43 @@ class PlayResult extends React.Component {
         onPublish(requestData, this.clear);
     };
 
-    clear = () => this.setState({ blue: 0, red: 0, });
+    clear = () => this.setState({blue: 0, red: 0,});
 
     render() {
         return (
-        <Row>
-            <Col xs={12}>
-                <h3>Score</h3>
-            </Col>
-            <Col sm={4}>
-                <FormControl
-                    style={{ borderColor: '#3498db' }}
-                    type="number"
-                    placeholder="Blue"
-                    onChange={this.onInputChange('blue')}
-                    value={this.state.blue}
-                />
-            </Col>
-            <Col xsHidden sm={1}>
-                <h4>vs</h4>
-            </Col>
-            <Col sm={4}>
-                <FormControl
-                    style={{ borderColor: '#e74c3c' }}
-                    type="number"
-                    placeholder="Red"
-                    onChange={this.onInputChange('red')}
-                    value={this.state.red}
-                />
-            </Col>
-            <Col sm={3}>
-                <Button onClick={this.handleFinish} bsStyle={'success'} block>
-                    Send
-                </Button>
-            </Col>
-        </Row>
+            <Panel className="ui-card with-vertical-margin">
+                <Row>
+                    <Col xs={12}>
+                        <h3 style={{marginTop: 0}}>Score</h3>
+                    </Col>
+                    <Col xs={6} sm={4}>
+                        <FormControl
+                            style={{borderColor: '#3498db'}}
+                            type="number"
+                            placeholder="Blue"
+                            onChange={this.onInputChange('blue')}
+                            value={this.state.blue}
+                        />
+                    </Col>
+                    <Col xsHidden sm={1}>
+                        <h4>vs</h4>
+                    </Col>
+                    <Col xs={6} sm={4}>
+                        <FormControl
+                            style={{borderColor: '#e74c3c'}}
+                            type="number"
+                            placeholder="Red"
+                            onChange={this.onInputChange('red')}
+                            value={this.state.red}
+                        />
+                    </Col>
+                    <Col xs={12} sm={3}>
+                        <Button onClick={this.handleFinish} bsStyle={'success'} block>
+                            Send
+                        </Button>
+                    </Col>
+                </Row>
+            </Panel>
         );
     }
 }

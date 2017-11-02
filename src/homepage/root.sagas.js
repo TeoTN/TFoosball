@@ -5,6 +5,8 @@ import { publish, removeMatch } from '../matches/matches.sagas';
 import { playScore } from '../play/play.sagas';
 import { teams } from '../teams/teams.sagas';
 import { onRequestSaveSettings } from '../settings/settings.sagas';
+import { users } from '../users/users.sagas';
+
 
 export default function* rootSaga() {
     yield [
@@ -17,5 +19,6 @@ export default function* rootSaga() {
         removeMatch(),
         playScore(),
         onRequestSaveSettings(),
+        users(),
     ];
 }

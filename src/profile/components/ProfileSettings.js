@@ -2,12 +2,13 @@ import React from 'react';
 import { Panel } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import SettingsForm from './SettingsForm';
-import { requestSaveSettings } from '../../settings/settings.actions';
+import {requestSaveSettings, requestToggleActive} from '../../settings/settings.actions';
 
 
 const mapStateToProps = ({ auth: {profile} }) => ({profile});
 const mapDispatchToProps = (dispatch) => ({
     saveSettings: (initialValues, values) => dispatch(requestSaveSettings(initialValues, values)),
+    toggleActive: (value) => dispatch(requestToggleActive(value)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -15,12 +16,13 @@ class ProfileSettings extends React.Component {
     onSubmit = (initialValues) => (values) => this.props.saveSettings(initialValues, values);
 
     render() {
-        const { profile: { username, first_name, last_name }} = this.props;
-        const initialValues = { username, first_name, last_name, };
+        const { profile: { username, first_name, last_name, hidden }, toggleActive} = this.props;
+        const initialValues = { username, first_name, last_name, hidden };
         return (
             <Panel>
                 <SettingsForm
                     onSubmit={this.onSubmit(initialValues)}
+                    onToggleActive={toggleActive}
                     initialValues={initialValues}
                 />
             </Panel>
