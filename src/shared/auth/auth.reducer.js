@@ -48,6 +48,7 @@ export const auth = (state = {activate: activate()}, action) => {
         case REQUEST_SAVE_MEMBER:
         case REQUEST_SAVE_PROFILE:
         case SETTINGS_SAVED:
+        case types.WHATS_NEW_SHOWN:
             return {
                 ...state,
                 profile: profile(state.profile, action),
