@@ -1,6 +1,10 @@
 import * as types from "./user.types";
+import * as fromUsers from './users.actions';
 import choice from "../utils/choice";
 import getRoles from "../utils/roles";
+import {combineReducers} from "redux";
+import {createSelector} from "reselect";
+
 
 export const user = (state = {}, action) => {
     switch (action.type) {
@@ -100,5 +104,124 @@ export const usersAutocompletion = (state = defaultUsersAutocompletion, action) 
             return state;
     }
 };
+
+export function entities(state={}, action) {
+    switch (action.type) {
+        case fromUsers.RECEIVE_LIST: {
+            return action.entities;
+        }
+        case fromUsers.UPDATE_LIST: {
+            return {
+                ...state,
+                ...action.entities,
+            };
+        }
+        case fromUsers.ADD:
+        case fromUsers.UPDATE:
+        case fromUsers.ASSIGN: {
+            return {
+                ...state,
+                [action.userData.id]: action.userData,
+            };
+        }
+        case fromUsers.DELETE: {
+            const {[action.id]: _, ...others} = state;
+            return others;
+        }
+        default:
+            return state;
+    }
+}
+
+export function selected(state = [], action) {
+    switch (action.type) {
+        case fromUsers.TOGGLE: {
+            const idx = state.indexOf(action.id);
+            return idx === -1 ?
+                [...state, action.id] :
+                [...state.slice(0, idx), ...state.slice(idx+1)]
+        }
+        default:
+            return state;
+    }
+}
+
+const initialPositions = {red: {att: null, def: null}, blue: {att: null, def: null}};
+export function positions(state=initialPositions, action) {
+    const { red, blue } = state;
+    switch (action.type) {
+        case fromUsers.SWAP_SIDES: {
+            return {
+                red: blue,
+                blue: red,
+            };
+        }
+        case fromUsers.SWAP_POSITIONS: {
+            return {
+                red: { att: red.def, def: red.att },
+                blue: { att: blue.def, def: blue.att },
+            };
+        }
+        case fromUsers.CHOOSE: {
+            return {
+                ...action.preset,
+            };
+        }
+        default:
+            return state;
+    }
+}
+
+export function autocompletion(state=defaultUsersAutocompletion, action) {
+    switch (action.type) {
+        case fromUsers.FETCH_AUTOCOMPLETION:
+            return {
+                ...state,
+                loading: true,
+                data: defaultUsersAutocompletion.emailAutocompletion
+            };
+        case fromUsers.RECEIVED_AUTOCOMPLETION:
+            return {
+                ...state,
+                loading: false,
+                data: action.data
+            };
+        default:
+            return state;
+    }
+}
+
+export function sorting(state={}, action) {
+    switch (action.type) {
+        case fromUsers.SORT:
+            return {
+                ...action.payload
+            };
+        default:
+            return state;
+    }
+}
+
+export const reducer = combineReducers({
+    entities,
+    selected,
+    positions,
+    autocompletion,
+    sorting,
+});
+
+/* SELECTORS */
+export const getUsersState = state => state.usersReducer;
+export const getUsers = createSelector(getUsersState, state => state.entities);
+export const getUsersIds = createSelector(getUsers, users => Object.keys(users));
+export const getSelectedUsers = createSelector(getUsersState, state => state.selected);
+export const getPositions = createSelector(getUsersState, state => state.positions);
+export const getSorting = createSelector(getUsersState, state => state.sorting);
+export const getAutocompletionState = createSelector(getUsersState, state => state.autocompletion);
+export const getUsersOnPositions = createSelector([getUsers, getPositions], (users, positions) => positions.map(idx => users[idx]));
+export const getUsersIdsSorted = createSelector(
+    [getUsers, sorting],
+    (users, sorting) => getSortedUsers(Object.values(users), sorting.column, sorting.isAscendingOrder).map(user => user.id)
+);
 
 export default users;

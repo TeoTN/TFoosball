@@ -1,12 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Panel, Label, Row } from 'react-bootstrap';
-import { TeamList, PendingMemberList, TeamInvite } from '../../teams/components/';
-import { selectTeam, leaveTeam, memberAcceptance } from '../../teams/teams.actions';
-import { getSelectedTeam } from '../../teams/teams.reducer';
-import { showQuestionModal } from '../../shared/modal.actions';
+import {connect} from 'react-redux';
+import {Panel, Label, Row} from 'react-bootstrap';
+import {TeamList, PendingMemberList, TeamInvite} from '../../teams/components/';
+import {selectTeam, leaveTeam, memberAcceptance} from '../../teams/teams.actions';
+import {getSelectedTeam} from '../../teams/teams.reducer';
+import {showQuestionModal} from '../../shared/modal.actions';
 import Switch from '../../shared/components/Switch';
-import { fetchEmailAutocompletion, inviteUser } from '../../users/user.actions';
+import {fetchEmailAutocompletion, inviteUser} from "../../users/users.actions";
 import {FS_INVITATIONS} from "../../api/config";
 
 
@@ -35,7 +35,9 @@ class ProfileTeams extends React.Component {
         };
     }
 
-    toggleMode = (mode) => ({target: {checked}}) => { this.setState({[mode]: checked})};
+    toggleMode = (mode) => ({target: {checked}}) => {
+        this.setState({[mode]: checked})
+    };
 
     onTeamSelect = (team) => {
         const {selectTeam, leaveTeam, showModal} = this.props;
@@ -44,7 +46,8 @@ class ProfileTeams extends React.Component {
                 title: 'Are you sure?',
                 text: `You are about to leave team ${team.name}. Proceed?`,
                 onAccept: () => leaveTeam(team),
-                onReject: () => {},
+                onReject: () => {
+                },
             });
         } else {
             selectTeam(team);
@@ -70,7 +73,7 @@ class ProfileTeams extends React.Component {
                         {selectedTeam}
                     </Label>
                 </span>
-                <hr />
+                <hr/>
 
                 <h4 className="text-info">
                     Joined teams
@@ -87,10 +90,10 @@ class ProfileTeams extends React.Component {
                     joinable={this.state.joinMode}
                     className="with-vertical-margin"
                 />
-                <hr />
+                <hr/>
 
                 <h4 className="text-info">Pending team members</h4>
-                { teams.pending.length > 0 ?
+                {teams.pending.length > 0 ?
                     <PendingMemberList
                         users={teams.pending}
                         onAccept={acceptMember}
@@ -98,11 +101,11 @@ class ProfileTeams extends React.Component {
                     /> :
                     <h6 className="text-muted">There are no pending team members</h6>
                 }
-                <hr />
+                <hr/>
 
-                { FS_INVITATIONS && <h4 className="text-info">Invite player to {selectedTeam}</h4>}
-                { FS_INVITATIONS && <h6>Only Google-based emails are supported now.</h6>}
-                { FS_INVITATIONS && <TeamInvite
+                {FS_INVITATIONS && <h4 className="text-info">Invite player to {selectedTeam}</h4>}
+                {FS_INVITATIONS && <h6>Only Google-based emails are supported now.</h6>}
+                {FS_INVITATIONS && <TeamInvite
                     fetchEmailAutocompletion={fetchEmailAutocompletion}
                     loadingEmailAutocompletion={loadingEmailAutocompletion}
                     emailAutocompletion={emailAutocompletion}

@@ -1,17 +1,17 @@
 import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { userUpdate, userAssign } from '../user.actions';
+import * as fromUsers from '../users.actions';
 
 const mapStateToProps = ({users}) => ({
     users: users.filter(u => u.selected),
 });
 const mapDispatchToProps = dispatch => ({
     cleanUser: (user) => dispatch(
-        userUpdate(user.id, {playing: false, team: undefined, position: undefined})
+        fromUsers.userUpdate(user.id, {playing: false, team: undefined, position: undefined})
     ),
     assignUser: (user, team, position) => dispatch(
-        userAssign(user.id, {playing: true, team, position})
+        fromUsers.userAssign(user.id, {playing: true, team, position})
     ),
 });
 
