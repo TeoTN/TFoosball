@@ -4,17 +4,11 @@ import { getCurrentTeam } from '../teams/teams.sagas';
 import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/user.types';
 import { raiseError } from '../shared/notifier.actions';
 import { requestStatsDone } from './play.actions';
-
-export const stateUsersPlayingSelector = ({users}) => users
-    .filter(u => u.playing)
-    .reduce(
-        (data, player) => Object.assign(data, {[`${player.team}_${player.position}`]: player.id}),
-        {}
-    );
+import { getUsersPlaying } from "../users/users.reducer";
 
 
 export function* fetchPlayScore() {
-    const players = yield select(stateUsersPlayingSelector);
+    const players = yield select(getUsersPlaying);
     if (Object.keys(players).length !== 4) return;
     const currentTeam = yield call(getCurrentTeam);
     const url = api.urls.teamMatchPoints(currentTeam.id);

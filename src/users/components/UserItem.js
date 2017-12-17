@@ -3,9 +3,9 @@ import { ListGroupItem, Col } from 'react-bootstrap';
 
 const selectedColor = 'success';
 
-const UserItem = ({user, onSelect}) => (
+const UserItem = ({user, onSelect, selected}) => (
     <ListGroupItem
-        bsStyle={ user.selected ? selectedColor : null }
+        bsStyle={ selected ? selectedColor : null }
         onClick={ () => onSelect(user) }>
             <Col xs={8}>
                 {user.username}

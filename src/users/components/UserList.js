@@ -4,22 +4,27 @@ import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
 import UserItem from './UserItem';
 import MatchToolbar from './MatchToolbar';
 import Loading from '../../shared/components/Loading';
-import * as UserActions from '../user.actions';
+import * as fromUsers from '../users.actions';
+import { getSelectedIds, getUsers, getUsersIds } from "../users.reducer";
 
 
-const mapStateToProps = ({users}) => ({users});
+const mapStateToProps = (state) => ({
+    users: getUsers(state),
+    usersIds: getUsersIds(state),
+    selected: getSelectedIds(state),
+});
 const mapDispatchToProps = (dispatch, props) => ({
-    select: (user) => dispatch(UserActions.userToggle(user))
+    select: (user) => dispatch(fromUsers.userToggle(user))
 });
 
-const UserList = ({users, select}) => (
+const UserList = ({users, usersIds, select, selected}) => (
     <div>
         <Row>
-            <MatchToolbar canPlay={users.length >= 4} />
+            <MatchToolbar canPlay={usersIds.length >= 4}/>
         </Row>
         <ListGroup>
             {
-                users.length > 0 && users.length < 4 ?
+                usersIds.length > 0 && usersIds.length < 4 ?
                     <ListGroupItem className="text-muted text-center" disabled>
                         At least 4 players are required
                     </ListGroupItem> : null
@@ -33,8 +38,13 @@ const UserList = ({users, select}) => (
                 </Col>
             </ListGroupItem>
             {
-                users.length > 0 ?
-                    users.map(user => <UserItem key={user.id} user={user} onSelect={select} />) :
+                usersIds.length > 0 ?
+                    Object.values(users).map(user => <UserItem
+                        key={user.id}
+                        user={user}
+                        onSelect={select}
+                        selected={selected.includes(user.id)}/>
+                    ) :
                     <ListGroupItem>
                         <Loading/>
                     </ListGroupItem>

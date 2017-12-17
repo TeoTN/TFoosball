@@ -1,27 +1,30 @@
 import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { userUpdate, userAssign } from '../user.actions';
+import * as fromUsers from '../users.actions';
+import { getPositions, getSelectedUsers } from "../users.reducer";
 
-const mapStateToProps = ({users}) => ({
-    users: users.filter(u => u.selected),
+const mapStateToProps = (state) => ({
+    selectedUsers: getSelectedUsers(state),
+    positions: getPositions(state)
 });
 const mapDispatchToProps = dispatch => ({
     cleanUser: (user) => dispatch(
-        userUpdate(user.id, {playing: false, team: undefined, position: undefined})
+        fromUsers.userUpdate(user.id, {playing: false, team: undefined, position: undefined})
     ),
     assignUser: (user, team, position) => dispatch(
-        userAssign(user.id, {playing: true, team, position})
+        fromUsers.userAssign(user.id, {playing: true, team, position})
     ),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 class UserPicker extends React.Component {
     getUsersOptions = () => {
-        const { users } = this.props;
-        return users.length === 0 ?
+        const { selectedUsers } = this.props;
+        const selectedUsersList = Object.values(selectedUsers);
+        return selectedUsersList.length === 0 ?
             <MenuItem disabled>No players selected</MenuItem> :
-            users.map(
+            selectedUsersList.map(
                 (user, idx) => (
                     <MenuItem eventKey={user.id} key={idx}> {user.username} </MenuItem>
                 )
@@ -42,8 +45,8 @@ class UserPicker extends React.Component {
     };
 
     render() {
-        const { team, position, users } = this.props;
-        const user = users.find(u => u.team === team && u.position === position);
+        const { team, position, positions } = this.props;
+        const user = positions[team][position];
 
         return (
             <DropdownButton

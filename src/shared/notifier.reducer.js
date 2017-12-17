@@ -5,7 +5,7 @@ export default (state = [], {type, id, msg, style}) => {
     switch (type) {
         case SHOW_INFO:
         case RAISE_ERROR:
-            return [{ id: lastNotifId++, msg, style }, ...state];
+            return [{ id: lastNotifId++, msg, style }, ...state.filter(n => n.msg !== msg)];
         case HANDLE:
             return state.filter(notif => notif.id !== id );
         case CLEAN:

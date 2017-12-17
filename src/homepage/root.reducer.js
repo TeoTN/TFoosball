@@ -1,4 +1,4 @@
-import { users, usersAutocompletion } from '../users/users.reducer';
+import { reducer as usersReducer } from '../users/users.reducer';
 import notifications from '../shared/notifier.reducer';
 import profile from '../profile/profile.reducer';
 import tournaments from '../tournament/tournaments.reducer';
@@ -12,8 +12,7 @@ import { reducer as form } from 'redux-form'
 import {combineReducers} from 'redux';
 
 const reducer = combineReducers({
-    users,          // Current users list from API general view
-    usersAutocompletion,
+    usersReducer,   // Current users list from API general view
     notifications,  // List of info/error messages to be displayed to users
     profile,        // Currently viewed profile (NOT a current user profile!)
     tournaments,    // Tournaments

@@ -16,8 +16,8 @@ class TeamInvite extends React.Component {
         const {
             pristine,
             invalid,
-            loadingEmailAutocompletion,
-            emailAutocompletion,
+            loading,
+            emails,
             fetchEmailAutocompletion,
             submitInvitation,
             handleSubmit,
@@ -32,9 +32,9 @@ class TeamInvite extends React.Component {
                             label="Email"
                             component={ValidatedAsyncInput}
                             validate={isEmailWrapped}
-                            options={emailAutocompletion}
+                            options={emails}
                             onInputChange={fetchEmailAutocompletion}
-                            isLoading={loadingEmailAutocompletion}
+                            isLoading={loading}
                             smLabel={3}
                             placeholder="Friend's email"
                             promptTextCreator={label => `Send invitation to ${label}`}

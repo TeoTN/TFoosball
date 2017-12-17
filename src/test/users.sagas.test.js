@@ -2,6 +2,7 @@ import { call, put, select } from 'redux-saga/effects';
 import api from '../api';
 import response from '../assets/mocks/users.json';
 import * as UserActions from '../users/user.actions';
+import * as fromUsers from '../users/users.actions';
 import { raiseError } from '../shared/notifier.actions';
 import { fetchUsers, fetchUpdateUsers } from '../users/users.sagas.js';
 import { getCurrentTeam } from '../teams/teams.sagas';
@@ -23,7 +24,7 @@ describe('FetchUsers saga ', () => {
 
         it('should put response action', () => {
             const iter = iterator.next(response).value;
-            expect(iter).toEqual(put(UserActions.receiveUsers(response)));
+            expect(iter).toEqual(put(fromUsers.receiveUsers(response)));
         });
 
         it('should return from saga', () => {
