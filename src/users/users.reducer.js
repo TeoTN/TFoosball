@@ -141,6 +141,10 @@ export const getPositions = createSelector([getUsers, getPositionsIds], (users, 
     red: mapValues(red, idx => users[idx]),
     blue: mapValues(blue, idx => users[idx])
 }));
+export const arePositionsSet = createSelector(
+    getPositionsIds,
+    positions => !!(positions.red.att && positions.red.def && positions.blue.att && positions.blue.def)
+);
 export const getSorting = createSelector(getUsersState, state => state.sorting);
 export const getAutocompletionState = createSelector(getUsersState, state => state.autocompletion);
 export const getUsersSorted = createSelector(

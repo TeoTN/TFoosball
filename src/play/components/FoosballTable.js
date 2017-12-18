@@ -10,12 +10,13 @@ import { choosePlayersForMatch, swapPositions, swapSides } from '../../users/use
 import { raiseError } from '../../shared/notifier.actions';
 import table from '../../assets/img/table.jpg';
 import { getSelectedTeam } from "../../teams/teams.reducer";
-import { getSelectedUsers, getPositions } from "../../users/users.reducer";
+import { getSelectedUsers, getPositions, arePositionsSet } from "../../users/users.reducer";
 
 const mapStateToProps = (state) => {
     const selectedTeam = getSelectedTeam(state.teams);
     return {
         positions: getPositions(state),
+        arePositionsSet: arePositionsSet(state),
         selectedUsers: getSelectedUsers(state),
         selectedTeam: selectedTeam ? selectedTeam.name : '',
     };
@@ -43,8 +44,7 @@ class FoosballTable extends Component {
     };
 
     render() {
-        const {positions, swapSides, swapPositions, publishMatch, selectedTeam} = this.props;
-
+        const {positions, arePositionsSet, swapSides, swapPositions, publishMatch, selectedTeam} = this.props;
         return (
             <div>
                 <Row>
@@ -72,8 +72,8 @@ class FoosballTable extends Component {
                         </ButtonGroup>
                     </Col>
                 </Row>
-                <PlayResult onPublish={publishMatch} players={positions}/>
-                {positions.length === 4 ? <PlayStats players={positions}/> : null}
+                <PlayResult onPublish={publishMatch} players={positions} arePositionsSet={arePositionsSet}/>
+                {arePositionsSet ? <PlayStats positions={positions}/> : null}
             </div>
         );
     }

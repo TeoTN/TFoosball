@@ -33,22 +33,6 @@ export const receivedEmailAutocompletion = (emails) => ({
     emails,
 });
 
-
-export const userDelete = (id) => ({
-    type: DELETE,
-    id
-});
-
-let lastUserId = 0;
-export const userNew = (username) => ({
-    type: ADD,
-    userData: {
-        id: lastUserId++,
-        username,
-        exp: 1000,
-    },
-});
-
 export const userToggle = (user) => ({
     type: TOGGLE,
     id: user.id,
@@ -67,7 +51,6 @@ export const userAssign = (id, userData) => ({
 });
 
 export const choosePlayersForMatch = (selectedUsers) => {
-    console.log(selectedUsers);
     const preset = getRoles(selectedUsers);
     return {
         type: CHOOSE,
@@ -90,7 +73,7 @@ export const receiveUsers = (response) => ({
 
 export const updateUsers = (response) => ({
     type: UPDATE_LIST,
-    userList: normalize(response, userListSchema).entities.users,
+    entities: normalize(response, userListSchema).entities.users,
 });
 
 export const swapSides = () => ({type: SWAP_SIDES,});

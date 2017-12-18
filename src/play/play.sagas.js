@@ -5,6 +5,7 @@ import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/users.actio
 import { raiseError } from '../shared/notifier.actions';
 import { requestStatsDone } from './play.actions';
 import { getUsersPlaying } from "../users/users.reducer";
+import * as fromMatch from "../matches/match.types";
 
 
 export function* fetchPlayScore() {
@@ -25,4 +26,5 @@ export function* playScore() {
     yield takeLatest(SWAP_POSITIONS, fetchPlayScore);
     yield takeLatest(SWAP_SIDES, fetchPlayScore);
     yield takeLatest(ASSIGN, fetchPlayScore);
+    yield takeLatest(fromMatch.SENT, fetchPlayScore);
 }
