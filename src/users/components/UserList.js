@@ -5,11 +5,11 @@ import UserItem from './UserItem';
 import MatchToolbar from './MatchToolbar';
 import Loading from '../../shared/components/Loading';
 import * as fromUsers from '../users.actions';
-import { getSelectedIds, getUsers, getUsersIds } from "../users.reducer";
+import { getSelectedIds, getUsersIds, getUsersSorted } from "../users.reducer";
 
 
 const mapStateToProps = (state) => ({
-    users: getUsers(state),
+    users: getUsersSorted(state),
     usersIds: getUsersIds(state),
     selected: getSelectedIds(state),
 });

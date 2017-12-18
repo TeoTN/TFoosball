@@ -113,6 +113,7 @@ const defaultSortingState = {column: 'exp', isAscendingOrder: false};
 export function sorting(state = defaultSortingState, action) {
     switch (action.type) {
         case fromUsers.SORT:
+            // TODO When column is changed, default isAscendingOrder to false
             return {
                 ...action.payload
             };
