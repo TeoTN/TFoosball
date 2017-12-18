@@ -1,102 +1,27 @@
-import * as types from "./user.types";
 import * as fromUsers from './users.actions';
-import choice from "../utils/choice";
-import getRoles from "../utils/roles";
-import {combineReducers} from "redux";
-import {createSelector} from "reselect";
+import { combineReducers } from "redux";
+import { createSelector } from "reselect";
 import pick from 'lodash/pick';
 import mapValues from 'lodash/mapValues';
 
 
-export const user = (state = {}, action) => {
-    switch (action.type) {
-        case types.ADD:
-            return {
-                ...action.userData
-            };
-        case types.CHOOSE:
-        case types.UPDATE:
-        case types.ASSIGN:
-            if (state.id !== action.id) return state;
-            return Object.assign({}, state, action.userData);
-        case types.UPDATE_LIST:
-            return Object.assign({}, state, action.userList.find(u => u.id === state.id));
-        case types.SWAP_POSITIONS:
-            if (state.playing) {
-                return Object.assign({}, state, { position: state.position === 'att' ? 'def' : 'att'});
-            }
-            return state;
-        case types.SWAP_SIDES:
-            if (state.playing) {
-                return Object.assign({}, state, { team: state.team === 'red' ? 'blue' : 'red' })
-            }
-            return state;
-        default:
-            return state;
-    }
-};
-
 export const getSortedUsers = (state, column, isAscendingOrder) =>
-    state.slice().sort((a, b) => {
-        const comparison = a[column] > b[column] ? 1 : a[column] < b[column] ? -1 : 0;
-        return isAscendingOrder ? comparison : -comparison;
+    state.slice().sort(({[column]: value1}, {[column]: value2}) => {
+        const isAscendingFactor = isAscendingOrder ? +1 : -1;
+        let v1 = value1, v2 = value2;
+        if (typeof value1 === 'string' && typeof value2 === 'string') {
+            v1 = value1.toLowerCase();
+            v2 = value2.toLowerCase();
+        }
+        return v1 > v2 ? isAscendingFactor : v1 < v2 ? -isAscendingFactor : 0;
     });
-
-export const clean = (state = [], action) => {
-    switch (action.type) {
-        case types.CHOOSE:
-            return state.map(u => ({
-                ...u,
-                playing: false,
-                team: undefined,
-                position: undefined,
-            }));
-        default:
-            return state;
-    }
-};
-
-export const users = (state = [], action) => {
-    switch (action.type) {
-        case types.ADD:
-            return [
-                user(undefined, action),
-                ...state
-            ];
-        case types.UPDATE:
-        case types.SWAP_POSITIONS:
-        case types.SWAP_SIDES:
-        case types.ASSIGN:
-            return state.map(u => user(u, action));
-        case types.DELETE:
-            return state.filter(user => user.id !== action.id);
-        case types.CHOOSE:
-            const intermediateState = clean(state, action);
-            const selected = intermediateState.filter(u => u.selected);
-            if (selected.length < 4) { //TODO Feature request 1-1 matches
-                throw new Error("Insufficient number of players selected.");
-            }
-            const playing = getRoles(choice(selected, 4));
-            return intermediateState.map(u => (playing[u.username]) ? playing[u.username] : u);
-        case types.SORT:
-            return getSortedUsers(state, action.column, action.isAscendingOrder);
-        case types.RECEIVE_LIST:
-            const data = Array.isArray(action.response) ? action.response : [];
-            return getSortedUsers(data, 'exp', false);
-        case types.UPDATE_LIST:
-            const updated = state.map(u => user(u, action));
-            return getSortedUsers(updated, 'exp', false);
-        default:
-            return state;
-    }
-};
 
 const defaultAutocompletion = {
     loading: false,
     emails: [],
 };
 
-export function entities(state={}, action) {
+export function entities(state = {}, action) {
     switch (action.type) {
         case fromUsers.RECEIVE_LIST: {
             return action.entities;
@@ -116,7 +41,7 @@ export function entities(state={}, action) {
             };
         }
         case fromUsers.DELETE: {
-            const {[action.id]: _, ...others} = state;
+            const {[action.id]: _, ...others} = state; // eslint-disable-line no-unused-vars
             return others;
         }
         default:
@@ -130,7 +55,7 @@ export function selected(state = [], action) {
             const idx = state.indexOf(action.id);
             return idx === -1 ?
                 [...state, action.id] :
-                [...state.slice(0, idx), ...state.slice(idx+1)]
+                [...state.slice(0, idx), ...state.slice(idx + 1)]
         }
         default:
             return state;
@@ -138,8 +63,9 @@ export function selected(state = [], action) {
 }
 
 const initialPositions = {red: {att: null, def: null}, blue: {att: null, def: null}};
-export function positions(state=initialPositions, action) {
-    const { red, blue } = state;
+
+export function positions(state = initialPositions, action) {
+    const {red, blue} = state;
     switch (action.type) {
         case fromUsers.SWAP_SIDES: {
             return {
@@ -149,8 +75,8 @@ export function positions(state=initialPositions, action) {
         }
         case fromUsers.SWAP_POSITIONS: {
             return {
-                red: { att: red.def, def: red.att },
-                blue: { att: blue.def, def: blue.att },
+                red: {att: red.def, def: red.att},
+                blue: {att: blue.def, def: blue.att},
             };
         }
         case fromUsers.CHOOSE: {
@@ -163,7 +89,7 @@ export function positions(state=initialPositions, action) {
     }
 }
 
-export function autocompletion(state=defaultAutocompletion, action) {
+export function autocompletion(state = defaultAutocompletion, action) {
     switch (action.type) {
         case fromUsers.FETCH_AUTOCOMPLETION:
             return {
@@ -182,7 +108,9 @@ export function autocompletion(state=defaultAutocompletion, action) {
     }
 }
 
-export function sorting(state={}, action) {
+const defaultSortingState = {column: 'exp', isAscendingOrder: false};
+
+export function sorting(state = defaultSortingState, action) {
     switch (action.type) {
         case fromUsers.SORT:
             return {
@@ -202,7 +130,7 @@ export const reducer = combineReducers({
 });
 
 /* SELECTORS */
-export const getUsersState = state => state.usersReducer;
+export const getUsersState = state => state.users;
 export const getUsers = createSelector(getUsersState, state => state.entities);
 export const getUsersIds = createSelector(getUsers, users => Object.keys(users));
 export const getSelectedIds = createSelector(getUsersState, state => state.selected);
@@ -214,13 +142,17 @@ export const getPositions = createSelector([getUsers, getPositionsIds], (users, 
 }));
 export const getSorting = createSelector(getUsersState, state => state.sorting);
 export const getAutocompletionState = createSelector(getUsersState, state => state.autocompletion);
-export const getUsersIdsSorted = createSelector(
-    [getUsers, sorting],
-    (users, sorting) => getSortedUsers(Object.values(users), sorting.column, sorting.isAscendingOrder).map(user => user.id)
+export const getUsersSorted = createSelector(
+    [getUsers, getSorting],
+    (users, sorting) => getSortedUsers(Object.values(users), sorting.column, sorting.isAscendingOrder)
+);
+export const getTop3 = createSelector(
+    getUsers,
+    users => getSortedUsers(Object.values(users), 'exp', false).slice(0, 3)
 );
 export const getUsersPlaying = createSelector(getPositionsIds, (positions) => ({
     red_def: positions.red.def, red_att: positions.red.att,
     blue_def: positions.blue.def, blue_att: positions.blue.att,
 }));
 
-export default users;
+export default reducer;

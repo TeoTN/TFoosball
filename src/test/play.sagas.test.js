@@ -1,8 +1,8 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects';
 import api from '../api';
-import { raiseError, showInfo } from '../shared/notifier.actions';
+import { raiseError } from '../shared/notifier.actions';
 import { stateUsersPlayingSelector, fetchPlayScore, playScore } from '../play/play.sagas';
-import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/user.types';
+import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/users.actions';
 import { getCurrentTeam } from '../teams/teams.sagas';
 import { requestStatsDone } from '../play/play.actions';
 
@@ -11,7 +11,7 @@ describe('PlayScore saga', () => {
         id: 17,
     };
     const url = api.urls.teamMatchPoints(currentTeam.id);
-    const errorMsg =  'Unable to get match score statistics.';
+    const errorMsg = 'Unable to get match score statistics.';
     const players = {
         red_att: {id: 1},
         red_def: {id: 2},
@@ -103,11 +103,11 @@ describe('PlayScore saga', () => {
 describe('Playing users selector', () => {
     const state = {
         users: [
-            { id: 1, team: 'red', position: 'att', playing: true, },
-            { id: 2, },
-            { id: 3, team: 'red', position: 'def', playing: true, },
-            { id: 4, team: 'blue', position: 'att', playing: true, },
-            { id: 5, team: 'blue', position: 'def', playing: true, },
+            {id: 1, team: 'red', position: 'att', playing: true,},
+            {id: 2,},
+            {id: 3, team: 'red', position: 'def', playing: true,},
+            {id: 4, team: 'blue', position: 'att', playing: true,},
+            {id: 5, team: 'blue', position: 'def', playing: true,},
         ]
     };
     const expectedData = {

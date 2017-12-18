@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {Glyphicon} from 'react-bootstrap';
+import React, { Component } from 'react';
+import { Glyphicon } from 'react-bootstrap';
 
 export default class RankingListHeader extends Component {
     getHeader = ([key, label]) => {
-        const {sortBy, ranking} = this.props;
+        const {sortBy, sorting} = this.props;
         return (
             <th key={key} onClick={() => sortBy(key, this.getDirection(key))} style={{cursor: 'pointer'}}>
                 {label}&nbsp;
                 {
-                    ranking.sorting.column === key
-                        ? <Glyphicon glyph={`sort-by-attributes${ranking.sorting.isAscendingOrder ? '' : '-alt'}`}/>
+                    sorting.column === key
+                        ? <Glyphicon glyph={`sort-by-attributes${sorting.isAscendingOrder ? '' : '-alt'}`}/>
                         : null
                 }
             </th>
@@ -17,7 +17,7 @@ export default class RankingListHeader extends Component {
     };
 
     getDirection = (key) => {
-        const {sorting} = this.props.ranking;
+        const {sorting} = this.props;
         return sorting.column !== key || !sorting.isAscendingOrder
     };
 

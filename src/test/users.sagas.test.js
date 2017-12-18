@@ -1,7 +1,7 @@
-import { call, put, select } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 import api from '../api';
 import response from '../assets/mocks/users.json';
-import * as UserActions from '../users/user.actions';
+import * as UserActions from '../users/users.actions';
 import * as fromUsers from '../users/users.actions';
 import { raiseError } from '../shared/notifier.actions';
 import { fetchUsers, fetchUpdateUsers } from '../users/users.sagas.js';
@@ -63,7 +63,7 @@ describe('FetchUsers saga ', () => {
 
 
 describe('FetchUpdateUsers saga', () => {
-    const currentTeam = { id: 6 };
+    const currentTeam = {id: 6};
     const url = api.urls.teamMemberList(currentTeam.id);
     const response = [{id: 6}, {id: 7}];
     const errorMsg = 'Failed to fetch users list';
