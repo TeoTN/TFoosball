@@ -1,10 +1,11 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects';
 import api from '../api';
 import { raiseError } from '../shared/notifier.actions';
-import { stateUsersPlayingSelector, fetchPlayScore, playScore } from '../play/play.sagas';
+import { fetchPlayScore, playScore } from '../play/play.sagas';
 import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/users.actions';
 import { getCurrentTeam } from '../teams/teams.sagas';
 import { requestStatsDone } from '../play/play.actions';
+import { arePositionsSet, getUsersPlayingById } from "../users/users.reducer";
 
 describe('PlayScore saga', () => {
     const currentTeam = {
@@ -26,9 +27,14 @@ describe('PlayScore saga', () => {
     describe('Scenario 1: Successfully obtained play score', () => {
         const iterator = fetchPlayScore();
 
-        it('should select playing users', () => {
+        it('should check if positions are set', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(stateUsersPlayingSelector));
+            expect(iter).toEqual(select(arePositionsSet));
+        });
+
+        it('should get playing users', () => {
+            const iter = iterator.next(true).value;
+            expect(iter).toEqual(select(getUsersPlayingById))
         });
 
         it('should obtain current team', () => {
@@ -54,9 +60,14 @@ describe('PlayScore saga', () => {
     describe('Scenario 2: Failed to obtain play score from API', () => {
         const iterator = fetchPlayScore();
 
-        it('should select playing users', () => {
+        it('should check if positions are set', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(stateUsersPlayingSelector));
+            expect(iter).toEqual(select(arePositionsSet));
+        });
+
+        it('should get playing users', () => {
+            const iter = iterator.next(true).value;
+            expect(iter).toEqual(select(getUsersPlayingById))
         });
 
         it('should obtain current team', () => {
@@ -98,23 +109,4 @@ describe('PlayScore saga', () => {
             expect(iterator.next().value).toEqual(takeLatest(ASSIGN, fetchPlayScore));
         });
     });
-});
-
-describe('Playing users selector', () => {
-    const state = {
-        users: [
-            {id: 1, team: 'red', position: 'att', playing: true,},
-            {id: 2,},
-            {id: 3, team: 'red', position: 'def', playing: true,},
-            {id: 4, team: 'blue', position: 'att', playing: true,},
-            {id: 5, team: 'blue', position: 'def', playing: true,},
-        ]
-    };
-    const expectedData = {
-        red_att: 1,
-        red_def: 3,
-        blue_att: 4,
-        blue_def: 5,
-    };
-    expect(stateUsersPlayingSelector(state)).toEqual(expectedData);
 });

@@ -4,7 +4,7 @@ import getRoles from '../utils/roles';
 
 
 export const ADD = 'USERS::ADD';
-export const FETCH_ENTITIES = 'USERS::FETCH::ENTITIES_DONE';
+export const FETCH_ENTITIES = 'USERS::FETCH::ENTITIES';
 export const ERROR_FETCHING_ENTITIES = 'USERS::FETCH::ENTITIES_ERROR';
 export const UPDATE = 'USERS::UPDATE::ENTITY';
 export const DELETE = 'USERS::DELETE';
