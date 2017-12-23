@@ -14,13 +14,9 @@ export default function getRoles(selectedUsers) {
         blue: r2 < 0.5 + d2,
     };
     return {
-        red: {
-            [isAtt['red'] ? 'att' : 'def']: players[0].id,
-            [!isAtt['red'] ? 'att' : 'def']: players[1].id,
-        },
-        blue: {
-            [isAtt['blue'] ? 'att' : 'def']: players[2].id,
-            [!isAtt['blue'] ? 'att' : 'def']: players[3].id,
-        }
+        [isAtt['red'] ? 'red_att' : 'red_def']: players[0].id,
+        [!isAtt['red'] ? 'red_att' : 'red_def']: players[1].id,
+        [isAtt['blue'] ? 'blue_att' : 'blue_def']: players[2].id,
+        [!isAtt['blue'] ? 'blue_att' : 'blue_def']: players[3].id,
     };
 }

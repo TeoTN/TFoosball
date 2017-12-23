@@ -16,7 +16,7 @@ const createLoggingDispatch = (store) => {
         console.log('%c Previous state', 'color: gray', previousState);
         console.log('%c Action', 'color: blue', action);
         const nextState = rawDispatch(action);
-        console.log('%c Next state', 'color: green', nextState);
+        console.log('%c Next state', 'color: green', store.getState());
         if (previousState === nextState) {
             console.log('%c State reference hasn\'t changed', 'color: orange');
         }

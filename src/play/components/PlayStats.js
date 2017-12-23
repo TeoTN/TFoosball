@@ -29,13 +29,13 @@ class PlayStats extends React.Component {
     );
 
     getPlayerStats = () => {
-        const {positions} = this.props;
+        const {players} = this.props;
         return (
             <Panel>
-                {this.renderUserStats(positions.red.att, 'red', 'att')}
-                {this.renderUserStats(positions.red.def, 'red', 'def')}
-                {this.renderUserStats(positions.blue.att, 'blue', 'att')}
-                {this.renderUserStats(positions.blue.def, 'blue', 'def')}
+                {this.renderUserStats(players.red_att, 'red', 'att')}
+                {this.renderUserStats(players.red_def, 'red', 'def')}
+                {this.renderUserStats(players.blue_att, 'blue', 'att')}
+                {this.renderUserStats(players.blue_def, 'blue', 'def')}
             </Panel>
         );
     };

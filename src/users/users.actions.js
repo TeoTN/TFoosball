@@ -44,17 +44,27 @@ export const userUpdate = (id, userData) => ({
     userData,
 });
 
-export const userAssign = (id, userData) => ({
+export const userAssign = (user, team, position) => ({
     type: ASSIGN,
-    id,
-    userData,
+    payload: {
+        user,
+        team,
+        position,
+    }
 });
 
 export const choosePlayersForMatch = (selectedUsers) => {
     const preset = getRoles(selectedUsers);
+    const { red_att, red_def, blue_att, blue_def } = preset;
     return {
         type: CHOOSE,
-        preset,
+        payload: {
+            playing: Object.values(preset),
+            red: [red_att, red_def],
+            blue: [blue_att, blue_def],
+            att: [red_att, blue_att],
+            def: [red_def, blue_def],
+        }
     }
 };
 

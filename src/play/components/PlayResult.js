@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Row, Col, FormControl, Panel } from 'react-bootstrap';
+import mapValues from 'lodash/mapValues';
 
 
 class PlayResult extends React.Component {
@@ -16,10 +17,7 @@ class PlayResult extends React.Component {
     handleFinish = () => {
         const {players, onPublish} = this.props;
         const requestData = {
-            red_att: players.red.att.username,
-            red_def: players.red.def.username,
-            blue_def: players.blue.def.username,
-            blue_att: players.blue.att.username,
+            ...mapValues(players, player => player.username),
             red_score: this.state.red,
             blue_score: this.state.blue,
         };

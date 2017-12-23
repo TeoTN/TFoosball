@@ -2,7 +2,9 @@ import * as fromUsers from './users.actions';
 import { combineReducers } from "redux";
 import { createSelector } from "reselect";
 import pick from 'lodash/pick';
+import intersection from 'lodash/intersection';
 import mapValues from 'lodash/mapValues';
+import uniq from 'lodash/uniq';
 
 
 export const getSortedUsers = (state, column, isAscendingOrder) =>
@@ -33,8 +35,7 @@ export function entities(state = {}, action) {
             };
         }
         case fromUsers.ADD:
-        case fromUsers.UPDATE:
-        case fromUsers.ASSIGN: {
+        case fromUsers.UPDATE: {
             return {
                 ...state,
                 [action.userData.id]: action.userData,
@@ -62,26 +63,49 @@ export function selected(state = [], action) {
     }
 }
 
-const initialPositions = {red: {att: null, def: null}, blue: {att: null, def: null}};
+const initialPositions = {
+    playing: [],
+    red: [],
+    blue: [],
+    att: [],
+    def: [],
+};
 
 export function positions(state = initialPositions, action) {
-    const {red, blue} = state;
+    const {red, blue, att, def} = state;
+
     switch (action.type) {
         case fromUsers.SWAP_SIDES: {
             return {
+                ...state,
                 red: blue,
                 blue: red,
             };
         }
         case fromUsers.SWAP_POSITIONS: {
             return {
-                red: {att: red.def, def: red.att},
-                blue: {att: blue.def, def: blue.att},
+                ...state,
+                att: def,
+                def: att,
             };
         }
         case fromUsers.CHOOSE: {
             return {
-                ...action.preset,
+                ...state,
+                ...action.payload,
+            }
+        }
+        case fromUsers.ASSIGN: {
+            const { user, position, team } = action.payload;
+            const previousUser = intersection(state[position], state[team])[0];
+            const cleanedState = {
+                ...mapValues(state, arr => arr.filter(id => id !== user.id && id !== previousUser)),
+            };
+            return {
+                ...cleanedState,
+                playing: [...cleanedState.playing, user.id],
+                [position]: [...cleanedState[position], user.id],
+                [team]: [...cleanedState[team], user.id],
             };
         }
         default:
@@ -136,15 +160,13 @@ export const getUsers = createSelector(getUsersState, state => state.entities);
 export const getUsersIds = createSelector(getUsers, users => Object.keys(users));
 export const getSelectedIds = createSelector(getUsersState, state => state.selected);
 export const getSelectedUsers = createSelector([getUsers, getSelectedIds], pick);
-export const getPositionsIds = createSelector(getUsersState, state => state.positions);
-export const getPositions = createSelector([getUsers, getPositionsIds], (users, {red, blue}) => ({
-    red: mapValues(red, idx => users[idx]),
-    blue: mapValues(blue, idx => users[idx])
-}));
-export const arePositionsSet = createSelector(
-    getPositionsIds,
-    positions => !!(positions.red.att && positions.red.def && positions.blue.att && positions.blue.def)
-);
+export const getPositionsState = createSelector(getUsersState, state => state.positions);
+export const getPlaying = createSelector(getPositionsState, positions => positions.playing);
+export const getRedAtt = createSelector(getPositionsState, positions => intersection(positions.red, positions.att)[0]);
+export const getRedDef = createSelector(getPositionsState, positions => intersection(positions.red, positions.def)[0]);
+export const getBlueAtt = createSelector(getPositionsState, positions => intersection(positions.blue, positions.att)[0]);
+export const getBlueDef = createSelector(getPositionsState, positions => intersection(positions.blue, positions.def)[0]);
+export const arePositionsSet = createSelector(getPlaying, playing => playing.length === 4);
 export const getSorting = createSelector(getUsersState, state => state.sorting);
 export const getAutocompletionState = createSelector(getUsersState, state => state.autocompletion);
 export const getUsersSorted = createSelector(
@@ -155,9 +177,13 @@ export const getTop3 = createSelector(
     getUsers,
     users => getSortedUsers(Object.values(users), 'exp', false).slice(0, 3)
 );
-export const getUsersPlaying = createSelector(getPositionsIds, (positions) => ({
-    red_def: positions.red.def, red_att: positions.red.att,
-    blue_def: positions.blue.def, blue_att: positions.blue.att,
-}));
+export const getUsersPlayingById = createSelector(
+    [getRedAtt, getRedDef, getBlueAtt, getBlueDef],
+    (red_att, red_def, blue_att, blue_def) => ({red_def, red_att, blue_def, blue_att})
+);
+export const getUsersPlaying = createSelector(
+    [getUsers, getUsersPlayingById],
+    (users, playing) => mapValues(playing, id => users[id])
+);
 
 export default reducer;

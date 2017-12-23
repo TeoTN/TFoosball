@@ -2,19 +2,14 @@ import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as fromUsers from '../users.actions';
-import { getPositions, getSelectedUsers } from "../users.reducer";
+import { getUsersPlaying, getSelectedUsers } from "../users.reducer";
 
 const mapStateToProps = (state) => ({
     selectedUsers: getSelectedUsers(state),
-    positions: getPositions(state)
+    players: getUsersPlaying(state)
 });
-const mapDispatchToProps = dispatch => ({
-    cleanUser: (user) => dispatch(
-        fromUsers.userUpdate(user.id, {playing: false, team: undefined, position: undefined})
-    ),
-    assignUser: (user, team, position) => dispatch(
-        fromUsers.userAssign(user.id, {playing: true, team, position})
-    ),
+const mapDispatchToProps = (dispatch, {team, position}) => ({
+    userAssign: user => dispatch(fromUsers.userAssign(user, team, position)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -36,18 +31,13 @@ class UserPicker extends React.Component {
     getColor = team => team === 'blue' ? 'info' : 'danger';
 
     handleChange = (currentUser) => (eventKey) => {
-        const { team, position, cleanUser, assignUser, users } = this.props;
-        if (currentUser) {
-            cleanUser(currentUser);
-        }
-        const newUser = users.find(u => u.id === eventKey);
-        assignUser(newUser, team, position);
+        const { userAssign, selectedUsers } = this.props;
+        userAssign(selectedUsers[eventKey]);
     };
 
     render() {
-        const { team, position, positions } = this.props;
-        const user = positions[team][position];
-
+        const { team, position, players } = this.props;
+        const user = players[`${team}_${position}`];
         return (
             <DropdownButton
                 bsStyle={this.getColor(team)}
