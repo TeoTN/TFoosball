@@ -4,6 +4,8 @@ import getRoles from '../utils/roles';
 
 
 export const ADD = 'USERS::ADD';
+export const FETCH_ENTITIES = 'USERS::FETCH::ENTITIES_DONE';
+export const ERROR_FETCHING_ENTITIES = 'USERS::FETCH::ENTITIES_ERROR';
 export const UPDATE = 'USERS::UPDATE::ENTITY';
 export const DELETE = 'USERS::DELETE';
 export const CHOOSE = 'USERS::CHOOSE';
@@ -55,7 +57,7 @@ export const userAssign = (user, team, position) => ({
 
 export const choosePlayersForMatch = (selectedUsers) => {
     const preset = getRoles(selectedUsers);
-    const { red_att, red_def, blue_att, blue_def } = preset;
+    const {red_att, red_def, blue_att, blue_def} = preset;
     return {
         type: CHOOSE,
         payload: {
@@ -88,3 +90,5 @@ export const updateUsers = (response) => ({
 
 export const swapSides = () => ({type: SWAP_SIDES,});
 export const swapPositions = () => ({type: SWAP_POSITIONS,});
+export const fetchEntities = () => ({type: FETCH_ENTITIES});
+export const errorFetchingEntities = () => ({type: ERROR_FETCHING_ENTITIES});

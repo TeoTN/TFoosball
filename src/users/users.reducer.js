@@ -4,7 +4,6 @@ import { createSelector } from "reselect";
 import pick from 'lodash/pick';
 import intersection from 'lodash/intersection';
 import mapValues from 'lodash/mapValues';
-import uniq from 'lodash/uniq';
 
 
 export const getSortedUsers = (state, column, isAscendingOrder) =>
@@ -146,17 +145,50 @@ export function sorting(state = defaultSortingState, action) {
     }
 }
 
+const defaultMetaState = {
+    loadingEntities: false,
+    loadedEntities: false,
+};
+
+export function meta(state = defaultMetaState, action) {
+    switch (action.type) {
+        case fromUsers.UPDATE_LIST:
+        case fromUsers.RECEIVE_LIST:
+            return {
+                ...state,
+                loadingEntities: false,
+                loadedEntities: true,
+            };
+        case fromUsers.FETCH_ENTITIES:
+            return {
+                ...state,
+                loadingEntities: true,
+                loadedEntities: false,
+            };
+        case fromUsers.ERROR_FETCHING_ENTITIES:
+            return {
+                ...state,
+                loadingEntities: false,
+                loadedEntities: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export const reducer = combineReducers({
     entities,
     selected,
     positions,
     autocompletion,
     sorting,
+    meta,
 });
 
 /* SELECTORS */
 export const getUsersState = state => state.users;
 export const getUsers = createSelector(getUsersState, state => state.entities);
+export const getMetadata = createSelector(getUsersState, state => state.meta);
 export const getUsersIds = createSelector(getUsers, users => Object.keys(users));
 export const getSelectedIds = createSelector(getUsersState, state => state.selected);
 export const getSelectedUsers = createSelector([getUsers, getSelectedIds], pick);

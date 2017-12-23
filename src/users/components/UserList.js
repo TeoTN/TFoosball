@@ -5,19 +5,20 @@ import UserItem from './UserItem';
 import MatchToolbar from './MatchToolbar';
 import Loading from '../../shared/components/Loading';
 import * as fromUsers from '../users.actions';
-import { getSelectedIds, getUsersIds, getUsersSorted } from "../users.reducer";
+import { getMetadata, getSelectedIds, getUsersIds, getUsersSorted } from "../users.reducer";
 
 
 const mapStateToProps = (state) => ({
     users: getUsersSorted(state),
     usersIds: getUsersIds(state),
     selected: getSelectedIds(state),
+    metadata: getMetadata(state),
 });
 const mapDispatchToProps = (dispatch, props) => ({
     select: (user) => dispatch(fromUsers.userToggle(user))
 });
 
-const UserList = ({users, usersIds, select, selected}) => (
+const UserList = ({users, usersIds, select, selected, metadata: {loadedEntities, loadingEntities}}) => (
     <div>
         <Row>
             <MatchToolbar canPlay={usersIds.length >= 4}/>
@@ -38,15 +39,19 @@ const UserList = ({users, usersIds, select, selected}) => (
                 </Col>
             </ListGroupItem>
             {
-                usersIds.length > 0 ?
+                loadedEntities && !loadingEntities ?
                     Object.values(users).map(user => <UserItem
                         key={user.id}
                         user={user}
                         onSelect={select}
                         selected={selected.includes(user.id)}/>
                     ) :
+                    loadingEntities ?
                     <ListGroupItem>
                         <Loading/>
+                    </ListGroupItem> :
+                    <ListGroupItem className="text-danger text-center" disabled>
+                        Failed to get the user list
                     </ListGroupItem>
             }
         </ListGroup>
