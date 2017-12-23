@@ -4,8 +4,8 @@ import * as usersReducers from '../users/users.reducer';
 import * as usersActions from '../users/users.actions';
 
 
-describe('Metadata reducer', function(){
-    it('should stop loading after users were received', function(){
+describe('Metadata reducer', function() {
+    it('should stop loading after users were received', function() {
         const stateBefore = {
             loadingEntities: true,
             loadedEntities: false,
@@ -20,7 +20,7 @@ describe('Metadata reducer', function(){
         expect(usersReducers.meta(stateBefore, action)).toEqual(stateAfter);
     });
 
-    it('should stop loading after users were updated', function(){
+    it('should stop loading after users were updated', function() {
         const stateBefore = {
             loadingEntities: true,
             loadedEntities: false,
@@ -35,7 +35,7 @@ describe('Metadata reducer', function(){
         expect(usersReducers.meta(stateBefore, action)).toEqual(stateAfter);
     });
 
-    it('should handle error while fetching users', function(){
+    it('should handle error while fetching users', function() {
         const stateBefore = {
             loadingEntities: true,
             loadedEntities: false,
@@ -50,7 +50,7 @@ describe('Metadata reducer', function(){
         expect(usersReducers.meta(stateBefore, action)).toEqual(stateAfter);
     });
 
-    it('should mark as loading after having started fetching', function(){
+    it('should mark as loading after having started fetching', function() {
         const stateBefore = {
             loadingEntities: false,
             loadedEntities: false,
@@ -66,8 +66,8 @@ describe('Metadata reducer', function(){
     });
 });
 
-describe('Metadata selectors', function(){
-    it('should get metadata', function(){
+describe('Metadata selectors', function() {
+    it('should get metadata', function() {
         const meta = {
             loadingEntities: true,
             loadedEntities: false,
@@ -83,14 +83,14 @@ describe('Metadata selectors', function(){
     })
 });
 
-describe('Users positions', function(){
-    it('...', function(){
+describe('Users positions', function() {
+    it('...', function() {
 
     })
 });
 
-describe('Positions selectors', function(){
-    it('should get positions', function(){
+describe('Positions selectors', function() {
+    it('should get positions', function() {
         const state = {
             users: {
                 positions: {
