@@ -2,6 +2,7 @@ import deepFreeze from 'deep-freeze';
 import usersMock from '../assets/mocks/users.json';
 import * as usersReducers from '../users/users.reducer';
 import * as usersActions from '../users/users.actions';
+import { users } from "../users/users.sagas";
 
 
 describe('Metadata reducer', function() {
@@ -432,4 +433,51 @@ describe('Selected reducer', function() {
         expect(usersReducers.selected(stateBefore, action)).toEqual(stateAfter);
     });
 
+});
+
+describe('Entities reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = {
+            1: {username: 'a'}
+        };
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.entities(stateBefore, action)).toEqual(stateBefore);
+    });
+
+    it('should handle receiving user list', function() {
+        const stateBefore = {
+            1: {id: 1, username: 'a'}
+        };
+        const action = usersActions.receiveUsers([
+            {id: 11, username: 'k'},
+            {id: 17, username: 'q'},
+        ]);
+        const stateAfter = {
+            11: {id: 11, username: 'k'},
+            17: {id: 17, username: 'q'},
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.entities(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should update user list', function() {
+        const stateBefore = {
+            1: {id: 1, username: 'a'}
+        };
+        const action = usersActions.updateUsers([
+            {id: 11, username: 'k'},
+            {id: 17, username: 'q'},
+        ]);
+        const stateAfter = {
+            1: {id: 1, username: 'a'},
+            11: {id: 11, username: 'k'},
+            17: {id: 17, username: 'q'},
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.entities(stateBefore, action)).toEqual(stateAfter);
+    });
 });

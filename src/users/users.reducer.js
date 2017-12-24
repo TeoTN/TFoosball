@@ -33,17 +33,6 @@ export function entities(state = {}, action) {
                 ...action.entities,
             };
         }
-        case fromUsers.ADD:
-        case fromUsers.UPDATE: {
-            return {
-                ...state,
-                [action.userData.id]: action.userData,
-            };
-        }
-        case fromUsers.DELETE: {
-            const {[action.id]: _, ...others} = state; // eslint-disable-line no-unused-vars
-            return others;
-        }
         default:
             return state;
     }

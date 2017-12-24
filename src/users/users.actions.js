@@ -3,11 +3,8 @@ import { userListSchema } from "./users.schema";
 import getRoles from '../utils/roles';
 
 
-export const ADD = 'USERS::ADD';
 export const FETCH_ENTITIES = 'USERS::FETCH::ENTITIES';
 export const ERROR_FETCHING_ENTITIES = 'USERS::FETCH::ENTITIES_ERROR';
-export const UPDATE = 'USERS::UPDATE::ENTITY';
-export const DELETE = 'USERS::DELETE';
 export const CHOOSE = 'USERS::CHOOSE';
 export const TOGGLE = 'USERS::TOGGLE';
 export const RECEIVE_LIST = 'USERS::RECEIVE::LIST';
@@ -38,12 +35,6 @@ export const receivedEmailAutocompletion = (emails) => ({
 export const userToggle = (user) => ({
     type: TOGGLE,
     id: user.id,
-});
-
-export const userUpdate = (id, userData) => ({
-    type: UPDATE,
-    id,
-    userData,
 });
 
 export const userAssign = (user, team, position) => ({
