@@ -131,6 +131,121 @@ describe('Autocompletion reducer', function() {
     });
 });
 
+describe('Positions reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = {playing: [], red: [], blue: [], att: [], def: [],};
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateBefore);
+    });
+
+    it('should swap sides', function() {
+        const stateBefore = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        const action = usersActions.swapSides();
+        const stateAfter = {
+            playing: [1, 2, 3, 4],
+            red: [2, 4],
+            blue: [1, 3],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should swap positions', function() {
+        const stateBefore = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        const action = usersActions.swapPositions();
+        const stateAfter = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [3, 4],
+            def: [1, 2],
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should update choice', function() {
+        const stateBefore = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        // Notice action creator choosePlayersForMatch is not deterministic
+        const action = {
+            type: usersActions.CHOOSE,
+            payload: {
+                playing: [3, 4, 2, 1],
+                red: [2, 1],
+                blue: [3, 4],
+                att: [2, 3],
+                def: [1, 4],
+            }
+        };
+        const stateAfter = {
+            playing: [3, 4, 2, 1],
+            red: [2, 1],
+            blue: [3, 4],
+            att: [2, 3],
+            def: [1, 4],
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should assign user', function() {
+        const stateBefore = {playing: [], red: [], blue: [], att: [], def: [],};
+        const action = usersActions.userAssign({id: 1}, 'blue', 'def');
+        const stateAfter = {playing: [1], red: [], blue: [1], att: [], def: [1],};
+
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should replace user', function() {
+        const stateBefore = {
+            playing: [3, 4, 2, 1],
+            red: [2, 1],
+            blue: [3, 4],
+            att: [2, 3],
+            def: [1, 4],
+        };
+        const action = usersActions.userAssign({id: 2}, 'blue', 'def');
+        const stateAfter = {
+            playing: [3, 1, 2],
+            red: [1],
+            blue: [3, 2],
+            att: [3],
+            def: [1, 2],
+        };
+
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+});
+
 describe('Positions selectors', function() {
     it('should get positions', function() {
         const state = {
@@ -288,4 +403,33 @@ describe('Positions selectors', function() {
         deepFreeze(state);
         expect(usersReducers.getUsersSorted(state)).toEqual([user3, user4, user2, user1, user5]);
     });
+});
+
+describe('Selected reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = [5, 3, 1];
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.selected(stateBefore, action)).toEqual(stateBefore);
+    });
+
+    it('should select user', function() {
+        const stateBefore = [5, 3, 1];
+        const action = usersActions.userToggle({id: 2});
+        const stateAfter = [5, 3, 1, 2];
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.selected(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should unselect user', function() {
+        const stateBefore = [5, 3, 1];
+        const action = usersActions.userToggle({id: 3});
+        const stateAfter = [5, 1];
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.selected(stateBefore, action)).toEqual(stateAfter);
+    });
+
 });
