@@ -83,10 +83,52 @@ describe('Metadata selectors', function() {
     })
 });
 
-describe('Users positions', function() {
-    it('...', function() {
+describe('Sorting reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const sortingState = {column: 'exp', isAscendingOrder: false};
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(sortingState);
+        deepFreeze(action);
+        expect(usersReducers.sorting(sortingState, action)).toEqual(sortingState);
+    });
 
-    })
+    it('should set column and order', function() {
+        const stateBefore = {column: 'exp', isAscendingOrder: false};
+        const action = usersActions.sortBy('username', true);
+        const stateAfter = {column: 'username', isAscendingOrder: true};
+
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.sorting(stateBefore, action)).toEqual(stateAfter);
+    });
+});
+
+describe('Autocompletion reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = {loading: false, emails: [],};
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.autocompletion(stateBefore, action)).toEqual(stateBefore);
+    });
+
+    it('should mark as loading after fetch action', function() {
+        const stateBefore = {loading: false, emails: [],};
+        const action = usersActions.fetchEmailAutocompletion('abc');
+        const stateAfter = {loading: true, emails: [],};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.autocompletion(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should store suggestions when received data from email autocompletion service', function() {
+        const stateBefore = {loading: true, emails: [],};
+        const action = usersActions.receivedEmailAutocompletion(['abc@example.com']);
+        const stateAfter = {loading: false, emails: ['abc@example.com'],};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.autocompletion(stateBefore, action)).toEqual(stateAfter);
+    });
 });
 
 describe('Positions selectors', function() {
