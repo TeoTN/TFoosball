@@ -76,7 +76,7 @@ export function* onRequestSaveSettings() {
         yield takeLatest(REQUEST_SAVE_SETTINGS, saveSettings);
     } catch(error) {
         yield put(raiseError(errorMsg));
-        yield takeLatest(REQUEST_SAVE_SETTINGS, saveSettings);
+        // yield takeLatest(REQUEST_SAVE_SETTINGS, saveSettings);
     }
 }
 

@@ -2,26 +2,24 @@ import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import * as fromUsers from '../users.actions';
+import { getUsersPlaying, getSelectedUsers } from "../users.reducer";
 
-const mapStateToProps = ({users}) => ({
-    users: users.filter(u => u.selected),
+const mapStateToProps = (state) => ({
+    selectedUsers: getSelectedUsers(state),
+    players: getUsersPlaying(state)
 });
-const mapDispatchToProps = dispatch => ({
-    cleanUser: (user) => dispatch(
-        fromUsers.userUpdate(user.id, {playing: false, team: undefined, position: undefined})
-    ),
-    assignUser: (user, team, position) => dispatch(
-        fromUsers.userAssign(user.id, {playing: true, team, position})
-    ),
+const mapDispatchToProps = (dispatch, {team, position}) => ({
+    userAssign: user => dispatch(fromUsers.userAssign(user, team, position)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 class UserPicker extends React.Component {
     getUsersOptions = () => {
-        const { users } = this.props;
-        return users.length === 0 ?
+        const { selectedUsers } = this.props;
+        const selectedUsersList = Object.values(selectedUsers);
+        return selectedUsersList.length === 0 ?
             <MenuItem disabled>No players selected</MenuItem> :
-            users.map(
+            selectedUsersList.map(
                 (user, idx) => (
                     <MenuItem eventKey={user.id} key={idx}> {user.username} </MenuItem>
                 )
@@ -33,18 +31,13 @@ class UserPicker extends React.Component {
     getColor = team => team === 'blue' ? 'info' : 'danger';
 
     handleChange = (currentUser) => (eventKey) => {
-        const { team, position, cleanUser, assignUser, users } = this.props;
-        if (currentUser) {
-            cleanUser(currentUser);
-        }
-        const newUser = users.find(u => u.id === eventKey);
-        assignUser(newUser, team, position);
+        const { userAssign, selectedUsers } = this.props;
+        userAssign(selectedUsers[eventKey]);
     };
 
     render() {
-        const { team, position, users } = this.props;
-        const user = users.find(u => u.team === team && u.position === position);
-
+        const { team, position, players } = this.props;
+        const user = players[`${team}_${position}`];
         return (
             <DropdownButton
                 bsStyle={this.getColor(team)}

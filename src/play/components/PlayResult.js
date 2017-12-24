@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Row, Col, FormControl, Panel} from 'react-bootstrap';
+import { Button, Row, Col, FormControl, Panel } from 'react-bootstrap';
+import mapValues from 'lodash/mapValues';
 
 
 class PlayResult extends React.Component {
@@ -16,7 +17,7 @@ class PlayResult extends React.Component {
     handleFinish = () => {
         const {players, onPublish} = this.props;
         const requestData = {
-            ...(players.reduce((o, p) => Object.assign(o, {[`${p.team}_${p.position}`]: p.username}), {})),
+            ...mapValues(players, player => player.username),
             red_score: this.state.red,
             blue_score: this.state.blue,
         };
@@ -26,6 +27,7 @@ class PlayResult extends React.Component {
     clear = () => this.setState({blue: 0, red: 0,});
 
     render() {
+        const {arePositionsSet} = this.props;
         return (
             <Panel className="ui-card with-vertical-margin">
                 <Row>
@@ -54,7 +56,7 @@ class PlayResult extends React.Component {
                         />
                     </Col>
                     <Col xs={12} sm={3}>
-                        <Button onClick={this.handleFinish} bsStyle={'success'} block>
+                        <Button onClick={this.handleFinish} bsStyle={'success'} block disabled={!arePositionsSet}>
                             Send
                         </Button>
                     </Col>

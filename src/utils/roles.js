@@ -1,19 +1,22 @@
-export default function getRoles(chosen) {
-    let players = chosen.slice(0);
+import shuffle from 'lodash/shuffle';
+
+export default function getRoles(selectedUsers) {
+    const players = shuffle(Object.values(selectedUsers));
+    if (players.length < 4) {
+        throw new Error('At least 4 players should be selected.');
+    }
+    const r1 = Math.random();
+    const r2 = Math.random();
+    const d1 = players[0].att_ratio - players[1].att_ratio;
+    const d2 = players[2].att_ratio - players[3].att_ratio;
     const isAtt = {
-        red: Math.random() < 0.5 + players[0].att - players[1].att,
-        blue: Math.random() < 0.5 + players[2].att - players[3].att,
+        red: r1 < 0.5 + d1,
+        blue: r2 < 0.5 + d2,
     };
-    const getUpdatedUser = (user, team, isSecond) => ({
-        ...user,
-        team,
-        playing: true,
-        position: isAtt[team] ^ isSecond ? 'att' : 'def',
-    });
     return {
-        [players[0].username]: getUpdatedUser(players[0], 'red', false),
-        [players[1].username]: getUpdatedUser(players[1], 'red', true),
-        [players[2].username]: getUpdatedUser(players[2], 'blue', false),
-        [players[3].username]: getUpdatedUser(players[3], 'blue', true),
+        [isAtt['red'] ? 'red_att' : 'red_def']: players[0].id,
+        [!isAtt['red'] ? 'red_att' : 'red_def']: players[1].id,
+        [isAtt['blue'] ? 'blue_att' : 'blue_def']: players[2].id,
+        [!isAtt['blue'] ? 'blue_att' : 'blue_def']: players[3].id,
     };
 }

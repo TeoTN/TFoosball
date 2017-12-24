@@ -8,9 +8,11 @@ export function* fetchUsers() {
     const currentTeam = yield call(getCurrentTeam);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
+        yield put(fromUsers.fetchEntities());
         const response = yield call(api.requests.get, url);
         yield put(fromUsers.receiveUsers(response));
     } catch (error) {
+        yield put(fromUsers.errorFetchingEntities());
         yield put(raiseError(error));
     }
 }
@@ -19,9 +21,11 @@ export function* fetchUpdateUsers() {
     const currentTeam = yield call(getCurrentTeam);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
+        yield put(fromUsers.fetchEntities());
         const response = yield call(api.requests.get, url, {}, 'Failed to fetch users list');
         yield put(fromUsers.updateUsers(response));
     } catch (error) {
+        yield put(fromUsers.errorFetchingEntities());
         yield put(raiseError(error));
     }
 }

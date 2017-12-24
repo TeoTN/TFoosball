@@ -8,12 +8,12 @@ import {showQuestionModal} from '../../shared/modal.actions';
 import Switch from '../../shared/components/Switch';
 import {fetchEmailAutocompletion, inviteUser} from "../../users/users.actions";
 import {FS_INVITATIONS} from "../../api/config";
+import { getAutocompletionState } from "../../users/users.reducer";
 
 
-const mapStateToProps = ({teams, usersAutocompletion: {emailAutocompletion, loadingEmailAutocompletion}}) => ({
-    teams,
-    emailAutocompletion,
-    loadingEmailAutocompletion,
+const mapStateToProps = (state) => ({
+    teams: state.teams,
+    autocompletion: getAutocompletionState(state),
 });
 const mapDispatchToProps = (dispatch) => ({
     selectTeam: (team) => dispatch(selectTeam(team)),
@@ -60,8 +60,7 @@ class ProfileTeams extends React.Component {
             acceptMember,
             rejectMember,
             fetchEmailAutocompletion,
-            emailAutocompletion,
-            loadingEmailAutocompletion,
+            autocompletion,
             submitInvitation,
         } = this.props;
         const selectedTeam = getSelectedTeam(teams).name;
@@ -107,8 +106,8 @@ class ProfileTeams extends React.Component {
                 {FS_INVITATIONS && <h6>Only Google-based emails are supported now.</h6>}
                 {FS_INVITATIONS && <TeamInvite
                     fetchEmailAutocompletion={fetchEmailAutocompletion}
-                    loadingEmailAutocompletion={loadingEmailAutocompletion}
-                    emailAutocompletion={emailAutocompletion}
+                    loading={autocompletion.loading}
+                    emails={autocompletion.emails}
                     submitInvitation={submitInvitation}
                 />}
             </Panel>

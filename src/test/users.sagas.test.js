@@ -1,7 +1,7 @@
-import { call, put, select } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 import api from '../api';
 import response from '../assets/mocks/users.json';
-import * as UserActions from '../users/user.actions';
+import * as UserActions from '../users/users.actions';
 import * as fromUsers from '../users/users.actions';
 import { raiseError } from '../shared/notifier.actions';
 import { fetchUsers, fetchUpdateUsers } from '../users/users.sagas.js';
@@ -18,8 +18,13 @@ describe('FetchUsers saga ', () => {
             expect(iter).toEqual(call(getCurrentTeam));
         });
 
+        it('should put metadata loading entities', () => {
+            const iter = iterator.next(currentTeam).value;
+            expect(iter).toEqual(put(fromUsers.fetchEntities()));
+        });
+
         it('should call fetch api', () => {
-            expect(iterator.next(currentTeam).value).toEqual(call(api.requests.get, url));
+            expect(iterator.next().value).toEqual(call(api.requests.get, url));
         });
 
         it('should put response action', () => {
@@ -43,13 +48,23 @@ describe('FetchUsers saga ', () => {
             expect(iter).toEqual(call(getCurrentTeam));
         });
 
-        it('should call fetch api', () => {
+        it('should put metadata loading entities', () => {
             const iter = iterator.next(currentTeam).value;
+            expect(iter).toEqual(put(fromUsers.fetchEntities()));
+        });
+
+        it('should call fetch api', () => {
+            const iter = iterator.next().value;
             expect(iter).toEqual(call(api.requests.get, url));
         });
 
-        it('should put raise error action', () => {
+        it('should put metadata failed loading entities', () => {
             const iter = iterator.throw(errorMsg).value;
+            expect(iter).toEqual(put(fromUsers.errorFetchingEntities()));
+        });
+
+        it('should put raise error action', () => {
+            const iter = iterator.next().value;
             expect(iter).toEqual(put(raiseError(errorMsg)));
         });
 
@@ -63,7 +78,7 @@ describe('FetchUsers saga ', () => {
 
 
 describe('FetchUpdateUsers saga', () => {
-    const currentTeam = { id: 6 };
+    const currentTeam = {id: 6};
     const url = api.urls.teamMemberList(currentTeam.id);
     const response = [{id: 6}, {id: 7}];
     const errorMsg = 'Failed to fetch users list';
@@ -76,8 +91,13 @@ describe('FetchUpdateUsers saga', () => {
             expect(iter).toEqual(call(getCurrentTeam))
         });
 
-        it('should call API to get team users list', () => {
+        it('should put metadata loading entities', () => {
             const iter = iterator.next(currentTeam).value;
+            expect(iter).toEqual(put(fromUsers.fetchEntities()));
+        });
+
+        it('should call API to get team users list', () => {
+            const iter = iterator.next().value;
             expect(iter).toEqual(call(api.requests.get, url, {}, errorMsg));
         });
 
@@ -100,13 +120,23 @@ describe('FetchUpdateUsers saga', () => {
             expect(iter).toEqual(call(getCurrentTeam))
         });
 
-        it('should call API to get team users list', () => {
+        it('should put metadata loading entities', () => {
             const iter = iterator.next(currentTeam).value;
+            expect(iter).toEqual(put(fromUsers.fetchEntities()));
+        });
+
+        it('should call API to get team users list', () => {
+            const iter = iterator.next().value;
             expect(iter).toEqual(call(api.requests.get, url, {}, errorMsg));
         });
 
-        it('should put updateUsers action', () => {
+        it('should put metadata failed loading entities', () => {
             const iter = iterator.throw(errorMsg).value;
+            expect(iter).toEqual(put(fromUsers.errorFetchingEntities()));
+        });
+
+        it('should put updateUsers action', () => {
+            const iter = iterator.next().value;
             expect(iter).toEqual(put(raiseError(errorMsg)));
         });
 
