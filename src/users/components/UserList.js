@@ -6,6 +6,7 @@ import MatchToolbar from './MatchToolbar';
 import Loading from '../../shared/components/Loading';
 import * as fromUsers from '../users.actions';
 import { getMetadata, getSelectedIds, getUsersIds, getUsersSorted } from "../users.reducer";
+import Icon from 'react-fontawesome';
 
 
 const mapStateToProps = (state) => ({
@@ -55,6 +56,9 @@ const UserList = ({users, usersIds, select, selected, metadata: {loadedEntities,
                     </ListGroupItem>
             }
         </ListGroup>
+        <p className='text-muted text-right'>
+            <Icon name='superpowers' ariaLabel={'Team admin'}/> - team admin
+        </p>
     </div>
 );
 

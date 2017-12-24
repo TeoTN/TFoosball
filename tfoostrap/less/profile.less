@@ -1,17 +1,36 @@
 @import '../variables';
 
 .profile-head {
-  margin: @padding-base-vertical @padding-base-horizontal;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  grid-template-rows: 32px 32px;
+  grid-template-areas:
+          "photo username"
+          "photo title";
+  width: 100%;
+  height: auto;
+  grid-column-gap: @padding-base-horizontal;
+  grid-row-gap: @padding-base-vertical;
+  margin-bottom: @padding-base-vertical;
 
-  & img {
-    vertical-align: top;
-    margin: @padding-base-vertical 0;
+  & .profile-photo {
+    grid-area: photo;
+    //margin: @padding-base-vertical 0;
+    & img {
+      border-radius: 32px;
+      width: 64px;
+      height: 64px;
+    }
   }
   & h1 {
-    display: inline-block;
-    margin: @padding-base-vertical @padding-base-horizontal;
+    grid-area: username;
+    margin: 0;
     font-size: @font-size-h2;
-    transform: translateY(25%);
+  }
+  & h2 {
+    grid-area: title;
+    margin: 0;
+    font-size: @font-size-h4;
   }
 
   @media (max-width: 768px) {
@@ -21,34 +40,9 @@
       display: block;
       font-size: @font-size-h3;
     }
-  }
-}
-
-.profile-photo {
-  display: inline-block;
-  width: 64px;
-  height: 64px;
-
-  @media (max-width: 768px) {
-    & {
-      margin: 0 auto;
-    }
-  }
-
-  .winners-stand & {
-    margin: 10px auto;
-  }
-
-  img {
-    width: 64px;
-    height: 64px;
-    border-radius: 32px;
-    margin: 0 16px 16px 0;
-
-    nav & {
-      width: 40px;
-      height: 40px;
-      margin: 10px;
+    & h2 {
+      display: block;
+      font-size: @font-size-h5;
     }
   }
 }
@@ -71,5 +65,13 @@
     & {
       display: none;
     }
+  }
+}
+
+.winners-stand {
+  & .profile-photo img {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
   }
 }

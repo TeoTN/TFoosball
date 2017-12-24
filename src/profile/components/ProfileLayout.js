@@ -25,6 +25,13 @@ export default class ProfileLayout extends React.Component {
                 <div className="profile-head">
                     <Gravatar email={profile.email} />
                     <h1>{ username } <small>{ profile.exp }&nbsp;XP</small></h1>
+                    {
+                        profile && profile.is_team_admin &&
+                        <h2>
+                            <Icon name='superpowers' ariaLabel={'Team admin'} className='text-danger'/> Team Admin
+                        </h2>
+                    }
+
                 </div>
                 <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">
                     <LinkContainer to={{pathname: `/profile/${username}/stats`}}>
