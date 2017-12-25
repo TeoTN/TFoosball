@@ -67,7 +67,6 @@ const api = {
         teamEntity: (team_id) => `${API_ROOT}/teams/${team_id}/`,
         teamAccept: () => `${API_ROOT}/teams/accept/`,
         teamInvite: (team_id) => `${API_ROOT}/teams/${team_id}/invite/`,
-        teamAssignAdmin: (team_id) => `${API_ROOT}/teams/${team_id}/assign_admin/`,
         teamMemberList: (team_id) => `${API_ROOT}/teams/${team_id}/members/`,
         teamMemberEntity: (team_id, member_id) => `${API_ROOT}/teams/${team_id}/members/${member_id}/`,
         teamMatchList: (team_id) => `${API_ROOT}/teams/${team_id}/matches/`,

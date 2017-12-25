@@ -47,8 +47,8 @@ export default class TeamList extends React.PureComponent {
         return (
             <div> {/* TODO Migrate to React.Fragment */}
                 <Row className="with-vertical-margin">
-                    <Switch bsStyle="success" onChange={this.toggleMode('joinable')}>Join team mode</Switch>
-                    <Switch bsStyle="danger" onChange={this.toggleMode('editable')}>Leave team mode</Switch>
+                    <Switch bsStyle="success" onChange={this.toggleMode('joinable')}>Join club mode</Switch>
+                    <Switch bsStyle="danger" onChange={this.toggleMode('editable')}>Leave club mode</Switch>
                 </Row>
                 <ListGroup fill>
                     {joinable ? <JoinTeamItem/> : null}

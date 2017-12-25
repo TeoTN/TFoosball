@@ -6,11 +6,12 @@ import { isUsername, isName } from '../../validators';
 import Switch from "../../shared/components/Switch";
 
 
-const ControlledSwitch = ({input, ...props}) => (
+export const ControlledSwitch = ({input, ...props}) => (
     <Switch bsStyle="info" onChange={input.onChange} checked={input.checked} />
 );
 
-const SettingsForm = ({ handleSubmit, pristine }) => {
+const SettingsForm = ({ handleSubmit,initialValues, pristine }) => {
+    console.log(initialValues);
     return (
         <Row>
             <Col xs={12} sm={8}>

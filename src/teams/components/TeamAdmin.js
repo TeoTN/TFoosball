@@ -4,53 +4,63 @@ import { Form, FormGroup, Col, Button, ControlLabel } from 'react-bootstrap';
 import { StaticValidatedInput } from "../../shared/components/ValidatedInput";
 import { connect } from "react-redux";
 import { getUsers } from "../../users/users.reducer";
-import { grantSuperpowers } from "../teams.actions";
+import { manageUser } from "../teams.actions";
+import { browserHistory } from 'react-router';
+import ManageMember from "./ManageMember";
 
 const mapStateToProps = state => ({
     users: getUsers(state),
+    profile: state.profile,
 });
 const mapDispatchToProps = dispatch => ({
-    grantSuperpowers: ({username: {value}}) => dispatch(grantSuperpowers(value)),
+    manageUser: (updatedProfile) => dispatch(manageUser(updatedProfile))
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@reduxForm({form: 'adminGrant'})
+@reduxForm({form: 'username'})
 class TeamAdmin extends React.PureComponent {
     getOptions = () => Object
         .values(this.props.users)
-        .filter(user => !user.is_team_admin)
         .map(user => ({value: user.username, label: user.username}));
 
+    goToUser = ({username: {value}}) => {
+        browserHistory.push(`/clubs/admin/${value}`);
+    };
+
     render() {
-        const {handleSubmit, grantSuperpowers} = this.props;
+        const {handleSubmit, manageUser, params: {username}, profile} = this.props;
         return (
             <div>
-                <h4 className='text-info'>Grant superpowers</h4>
-                <Form onSubmit={handleSubmit(grantSuperpowers)} horizontal>
-                    <Col sm={2}>
-                        <ControlLabel>Username</ControlLabel>
-                    </Col>
-                    <Col sm={8}>
-                        <Field
-                            name='username'
-                            label="Username"
-                            component={StaticValidatedInput}
-                            options={this.getOptions()}
-                            onInputChange={() => {
-                            }}
-                            placeholder="Member username"
-                            promptTextCreator={label => `Grant superpowers to ${label}`}
-                        />
-                    </Col>
-                    <FormGroup>
-                        <Col sm={2}>
-                            <Button type="submit" bsStyle='success' block>
-                                Grant
-                            </Button>
-                        </Col>
-                    </FormGroup>
-                </Form>
-                <hr/>
+                {
+                    username ?
+                        <ManageMember
+                            manageUser={manageUser}
+                            initialValues={profile}
+                        /> :
+                        <Form onSubmit={handleSubmit(this.goToUser)} horizontal>
+                            <h4 className='text-info'>Manage member</h4>
+                            <Col sm={2}>
+                                <ControlLabel>Username</ControlLabel>
+                            </Col>
+                            <Col sm={8}>
+                                <Field
+                                    name='username'
+                                    label="Username"
+                                    component={StaticValidatedInput}
+                                    options={this.getOptions()}
+                                    placeholder="Member username"
+                                    promptTextCreator={label => `Manage ${label} settings`}
+                                />
+                            </Col>
+                            <FormGroup>
+                                <Col sm={2}>
+                                    <Button type="submit" bsStyle='success' block>
+                                        Manage
+                                    </Button>
+                                </Col>
+                            </FormGroup>
+                        </Form>
+                }
             </div>
         );
     }

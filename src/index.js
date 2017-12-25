@@ -85,6 +85,7 @@ ReactDOM.render(
                     <Route path='pending' component={PendingMemberList}/>
                     <Route path='invite' component={TeamInvite}/>
                     <Route path='admin' component={TeamAdmin}/>
+                    <Route path='admin(/:username)' component={TeamAdmin}/>
                 </Route>
                 {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>

@@ -5,6 +5,7 @@ import {
     SELECT_TEAM,
     MEMBER_ACCEPTANCE,
     LEAVE_TEAM,
+    MANAGE_USER,
     teamCreated,
     setTeams,
     selectTeam,
@@ -18,7 +19,7 @@ import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
 import { getSelectedTeam } from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
-import { GRANT_SUPERPOWERS } from "./teams.actions";
+import { profileUpdate } from "../profile/profile.actions";
 
 
 export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
@@ -158,19 +159,21 @@ export function* memberAcceptance() {
     }
 }
 
-export function* grantSuperpowers() {
-    function* onRequestSU({username}) {
+export function* manageUser() {
+    function* onManageUser({updatedProfile: {id, username, is_team_admin, hidden}}) {
+        const error_msg = `Failed to manage ${username} settings.`;
         const currentTeam = yield call(getCurrentTeam);
-        const url = api.urls.teamAssignAdmin(currentTeam.id);
+        const url = api.urls.teamMemberEntity(currentTeam.id, id);
         try {
-            yield call(api.requests.post, url, {username}, `Failed to grant super cow powers to ${username}.`);
-            yield put(showInfo(`User ${username} was granted super cow powers`));
+            const response = yield call(api.requests.patch, url, {is_team_admin, hidden}, error_msg);
+            yield put(showInfo(`Updated ${username} settings.`));
+            yield put(profileUpdate(response));
         }
         catch (error) {
             yield put(raiseError(error));
         }
     }
-    yield takeLatest(GRANT_SUPERPOWERS, onRequestSU);
+    yield takeLatest(MANAGE_USER, onManageUser);
 }
 
 export function* teams() {
@@ -181,6 +184,6 @@ export function* teams() {
         handleJoinTeam(),
         memberAcceptance(),
         leaveTeam(),
-        grantSuperpowers(),
+        manageUser(),
     ];
 }
