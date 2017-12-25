@@ -7,6 +7,7 @@ export const PENDING_MEMBERS = 'TEAMS::PENDING_MEMBERS';
 export const MEMBER_ACCEPTANCE = 'TEAMS::MEMBER_ACCEPTANCE';
 export const LEAVE_TEAM = 'TEAMS::LEAVE';
 export const TEAM_LEFT = 'TEAMS::LEFT';
+export const GRANT_SUPERPOWERS = 'TEAMS::GRANT_SUPERCOW_POWERS'
 
 
 export const requestCreateTeam = (name, username) => ({
@@ -58,4 +59,9 @@ export const memberAcceptance = (id, shouldAccept) => ({
     type: MEMBER_ACCEPTANCE,
     id,
     shouldAccept,
+});
+
+export const grantSuperpowers = (username) => ({
+    type: GRANT_SUPERPOWERS,
+    username,
 });

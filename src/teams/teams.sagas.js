@@ -18,6 +18,7 @@ import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
 import { getSelectedTeam } from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
+import { GRANT_SUPERPOWERS } from "./teams.actions";
 
 
 export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
@@ -157,6 +158,21 @@ export function* memberAcceptance() {
     }
 }
 
+export function* grantSuperpowers() {
+    function* onRequestSU({username}) {
+        const currentTeam = yield call(getCurrentTeam);
+        const url = api.urls.teamAssignAdmin(currentTeam.id);
+        try {
+            yield call(api.requests.post, url, {username}, `Failed to grant super cow powers to ${username}.`);
+            yield put(showInfo(`User ${username} was granted super cow powers`));
+        }
+        catch (error) {
+            yield put(raiseError(error));
+        }
+    }
+    yield takeLatest(GRANT_SUPERPOWERS, onRequestSU);
+}
+
 export function* teams() {
     yield [
         fetchTeams(),
@@ -165,5 +181,6 @@ export function* teams() {
         handleJoinTeam(),
         memberAcceptance(),
         leaveTeam(),
+        grantSuperpowers(),
     ];
 }

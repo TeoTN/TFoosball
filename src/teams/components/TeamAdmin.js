@@ -2,7 +2,18 @@ import React from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { Form, FormGroup, Col, Button, ControlLabel } from 'react-bootstrap';
 import { StaticValidatedInput } from "../../shared/components/ValidatedInput";
+import { connect } from "react-redux";
+import { getUsers } from "../../users/users.reducer";
+import { grantSuperpowers } from "../teams.actions";
 
+const mapStateToProps = state => ({
+    users: getUsers(state),
+});
+const mapDispatchToProps = dispatch => ({
+    grantSuperpowers: ({username: {value}}) => dispatch(grantSuperpowers(value)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @reduxForm({form: 'adminGrant'})
 class TeamAdmin extends React.PureComponent {
     getOptions = () => Object
@@ -11,10 +22,11 @@ class TeamAdmin extends React.PureComponent {
         .map(user => ({value: user.username, label: user.username}));
 
     render() {
+        const {handleSubmit, grantSuperpowers} = this.props;
         return (
             <div>
                 <h4 className='text-info'>Grant superpowers</h4>
-                <Form onSubmit={() => {}} horizontal>
+                <Form onSubmit={handleSubmit(grantSuperpowers)} horizontal>
                     <Col sm={2}>
                         <ControlLabel>Username</ControlLabel>
                     </Col>
@@ -24,7 +36,8 @@ class TeamAdmin extends React.PureComponent {
                             label="Username"
                             component={StaticValidatedInput}
                             options={this.getOptions()}
-                            onInputChange={() => {}}
+                            onInputChange={() => {
+                            }}
                             placeholder="Member username"
                             promptTextCreator={label => `Grant superpowers to ${label}`}
                         />

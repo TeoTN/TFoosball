@@ -4,11 +4,9 @@ import { Panel, Nav, NavItem } from 'react-bootstrap';
 import Icon from 'react-fontawesome';
 import { getSelectedTeam } from '../../teams/teams.reducer';
 import { LinkContainer } from "react-router-bootstrap";
-import { getUsers } from "../../users/users.reducer";
 import get from 'lodash/get';
 
 const mapStateToProps = (state) => ({
-    users: getUsers(state),
     teams: state.teams,
     isTeamAdmin: get(state, 'auth.profile.is_team_admin'),
 });
@@ -17,7 +15,6 @@ const mapStateToProps = (state) => ({
 class ClubsLayout extends React.PureComponent {
     render() {
         const {
-            users,
             teams,
             children,
             isTeamAdmin,
@@ -56,7 +53,6 @@ class ClubsLayout extends React.PureComponent {
                     <hr/>
                     {React.cloneElement(children, {
                         teams,
-                        users,
                     })}
                 </Panel>
             </div>
