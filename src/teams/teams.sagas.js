@@ -32,7 +32,7 @@ export function* handleSelectTeam() {
     while (true) {
         const { team } = yield take(SELECT_TEAM);
         yield call(fetchProfile, team.id, team.member_id);
-        yield call([browserHistory, browserHistory.push], `/profile/${team.username}/teams`);
+        yield call([browserHistory, browserHistory.push], `/clubs/joined`);
     }
 }
 

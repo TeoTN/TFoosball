@@ -30,7 +30,7 @@ export default class ProfileLayout extends React.Component {
                     {
                         profile && profile.is_team_admin &&
                         <h2>
-                            <Icon name='superpowers' ariaLabel={'Team admin'} className='text-danger'/> Team Admin
+                            <Icon name='superpowers' ariaLabel={'Team admin'} className='text-danger'/> Club Admin
                         </h2>
                     }
 

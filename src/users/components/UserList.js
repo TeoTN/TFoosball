@@ -61,7 +61,7 @@ const UserList = ({users, usersIds, select, selected, metadata: {loadedEntities,
             }
         </ListGroup>
         <p className='text-muted text-right'>
-            <Icon name='superpowers' ariaLabel={'Team admin'}/> - team admin
+            <Icon name='superpowers' ariaLabel={'Team admin'}/> - club admin
         </p>
     </div>
 );

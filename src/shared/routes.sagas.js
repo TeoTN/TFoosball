@@ -16,13 +16,14 @@ const options = {
 };
 
 const routes = {
+    '/match': fetchUsers,
     '/profile/:username/*': profileStats,
     '/profile/:username/matches/:page?': profileMatches,
-    '/profile/:username/teams': function* () {
+    '/clubs/joined': function* () {
         yield [fetchPendingMembers(), fetchTeams()];
     },
+    '/clubs/admin': fetchUsers,
     '/matches/:page': listMatches,
-    '/match': fetchUsers,
     '/ranking': fetchUsers,
     '/settings': settings,
     '/accept/:activation_code': acceptInvitation,

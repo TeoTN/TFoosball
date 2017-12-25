@@ -9,7 +9,7 @@ const withLabel = (InputComponent) => ({label, xsLabel, smLabel, mdLabel, lgLabe
     return (
         <div>
             <Col xs={xsLabel} sm={smLabel} md={mdLabel} lg={lgLabel} className="text-right">
-                <ControlLabel>{label}</ControlLabel>
+                    <ControlLabel>{label}</ControlLabel>
             </Col>
             <Col xs={inv(xsLabel)} sm={inv(smLabel)} md={inv(mdLabel)} lg={inv(lgLabel)}>
                 <InputComponent {...props} />
@@ -50,7 +50,7 @@ const withValidation = (InputComponent) => class extends React.Component {
     }
 };
 
-export const StaticValidatedInput = withValidation(FormControl);
+export const StaticValidatedInput = withValidation(Select.Creatable);
 export const ValidatedInput = withValidation(withLabel(withErrorTooltip(FormControl)));
 export const StaticValidatedAsyncInput = withValidation(Select);
 export const ValidatedAsyncInput = withValidation(withLabel(withErrorTooltip(Select.Creatable)));

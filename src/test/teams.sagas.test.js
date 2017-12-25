@@ -168,7 +168,7 @@ describe('HandleSelectTeam saga', () => {
 
     it('should redirect to new profile teams', () => {
         const iter = iterator.next().value;
-        expect(iter).toEqual(call([browserHistory, browserHistory.push], `/profile/${team.username}/teams`));
+        expect(iter).toEqual(call([browserHistory, browserHistory.push], `/clubs/joined`));
     });
 
     it('should not return from saga', () => {

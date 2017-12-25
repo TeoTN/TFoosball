@@ -3,7 +3,6 @@ import {Form, FormGroup, Row, Col, Button} from 'react-bootstrap';
 import {reduxForm, Field} from 'redux-form';
 import {ValidatedAsyncInput} from '../../shared/components/ValidatedInput';
 import {isEmail} from '../../validators';
-import { getSelectedTeam } from "../teams.reducer";
 import { getAutocompletionState } from "../../users/users.reducer";
 import { connect } from "react-redux";
 import { fetchEmailAutocompletion, inviteUser } from "../../users/users.actions";
