@@ -25,12 +25,6 @@ const UserList = ({users, usersIds, select, selected, metadata: {loadedEntities,
             <MatchToolbar canPlay={usersIds.length >= 4}/>
         </Row>
         <ListGroup>
-            {
-                usersIds.length > 0 && usersIds.length < 4 ?
-                    <ListGroupItem className="text-muted text-center" disabled>
-                        At least 4 players are required
-                    </ListGroupItem> : null
-            }
             <ListGroupItem listItem>
                 <Col xs={8}>
                     <strong> Username </strong>
@@ -41,19 +35,29 @@ const UserList = ({users, usersIds, select, selected, metadata: {loadedEntities,
             </ListGroupItem>
             {
                 loadedEntities && !loadingEntities ?
-                    Object.values(users).map(user => <UserItem
-                        key={user.id}
-                        user={user}
-                        onSelect={select}
-                        selected={selected.includes(user.id)}/>
-                    ) :
+                    Object.keys(users).length === 0 ?
+                        <ListGroupItem className="text-danger text-center" disabled>
+                            No active users
+                        </ListGroupItem> :
+                        Object.values(users).map(user => <UserItem
+                            key={user.id}
+                            user={user}
+                            onSelect={select}
+                            selected={selected.includes(user.id)}/>
+                        ) :
                     loadingEntities ?
-                    <ListGroupItem>
-                        <Loading/>
-                    </ListGroupItem> :
-                    <ListGroupItem className="text-danger text-center" disabled>
-                        Failed to get the user list
-                    </ListGroupItem>
+                        <ListGroupItem>
+                            <Loading/>
+                        </ListGroupItem> :
+                        <ListGroupItem className="text-danger text-center" disabled>
+                            Failed to get the user list
+                        </ListGroupItem>
+            }
+            {
+                usersIds.length > 0 && usersIds.length < 4 &&
+                <ListGroupItem className="text-muted text-center" disabled>
+                    At least 4 players are required
+                </ListGroupItem>
             }
         </ListGroup>
         <p className='text-muted text-right'>

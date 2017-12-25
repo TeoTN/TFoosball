@@ -18,13 +18,15 @@ const mapStateToProps = ({profile, auth}) => ({
 @connect(mapStateToProps, null)
 export default class ProfileLayout extends React.Component {
     render() {
-        const { children, profile, params: {username}, myUsername} = this.props;
+        const {children, profile, params: {username}, myUsername} = this.props;
 
         return (
             <div className="container">
                 <div className="profile-head">
-                    <Gravatar email={profile.email} />
-                    <h1>{ username } <small>{ profile.exp }&nbsp;XP</small></h1>
+                    <Gravatar email={profile.email}/>
+                    <h1>{username}
+                        <small>{profile.exp}&nbsp;XP</small>
+                    </h1>
                     {
                         profile && profile.is_team_admin &&
                         <h2>
@@ -46,24 +48,16 @@ export default class ProfileLayout extends React.Component {
                             <p className="xs-text-small">Matches</p>
                         </NavItem>
                     </LinkContainer>
-                    { myUsername === username ?
-                        <LinkContainer to={{pathname: `/profile/${username}/teams`}}>
-                            <NavItem eventKey="3" href="#">
-                                <Icon name="users"/>
-                                <p className="xs-text-small">Teams</p>
-                            </NavItem>
-                        </LinkContainer> :
-                        null }
-                    { myUsername === username ?
-                        <LinkContainer to={{pathname: `/profile/${username}/settings`}}>
-                            <NavItem eventKey="4" href="#">
-                                <Glyphicon glyph="wrench"/>
-                                <p className="xs-text-small">Settings</p>
-                            </NavItem>
-                        </LinkContainer> : null }
+                    {myUsername === username &&
+                    <LinkContainer to={{pathname: `/profile/${username}/settings`}}>
+                        <NavItem eventKey="4" href="#">
+                            <Glyphicon glyph="wrench"/>
+                            <p className="xs-text-small">Settings</p>
+                        </NavItem>
+                    </LinkContainer>}
                 </Nav>
-                { children ?
-                    children :
+                {
+                    children ||
                     <Panel>
                         <Row>
                             <Col md={5}>

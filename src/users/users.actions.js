@@ -71,12 +71,12 @@ export const sortBy = (column, isAscendingOrder = true) => ({
 
 export const receiveUsers = (response) => ({
     type: RECEIVE_LIST,
-    entities: normalize(response, userListSchema).entities.users,
+    entities: normalize(response, userListSchema).entities.users || [],
 });
 
 export const updateUsers = (response) => ({
     type: UPDATE_LIST,
-    entities: normalize(response, userListSchema).entities.users,
+    entities: normalize(response, userListSchema).entities.users || [],
 });
 
 export const swapSides = () => ({type: SWAP_SIDES,});

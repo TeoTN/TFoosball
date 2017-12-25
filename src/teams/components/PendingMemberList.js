@@ -1,5 +1,7 @@
 import React from 'react'
-import {ListGroupItem, ListGroup, Row, Col, Button, ButtonGroup, Glyphicon} from 'react-bootstrap';
+import { ListGroupItem, ListGroup, Row, Col, Button, ButtonGroup, Glyphicon } from 'react-bootstrap';
+import { memberAcceptance } from "../teams.actions";
+import { connect } from "react-redux";
 
 const PendingMemberItem = ({user, onAccept, onReject}) => (
     <ListGroupItem key={`${user.username}.${user.id}`}>
@@ -21,10 +23,26 @@ const PendingMemberItem = ({user, onAccept, onReject}) => (
     </ListGroupItem>
 );
 
-const PendingMemberList = ({users = [], onAccept, onReject}) => (
-    <ListGroup>
-        { users.map(user => <PendingMemberItem key={user.username} user={user} onAccept={onAccept} onReject={onReject} />) }
-    </ListGroup>
-);
+const mapDispatchToProps = (dispatch) => ({
+    acceptMember: (id) => dispatch(memberAcceptance(id, true)),
+    rejectMember: (id) => dispatch(memberAcceptance(id, false)),
+});
 
-export default PendingMemberList;
+@connect(null, mapDispatchToProps)
+export default class PendingMemberList extends React.PureComponent {
+    render() {
+        const {teams: {pending = []}, acceptMember, rejectMember} = this.props;
+        return pending.length > 0 ?
+            <ListGroup>
+                {
+                    pending.map(user => <PendingMemberItem
+                        key={user.username}
+                        user={user}
+                        onAccept={acceptMember}
+                        onReject={rejectMember}
+                    />)
+                }
+            </ListGroup> :
+            <h6 className="text-muted">There are no pending club members</h6>
+    }
+}
