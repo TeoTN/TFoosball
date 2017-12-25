@@ -5,7 +5,10 @@ import { StaticValidatedInput } from "../../shared/components/ValidatedInput";
 
 @reduxForm({form: 'adminGrant'})
 class TeamAdmin extends React.PureComponent {
-    getOptions = () => Object.values(this.props.users).map(user => ({value: user.username, label: user.username}));
+    getOptions = () => Object
+        .values(this.props.users)
+        .filter(user => !user.is_team_admin)
+        .map(user => ({value: user.username, label: user.username}));
 
     render() {
         return (

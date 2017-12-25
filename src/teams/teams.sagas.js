@@ -1,4 +1,4 @@
-import { call, take, put, select, takeEvery } from 'redux-saga/effects';
+import { call, take, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
     REQUEST_CREATE_TEAM,
     REQUEST_JOIN_TEAM,
@@ -29,11 +29,11 @@ export function* getCurrentTeam() {
 }
 
 export function* handleSelectTeam() {
-    while (true) {
-        const { team } = yield take(SELECT_TEAM);
+    function* onTeamSelect(team) {
         yield call(fetchProfile, team.id, team.member_id);
         yield call([browserHistory, browserHistory.push], `/clubs/joined`);
     }
+    yield takeLatest(SELECT_TEAM, onTeamSelect);
 }
 
 export function* createTeam(action) {
@@ -70,8 +70,7 @@ export function* leaveTeam() {
 }
 
 export function* teamCreationFlow() {
-    while (true) {
-        const action = yield take(REQUEST_CREATE_TEAM);
+    function* onTeamCreate(action) {
         // TODO First validate form data
         yield call(authenticate); // TODO check if not authenticated within this generator itself
         const team = yield call(createTeam, action);
@@ -79,6 +78,7 @@ export function* teamCreationFlow() {
         yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
         yield call([browserHistory, browserHistory.push], '/match');
     }
+    yield takeLatest(REQUEST_CREATE_TEAM, onTeamCreate);
 }
 
 export function* fetchTeams() {

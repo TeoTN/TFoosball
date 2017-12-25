@@ -35,16 +35,18 @@ const UserList = ({users, usersIds, select, selected, metadata: {loadedEntities,
             </ListGroupItem>
             {
                 loadedEntities && !loadingEntities ?
-                    Object.keys(users).length === 0 ?
-                        <ListGroupItem className="text-danger text-center" disabled>
-                            No active users
-                        </ListGroupItem> :
-                        Object.values(users).map(user => <UserItem
-                            key={user.id}
-                            user={user}
-                            onSelect={select}
-                            selected={selected.includes(user.id)}/>
-                        ) :
+                    (
+                        Object.keys(users).length === 0 ?
+                            <ListGroupItem className="text-danger text-center" disabled>
+                                No active users
+                            </ListGroupItem> :
+                            Object.values(users).map(user => <UserItem
+                                key={user.id}
+                                user={user}
+                                onSelect={select}
+                                selected={selected.includes(user.id)}/>
+                            )
+                    ) :
                     loadingEntities ?
                         <ListGroupItem>
                             <Loading/>
