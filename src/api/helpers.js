@@ -1,4 +1,4 @@
-import {APIError, APIUnauthorizedError, APIForbiddenError} from '../errors';
+import * as fromErrors from '../errors';
 
 export const retryOnError = (fn, errClass=Error) => fn().catch(error => {
     if (error.constructor === errClass) {
@@ -18,14 +18,19 @@ export const ensureSuccessOr = (errorMsg) =>
         } else if (response.status === 403) {
             return response.json()
                 .catch(ignoreSyntax)
-                .then(responseBody => Promise.reject(new APIForbiddenError(errorMsg, responseBody)));
+                .then(responseBody => Promise.reject(new fromErrors.APIForbiddenError(errorMsg, responseBody)));
         } else if (response.status === 401) {
             return response.json()
                 .catch(ignoreSyntax)
-                .then(responseBody => Promise.reject(new APIUnauthorizedError(responseBody)));
-        } else {
+                .then(responseBody => Promise.reject(new fromErrors.APIUnauthorizedError(responseBody)));
+        } else if (response.status === 400) {
             return response.json()
                 .catch(ignoreSyntax)
-                .then(responseBody => Promise.reject(new APIError(errorMsg, responseBody)));
+                .then(responseBody => Promise.reject(new fromErrors.APIValidationError(responseBody)))
+        }
+        else {
+            return response.json()
+                .catch(ignoreSyntax)
+                .then(responseBody => Promise.reject(new fromErrors.APIError(responseBody)));
         }
     };
