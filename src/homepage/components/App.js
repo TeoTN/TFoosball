@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../../shared/components/Header';
-import ModalMessage from '../../shared/components/QuestionModal';
+import ModalMessage from '../../shared/components/ModalMessage';
 import { ListGroupItem } from 'react-bootstrap';
 import {utils} from 'react-bootstrap';
 
