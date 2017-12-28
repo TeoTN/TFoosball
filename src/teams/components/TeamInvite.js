@@ -3,10 +3,22 @@ import {Form, FormGroup, Row, Col, Button} from 'react-bootstrap';
 import {reduxForm, Field} from 'redux-form';
 import {ValidatedAsyncInput} from '../../shared/components/ValidatedInput';
 import {isEmail} from '../../validators';
+import { getAutocompletionState } from "../../users/users.reducer";
+import { connect } from "react-redux";
+import { fetchEmailAutocompletion, inviteUser } from "../../users/users.actions";
 
+const mapStateToProps = (state) => ({
+    teams: state.teams,
+    autocompletion: getAutocompletionState(state),
+});
+const mapDispatchToProps = (dispatch) => ({
+    fetchEmailAutocompletion: (input) => dispatch(fetchEmailAutocompletion(input)),
+    submitInvitation: ({email}) => dispatch(inviteUser(email.value)),
+});
 
+@connect(mapStateToProps, mapDispatchToProps)
 @reduxForm({form: 'teamInvite'})
-class TeamInvite extends React.Component {
+class TeamInvite extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {value: '', loading: false};
@@ -16,9 +28,8 @@ class TeamInvite extends React.Component {
         const {
             pristine,
             invalid,
-            loadingEmailAutocompletion,
-            emailAutocompletion,
             fetchEmailAutocompletion,
+            autocompletion: {loading, emails},
             submitInvitation,
             handleSubmit,
         } = this.props;
@@ -32,9 +43,9 @@ class TeamInvite extends React.Component {
                             label="Email"
                             component={ValidatedAsyncInput}
                             validate={isEmailWrapped}
-                            options={emailAutocompletion}
+                            options={emails}
                             onInputChange={fetchEmailAutocompletion}
-                            isLoading={loadingEmailAutocompletion}
+                            isLoading={loading}
                             smLabel={3}
                             placeholder="Friend's email"
                             promptTextCreator={label => `Send invitation to ${label}`}

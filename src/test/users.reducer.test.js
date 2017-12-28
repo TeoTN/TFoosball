@@ -1,393 +1,483 @@
-import * as actions from '../users/user.actions';
 import deepFreeze from 'deep-freeze';
-import { user, users, getSortedUsers, clean } from '../users/users.reducer';
 import usersMock from '../assets/mocks/users.json';
+import * as usersReducers from '../users/users.reducer';
+import * as usersActions from '../users/users.actions';
+import { users } from "../users/users.sagas";
 
 
-describe('Clean reducer', () => {
-    it('should clean playing, team, position', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 1000, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1000, },
-            {id: 5, exp: 1000, },
-        ];
-        const action = actions.choosePlayersForMatch();
-        const stateAfter = [
-            {id: 1, playing: false, team: undefined, position: undefined, exp: 1000, },
-            {id: 2, playing: false, team: undefined, position: undefined, exp: 1000, },
-            {id: 3, playing: false, team: undefined, position: undefined, exp: 1000, },
-            {id: 4, playing: false, team: undefined, position: undefined, exp: 1000, },
-            {id: 5, playing: false, team: undefined, position: undefined, exp: 1000, },
-        ];
-
+describe('Metadata reducer', function() {
+    it('should stop loading after users were received', function() {
+        const stateBefore = {
+            loadingEntities: true,
+            loadedEntities: false,
+        };
+        const action = usersActions.receiveUsers(usersMock);
+        const stateAfter = {
+            loadingEntities: false,
+            loadedEntities: true,
+        };
         deepFreeze(stateBefore);
         deepFreeze(action);
-
-        expect(clean(stateBefore, action)).toEqual(stateAfter);
+        expect(usersReducers.meta(stateBefore, action)).toEqual(stateAfter);
     });
 
-    it('should not change state on default action', () => {
-        const state = [{ id: 0, username: 'U0', team: 'red', position: 'att', }];
-        const action = { type: 'NULL::DEFAULT', };
-        deepFreeze(state);
+    it('should stop loading after users were updated', function() {
+        const stateBefore = {
+            loadingEntities: true,
+            loadedEntities: false,
+        };
+        const action = usersActions.updateUsers(usersMock);
+        const stateAfter = {
+            loadingEntities: false,
+            loadedEntities: true,
+        };
+        deepFreeze(stateBefore);
         deepFreeze(action);
-        expect(users(state, action)).toEqual(state);
+        expect(usersReducers.meta(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should handle error while fetching users', function() {
+        const stateBefore = {
+            loadingEntities: true,
+            loadedEntities: false,
+        };
+        const action = usersActions.errorFetchingEntities();
+        const stateAfter = {
+            loadingEntities: false,
+            loadedEntities: false,
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.meta(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should mark as loading after having started fetching', function() {
+        const stateBefore = {
+            loadingEntities: false,
+            loadedEntities: false,
+        };
+        const action = usersActions.fetchEntities();
+        const stateAfter = {
+            loadingEntities: true,
+            loadedEntities: false,
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.meta(stateBefore, action)).toEqual(stateAfter);
     });
 });
 
+describe('Metadata selectors', function() {
+    it('should get metadata', function() {
+        const meta = {
+            loadingEntities: true,
+            loadedEntities: false,
+        };
+        const state = {
+            users: {
+                meta,
+                entities: {},
+                others: {},
+            },
+        };
+        expect(usersReducers.getMetadata(state)).toEqual(meta);
+    })
+});
 
-describe('User reducer', () => {
-    it('should create new user object', () => {
-        const stateBefore = {};
-        const action = actions.userNew('Corn');
+describe('Sorting reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const sortingState = {column: 'exp', isAscendingOrder: false};
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(sortingState);
+        deepFreeze(action);
+        expect(usersReducers.sorting(sortingState, action)).toEqual(sortingState);
+    });
+
+    it('should set column and order', function() {
+        const stateBefore = {column: 'exp', isAscendingOrder: false};
+        const action = usersActions.sortBy('username', true);
+        const stateAfter = {column: 'username', isAscendingOrder: true};
+
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.sorting(stateBefore, action)).toEqual(stateAfter);
+    });
+});
+
+describe('Autocompletion reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = {loading: false, emails: [],};
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.autocompletion(stateBefore, action)).toEqual(stateBefore);
+    });
+
+    it('should mark as loading after fetch action', function() {
+        const stateBefore = {loading: false, emails: [],};
+        const action = usersActions.fetchEmailAutocompletion('abc');
+        const stateAfter = {loading: true, emails: [],};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.autocompletion(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should store suggestions when received data from email autocompletion service', function() {
+        const stateBefore = {loading: true, emails: [],};
+        const action = usersActions.receivedEmailAutocompletion(['abc@example.com']);
+        const stateAfter = {loading: false, emails: ['abc@example.com'],};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.autocompletion(stateBefore, action)).toEqual(stateAfter);
+    });
+});
+
+describe('Positions reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = {playing: [], red: [], blue: [], att: [], def: [],};
+        const action = {type: 'UNKNOWN'};
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateBefore);
+    });
+
+    it('should swap sides', function() {
+        const stateBefore = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        const action = usersActions.swapSides();
         const stateAfter = {
-            id: 0,
-            username: 'Corn',
-            exp: 1000,
+            playing: [1, 2, 3, 4],
+            red: [2, 4],
+            blue: [1, 3],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should swap positions', function() {
+        const stateBefore = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        const action = usersActions.swapPositions();
+        const stateAfter = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [3, 4],
+            def: [1, 2],
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should update choice', function() {
+        const stateBefore = {
+            playing: [1, 2, 3, 4],
+            red: [1, 3],
+            blue: [2, 4],
+            att: [1, 2],
+            def: [3, 4],
+        };
+        // Notice action creator choosePlayersForMatch is not deterministic
+        const action = {
+            type: usersActions.CHOOSE,
+            payload: {
+                playing: [3, 4, 2, 1],
+                red: [2, 1],
+                blue: [3, 4],
+                att: [2, 3],
+                def: [1, 4],
+            }
+        };
+        const stateAfter = {
+            playing: [3, 4, 2, 1],
+            red: [2, 1],
+            blue: [3, 4],
+            att: [2, 3],
+            def: [1, 4],
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should assign user', function() {
+        const stateBefore = {playing: [], red: [], blue: [], att: [], def: [],};
+        const action = usersActions.userAssign({id: 1}, 'blue', 'def');
+        const stateAfter = {playing: [1], red: [], blue: [1], att: [], def: [1],};
+
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should replace user', function() {
+        const stateBefore = {
+            playing: [3, 4, 2, 1],
+            red: [2, 1],
+            blue: [3, 4],
+            att: [2, 3],
+            def: [1, 4],
+        };
+        const action = usersActions.userAssign({id: 2}, 'blue', 'def');
+        const stateAfter = {
+            playing: [3, 1, 2],
+            red: [1],
+            blue: [3, 2],
+            att: [3],
+            def: [1, 2],
         };
 
         deepFreeze(stateBefore);
         deepFreeze(action);
-        expect(user(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should swap position', () => {
-        const stateBefore = { id: 0, username: 'U0', playing: true, team: 'red', position: 'att', };
-        const stateAfter = { id: 0, username: 'U0', playing: true, team: 'red', position: 'def', };
-        const action = actions.swapPositions();
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(user(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should not swap position of non-player', () => {
-        const stateBefore = { id: 0, username: 'U0', team: 'red', position: 'att', };
-        const stateAfter = { id: 0, username: 'U0', team: 'red', position: 'att', };
-        const action = actions.swapPositions();
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(user(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should swap side', () => {
-        const stateBefore = { id: 0, username: 'U0', playing: true, team: 'red', position: 'att', };
-        const stateAfter = { id: 0, username: 'U0', playing: true, team: 'blue', position: 'att', };
-        const action = actions.swapSides();
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(user(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should not swap side of non-player', () => {
-        const stateBefore = { id: 0, username: 'U0', team: 'red', position: 'att', };
-        const stateAfter = { id: 0, username: 'U0', team: 'red', position: 'att', };
-        const action = actions.swapSides();
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(user(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should not change state on default action', () => {
-        const state = { id: 0, username: 'U0', team: 'red', position: 'att', };
-        const action = { type: 'NULL::DEFAULT', };
-        deepFreeze(state);
-        deepFreeze(action);
-        expect(users(state, action)).toEqual(state);
+        expect(usersReducers.positions(stateBefore, action)).toEqual(stateAfter);
     });
 });
 
-
-describe('User list reducer', function() {
-    const username = 'Shannon';
-    it('should add user', function() {
-        const stateBefore = [];
-        const action = actions.userNew(username);
-        const stateAfter = [{
-            id: 1,
-            username,
-            exp: 1000,
-        }];
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
+describe('Positions selectors', function() {
+    it('should get positions', function() {
+        const state = {
+            users: {
+                positions: {
+                    playing: [1, 2, 3, 4],
+                    red: [1, 3],
+                    blue: [2, 4],
+                    att: [1, 2],
+                    def: [3, 4],
+                }
+            }
+        };
+        deepFreeze(state);
+        const positions = usersReducers.getUsersPlayingById(state);
+        expect(positions).toEqual({
+            red_att: 1,
+            red_def: 3,
+            blue_att: 2,
+            blue_def: 4,
+        });
     });
 
-    it('should update user', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 1000, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1000, },
-            {id: 5, exp: 1000, },
-        ];
-        const stateAfter = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 1521, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1000, },
-            {id: 5, exp: 1000, },
-        ];
-        const action = actions.userUpdate(3, { exp: 1521, });
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
+    it('should tell that positions are set', function() {
+        const state = {
+            users: {
+                positions: {
+                    playing: [1, 2, 3, 4],
+                    red: [1, 3],
+                    blue: [2, 4],
+                    att: [1, 2],
+                    def: [3, 4],
+                }
+            }
+        };
+        deepFreeze(state);
+        const arePositionsSet = usersReducers.arePositionsSet(state);
+        expect(arePositionsSet).toEqual(true);
     });
 
-    it('should delete user', function() {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 1000, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1000, },
-            {id: 5, exp: 1000, },
-        ];
-        const stateAfter = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1000, },
-            {id: 5, exp: 1000, },
-        ];
-        const action = actions.userDelete(3);
+    it('should tell that positions are NOT set', function() {
+        const state = {
+            users: {
+                positions: {
+                    playing: [1, 2, 3,],
+                    red: [1, 3],
+                    blue: [2,],
+                    att: [1, 2],
+                    def: [3,],
+                }
+            }
+        };
+        deepFreeze(state);
+        const arePositionsSet = usersReducers.arePositionsSet(state);
+        expect(arePositionsSet).toEqual(false);
+    });
 
+    it('should get appropriate players by positions', function() {
+        const state = {
+            users: {
+                positions: {
+                    playing: [1, 2, 3, 4],
+                    red: [1, 3],
+                    blue: [2, 4],
+                    att: [1, 2],
+                    def: [3, 4],
+                }
+            }
+        };
+        deepFreeze(state);
+        expect(usersReducers.getRedAtt(state)).toEqual(1);
+        expect(usersReducers.getRedDef(state)).toEqual(3);
+        expect(usersReducers.getBlueAtt(state)).toEqual(2);
+        expect(usersReducers.getBlueDef(state)).toEqual(4);
+    });
+
+    it('should get users playing', function() {
+        const user1 = {username: 'a'};
+        const user2 = {username: 'b'};
+        const user3 = {username: 'c'};
+        const user4 = {username: 'd'};
+        const state = {
+            users: {
+                entities: {
+                    1: user1, 2: user2, 3: user3, 4: user4,
+                },
+                positions: {
+                    playing: [1, 2, 3, 4],
+                    red: [1, 3],
+                    blue: [2, 4],
+                    att: [1, 2],
+                    def: [3, 4],
+                }
+            }
+        };
+
+        deepFreeze(state);
+        expect(usersReducers.getUsersPlaying(state)).toEqual({
+            red_att: user1,
+            red_def: user3,
+            blue_att: user2,
+            blue_def: user4,
+        });
+    });
+
+    it('should get top 3 users', function() {
+        const user1 = {username: 'a', exp: 1000};
+        const user2 = {username: 'b', exp: 1020};
+        const user3 = {username: 'c', exp: 1111};
+        const user4 = {username: 'd', exp: 1070};
+        const user5 = {username: 'e', exp: 999};
+        const state = {
+            users: {
+                entities: {
+                    1: user1, 2: user2, 3: user3, 4: user4, 5: user5,
+                }
+            }
+        };
+        deepFreeze(state);
+        expect(usersReducers.getTop3(state)).toEqual([user3, user4, user2]);
+    });
+
+    it('should get users sorted by username', function() {
+        const user1 = {username: 'a', exp: 1000};
+        const user2 = {username: 'b', exp: 1020};
+        const user3 = {username: 'c', exp: 1111};
+        const user4 = {username: 'd', exp: 1070};
+        const user5 = {username: 'e', exp: 999};
+        const state = {
+            users: {
+                entities: {
+                    1: user1, 2: user2, 3: user3, 4: user4, 5: user5,
+                },
+                sorting: {column: 'username', isAscendingOrder: true}
+            },
+        };
+        deepFreeze(state);
+        expect(usersReducers.getUsersSorted(state)).toEqual([user1, user2, user3, user4, user5]);
+    });
+
+    it('should get users sorted by exp', function() {
+        const user1 = {username: 'a', exp: 1000};
+        const user2 = {username: 'b', exp: 1020};
+        const user3 = {username: 'c', exp: 1111};
+        const user4 = {username: 'd', exp: 1070};
+        const user5 = {username: 'e', exp: 999};
+        const state = {
+            users: {
+                entities: {
+                    1: user1, 2: user2, 3: user3, 4: user4, 5: user5,
+                },
+                sorting: {column: 'exp', isAscendingOrder: false}
+            },
+        };
+        deepFreeze(state);
+        expect(usersReducers.getUsersSorted(state)).toEqual([user3, user4, user2, user1, user5]);
+    });
+});
+
+describe('Selected reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = [5, 3, 1];
+        const action = {type: 'UNKNOWN'};
         deepFreeze(stateBefore);
         deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
+        expect(usersReducers.selected(stateBefore, action)).toEqual(stateBefore);
     });
 
     it('should select user', function() {
-        const stateBefore = [
-            { id: 0, username: 'User0', exp: 1000, },
-            { id: 1, username: 'User1', exp: 1000, },
-            { id: 2, username: 'User2', exp: 1000, },
-        ];
-        const user = stateBefore[1];
-        const action = actions.userToggle(user);
-        const stateAfter = [
-            { id: 0, username: 'User0', exp: 1000, },
-            { id: 1, username: 'User1', exp: 1000, selected: true, },
-            { id: 2, username: 'User2', exp: 1000, },
-        ];
-
-        deepFreeze(stateBefore);
-        deepFreeze(user);
-        deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should choose four users with teams and positions', function() {
-        const stateBefore = usersMock;
-        const action = actions.choosePlayersForMatch();
+        const stateBefore = [5, 3, 1];
+        const action = usersActions.userToggle({id: 2});
+        const stateAfter = [5, 3, 1, 2];
         deepFreeze(stateBefore);
         deepFreeze(action);
-        const stateAfter = users(stateBefore, action).filter(u => u.playing);
-        expect(stateAfter).toHaveLength(4);
-        for (const user of stateAfter) {
-            const keys = Object.keys(user);
-            expect(keys).toContain('team');
-            expect(keys).toContain('position');
-        }
+        expect(usersReducers.selected(stateBefore, action)).toEqual(stateAfter);
     });
 
-    it('should throw error when insufficient no of players selected', () => {
-        const errorMsg = 'Insufficient number of players selected.';
-        const stateBefore = [
-            { id: 0, username: 'User0', exp: 1000, selected: true, },
-            { id: 1, username: 'User1', exp: 1000, selected: true, },
-            { id: 2, username: 'User2', exp: 1000, selected: true, },
-            { id: 3, username: 'User3', exp: 1000, },
-        ];
-        const action = actions.choosePlayersForMatch();
+    it('should unselect user', function() {
+        const stateBefore = [5, 3, 1];
+        const action = usersActions.userToggle({id: 3});
+        const stateAfter = [5, 1];
         deepFreeze(stateBefore);
         deepFreeze(action);
-        expect(() => users(stateBefore, action)).toThrowError(errorMsg);
+        expect(usersReducers.selected(stateBefore, action)).toEqual(stateAfter);
     });
 
-    it('should not mutate state while sorting', function() {
-        const stateBefore = usersMock;
-        const actionExp = actions.sortByExp();
-        const actionName = actions.sortByName();
-        deepFreeze(stateBefore);
-        deepFreeze(actionExp);
-        deepFreeze(actionName);
-        expect(users.bind(null, stateBefore, actionExp)).not.toThrowError();
-        expect(users.bind(null, stateBefore, actionName)).not.toThrowError();
-    });
-
-    it('should sort by exp ascending', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 978, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1015, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 866, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1121, },
-            {id: 5, exp: 1004, },
-        ];
-        const action = actions.sortBy('exp', true);
-        const stateAfter = [
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 866, },
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 978, },
-            {id: 5, exp: 1004, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1015, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1121, },
-        ];
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should swap sides', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att'},
-            {id: 2, playing: true, team: 'red', position: 'def'},
-            {id: 3, playing: true, team: 'blue', position: 'att'},
-            {id: 4, playing: true, team: 'blue', position: 'def'},
-        ];
-        const action = actions.swapSides();
-        const stateAfter = [
-            {id: 1, playing: true, team: 'blue', position: 'att'},
-            {id: 2, playing: true, team: 'blue', position: 'def'},
-            {id: 3, playing: true, team: 'red', position: 'att'},
-            {id: 4, playing: true, team: 'red', position: 'def'},
-        ];
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should swap positions', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att'},
-            {id: 2, playing: true, team: 'red', position: 'def'},
-            {id: 3, playing: true, team: 'blue', position: 'att'},
-            {id: 4, playing: true, team: 'blue', position: 'def'},
-        ];
-        const action = actions.swapPositions();
-        const stateAfter = [
-            {id: 1, playing: true, team: 'red', position: 'def'},
-            {id: 2, playing: true, team: 'red', position: 'att'},
-            {id: 3, playing: true, team: 'blue', position: 'def'},
-            {id: 4, playing: true, team: 'blue', position: 'att'},
-        ];
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should update users list', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 1000, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1000, },
-            {id: 5, exp: 1000, },
-        ];
-        const action = actions.updateUsers([
-            {id: 3, exp: 1050, },
-            {id: 4, exp: 1050, },
-            {id: 5, exp: 1050, },
-        ]);
-        const stateAfter = getSortedUsers([
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 1050, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1050, },
-            {id: 5, exp: 1050, },
-        ], 'exp', false);
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(users(stateBefore, action)).toEqual(stateAfter);
-    });
-
-    it('should not change state on default action', () => {
-        const state = {
-            users: [],
-        };
-        const action = { type: 'NULL::DEFAULT', };
-        deepFreeze(state);
-        deepFreeze(action);
-        expect(users(state, action)).toEqual(state);
-    });
-
-    it('should set users as empty array on wrong response', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 1000, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1000, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 1000, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1000, },
-            {id: 5, exp: 1000, },
-        ];
-        const action = actions.receiveUsers({});
-        const stateAfter = [];
-
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-
-        expect(() => users(stateBefore, action)).not.toThrowError();
-        expect(users(stateBefore, action)).toEqual(stateAfter);
-    });
 });
 
-describe('Sorting users by column', () => {
-    it('should sort by exp ascending', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 978, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1015, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 866, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1121, },
-            {id: 5, exp: 1004, },
-        ];
-        const stateAfter = [
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 866, },
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 978, },
-            {id: 5, exp: 1004, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1015, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1121, },
-        ];
-
+describe('Entities reducer', function() {
+    it('should NOT modify state on unknown action', function() {
+        const stateBefore = {
+            1: {username: 'a'}
+        };
+        const action = {type: 'UNKNOWN'};
         deepFreeze(stateBefore);
-        expect(getSortedUsers(stateBefore, 'exp', true)).toEqual(stateAfter);
+        deepFreeze(action);
+        expect(usersReducers.entities(stateBefore, action)).toEqual(stateBefore);
     });
 
-    it('should sort by exp descending', () => {
-        const stateBefore = [
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 978, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1015, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 866, },
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1121, },
-            {id: 5, exp: 1004, },
-        ];
-        const stateAfter = [
-            {id: 4, playing: true, team: 'blue', position: 'def', exp: 1121, },
-            {id: 2, playing: true, team: 'red', position: 'def', exp: 1015, },
-            {id: 5, exp: 1004, },
-            {id: 1, playing: true, team: 'red', position: 'att', exp: 978, },
-            {id: 3, playing: true, team: 'blue', position: 'att', exp: 866, },
-        ];
-
+    it('should handle receiving user list', function() {
+        const stateBefore = {
+            1: {id: 1, username: 'a'}
+        };
+        const action = usersActions.receiveUsers([
+            {id: 11, username: 'k'},
+            {id: 17, username: 'q'},
+        ]);
+        const stateAfter = {
+            11: {id: 11, username: 'k'},
+            17: {id: 17, username: 'q'},
+        };
         deepFreeze(stateBefore);
-        expect(getSortedUsers(stateBefore, 'exp', false)).toEqual(stateAfter);
+        deepFreeze(action);
+        expect(usersReducers.entities(stateBefore, action)).toEqual(stateAfter);
+    });
+
+    it('should update user list', function() {
+        const stateBefore = {
+            1: {id: 1, username: 'a'}
+        };
+        const action = usersActions.updateUsers([
+            {id: 11, username: 'k'},
+            {id: 17, username: 'q'},
+        ]);
+        const stateAfter = {
+            1: {id: 1, username: 'a'},
+            11: {id: 11, username: 'k'},
+            17: {id: 17, username: 'q'},
+        };
+        deepFreeze(stateBefore);
+        deepFreeze(action);
+        expect(usersReducers.entities(stateBefore, action)).toEqual(stateAfter);
     });
 });

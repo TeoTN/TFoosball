@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './homepage/components/App';
-import {Provider} from 'react-redux';
-import {Router, Route, browserHistory} from 'react-router';
+import { Provider } from 'react-redux';
+import { Router, Route, browserHistory } from 'react-router';
 import store from './store';
-import {PlayLayout, ProfileLayout, RankingLayout, MatchesLayout, HomeLayout, InvitationLayout} from './layouts';
-import {ProfileMatches, ProfileTeams, ProfileSettings} from './profile/components';
-import TeamAssignment  from './homepage/components/TeamAssignment';
+import { PlayLayout, ProfileLayout, RankingLayout, MatchesLayout, HomeLayout, InvitationLayout } from './layouts';
+import { ProfileMatches, ProfileSettings } from './profile/components';
+import TeamAssignment from './homepage/components/TeamAssignment';
 import '@tfoosball/tfoostrap';
 import './utils/object';
 import './utils/doughnutText';
-import {loadState} from './persistence';
+import { loadState } from './persistence';
+import {ClubsLayout, PendingMemberList, TeamInvite, TeamList, TeamAdmin} from './teams/components';
 
 
 export const hasToken = (state) => state &&
@@ -32,6 +33,7 @@ function requireAuth(nextState, replace, next) {
     }
     next();
 }
+
 function homepage(nextState, replace, next) {
     const persistedState = loadState();
     const isToken = hasToken(persistedState);
@@ -73,12 +75,18 @@ ReactDOM.render(
                 <Route path="profile/:username" component={ProfileLayout} onEnter={requireAuth}>
                     <Route path="stats"/>
                     <Route path="matches(/:page)" component={ProfileMatches}/>
-                    <Route path="teams" component={ProfileTeams}/>
                     <Route path="settings" component={ProfileSettings}/>
                 </Route>
                 <Route path="ranking" component={RankingLayout} onEnter={requireAuth}/>
                 <Route path="matches/(:page)" component={MatchesLayout} onEnter={requireAuth}/>
                 <Route path="accept/(:activation_code)" component={InvitationLayout}/>
+                <Route path="clubs" component={ClubsLayout} onEnter={requireAuth}>
+                    <Route path='joined' component={TeamList}/>
+                    <Route path='pending' component={PendingMemberList}/>
+                    <Route path='invite' component={TeamInvite}/>
+                    <Route path='admin' component={TeamAdmin}/>
+                    <Route path='admin(/:username)' component={TeamAdmin}/>
+                </Route>
                 {/*<Route path="tournament/(:tid)" component={TournamentLayout} />*/}
             </Route>
         </Router>

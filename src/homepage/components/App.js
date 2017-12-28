@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../../shared/components/Header';
-import ModalMessage from '../../shared/components/QuestionModal';
+import ModalMessage from '../../shared/components/ModalMessage';
 import { ListGroupItem } from 'react-bootstrap';
 import {utils} from 'react-bootstrap';
 
@@ -20,7 +20,7 @@ export default class App extends React.Component {
                 </main>
                 <div className="filler"/>
                 <footer className="footer-app">
-                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>. [v2.2.1]
+                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>. [v2.3.0]
                 </footer>
             </div>
         );

@@ -9,14 +9,14 @@ const mapStateToProps = ({play: {stats}}) => ({
 
 @connect(mapStateToProps, null)
 class PlayStats extends React.Component {
-    renderUserStats = (player, index) => (
-        <Row key={index}>
+    renderUserStats = (player, team, position) => (
+        <Row key={`stats-${team}-${position}`}>
             <Col xs={4}>
                 { player.username }
             </Col>
             <Col xs={2}>
-                <strong className={player.team==='red'?'text-danger':'text-info'}>
-                    { player.position.toUpperCase() }
+                <strong className={team==='red'?'text-danger':'text-info'}>
+                    { position.toUpperCase() }
                 </strong>
             </Col>
             <Col xs={2}>
@@ -28,7 +28,17 @@ class PlayStats extends React.Component {
         </Row>
     );
 
-    getPlayerStats = () => this.props.players.map(this.renderUserStats);
+    getPlayerStats = () => {
+        const {players} = this.props;
+        return (
+            <Panel>
+                {this.renderUserStats(players.red_att, 'red', 'att')}
+                {this.renderUserStats(players.red_def, 'red', 'def')}
+                {this.renderUserStats(players.blue_att, 'blue', 'att')}
+                {this.renderUserStats(players.blue_def, 'blue', 'def')}
+            </Panel>
+        );
+    };
 
     render() {
         const { stats } = this.props;
@@ -41,9 +51,7 @@ class PlayStats extends React.Component {
                     <Widget label="Max blue XP gain" value={stats.blue}/>
                     <Widget label="Max red XP gain" value={stats.red}/>
                 </Row>
-                <Panel>
-                    { this.getPlayerStats() }
-                </Panel>
+                { this.getPlayerStats() }
             </div>
         );
     }

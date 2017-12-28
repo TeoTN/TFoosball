@@ -117,13 +117,20 @@ module.exports = {
                     /\.(js|jsx)$/,
                     /\.css$/,
                     /\.json$/,
-                    /\.svg$/
+                    /\.svg$/,
+                    /\.md/
                 ],
                 loader: 'url',
                 query: {
                     limit: 10000,
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
+            },
+            // Process Markdown as raw
+            {
+                test: /\.md$/,
+                include: paths.appSrc,
+                loader: 'raw-loader'
             },
             // Process JS with Babel.
             {

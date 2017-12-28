@@ -4,7 +4,7 @@ export Loading from './Loading';
 export NaivePager from './NaivePager';
 export Navigation from './Navigation';
 export Notifications from './Notifications';
-export QuestionModal from './QuestionModal';
+export ModalMessage from './ModalMessage';
 export SignInButton from './SignInButton';
 export Switch from './Switch';
 export ValidatedInput from './ValidatedInput';

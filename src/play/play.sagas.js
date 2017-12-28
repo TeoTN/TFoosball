@@ -1,21 +1,17 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import api from '../api';
 import { getCurrentTeam } from '../teams/teams.sagas';
-import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/user.types';
+import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/users.actions';
 import { raiseError } from '../shared/notifier.actions';
 import { requestStatsDone } from './play.actions';
-
-export const stateUsersPlayingSelector = ({users}) => users
-    .filter(u => u.playing)
-    .reduce(
-        (data, player) => Object.assign(data, {[`${player.team}_${player.position}`]: player.id}),
-        {}
-    );
+import { getUsersPlayingById, arePositionsSet } from "../users/users.reducer";
+import * as fromMatch from "../matches/match.types";
 
 
 export function* fetchPlayScore() {
-    const players = yield select(stateUsersPlayingSelector);
-    if (Object.keys(players).length !== 4) return;
+    const hasSetPositions = yield select(arePositionsSet);
+    if (!hasSetPositions) return;
+    const players = yield select(getUsersPlayingById);
     const currentTeam = yield call(getCurrentTeam);
     const url = api.urls.teamMatchPoints(currentTeam.id);
     try {
@@ -31,4 +27,5 @@ export function* playScore() {
     yield takeLatest(SWAP_POSITIONS, fetchPlayScore);
     yield takeLatest(SWAP_SIDES, fetchPlayScore);
     yield takeLatest(ASSIGN, fetchPlayScore);
+    yield takeLatest(fromMatch.SENT, fetchPlayScore);
 }

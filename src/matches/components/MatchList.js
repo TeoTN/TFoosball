@@ -6,7 +6,7 @@ import Switch from '../../shared/components/Switch';
 
 export default class MatchList extends React.Component {
     getMatchItem = () => {
-        const { withOptions, onRemove, username, signed } = this.props;
+        const {withOptions, onRemove, username, signed} = this.props;
         return (match, idx) => (
             <MatchItem
                 key={idx}
@@ -24,10 +24,10 @@ export default class MatchList extends React.Component {
 
         return (
             <ListGroup componentClass="ul">
-                { matches.map(this.getMatchItem()) }
+                {matches.map(this.getMatchItem())}
                 <ListGroupItem className="text-primary text-right">
-                    <Switch bsStyle="danger" onChange={switchDeleteMode}>Delete mode</Switch>
-                    <strong className="with-horizontal-margin">Total matches: { count }</strong>
+                    {switchDeleteMode && <Switch bsStyle="danger" onChange={switchDeleteMode}>Delete mode</Switch>}
+                    <strong className="with-horizontal-margin">Total matches: {count}</strong>
                 </ListGroupItem>
             </ListGroup>
         );

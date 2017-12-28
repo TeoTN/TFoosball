@@ -11,11 +11,15 @@ const createLoggingDispatch = (store) => {
         return rawDispatch;
     }
     return (action) => {
+        const previousState = store.getState();
         console.group(action.type);
-        console.log('%c Previous state', 'color: gray', store.getState());
+        console.log('%c Previous state', 'color: gray', previousState);
         console.log('%c Action', 'color: blue', action);
         const nextState = rawDispatch(action);
         console.log('%c Next state', 'color: green', store.getState());
+        if (previousState === nextState) {
+            console.log('%c State reference hasn\'t changed', 'color: orange');
+        }
         console.groupEnd(action.type);
         return nextState;
     };

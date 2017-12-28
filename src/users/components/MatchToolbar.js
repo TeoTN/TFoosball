@@ -1,51 +1,48 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as UserActions from '../user.actions';
+import * as UserActions from '../users.actions';
 import { raiseError } from '../../shared/notifier.actions';
 import { Button, ButtonGroup, Col } from 'react-bootstrap';
+import { getSelectedUsers, getSorting } from "../users.reducer";
 
+const mapStateToProps = (state) => ({
+    selectedUsers: getSelectedUsers(state),
+    sorting: getSorting(state),
+});
 const mapDispatchToProps = (dispatch) => ({
-    handlePlay: () => {
+    handlePlay: (selectedUsers) => {
         try {
-            dispatch(UserActions.choosePlayersForMatch())
+            dispatch(UserActions.choosePlayersForMatch(selectedUsers))
         }
         catch(err) {
             dispatch(raiseError(err.message));
         }
-        window.scrollTo(0, 0);
     },
     sortByExp: (direction) => dispatch(UserActions.sortBy("exp", direction)),
     sortByName: (direction) => dispatch(UserActions.sortBy("username", direction)),
 });
 
-@connect(null, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 class MatchToolbar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            sortDir: false,
-        };
-    }
-
-    sort = (method) => {
-        const { sortDir } = this.state;
-        method(sortDir);
-        this.setState({sortDir: !sortDir});
-    };
-
     render() {
-        const { sortByName, sortByExp, handlePlay, canPlay } = this.props;
+        const { sortByName, sortByExp, canPlay, sorting: {isAscendingOrder}, handlePlay, selectedUsers} = this.props;
         return (
             <Col xs={12}>
                 <ButtonGroup justified className="ui-card">
                     <ButtonGroup>
-                        <Button bsStyle="primary" bsSize="small" onClick={() => this.sort(sortByName)}>By name</Button>
+                        <Button bsStyle="primary" bsSize="small" onClick={() => sortByName(!isAscendingOrder)}>By name</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="primary" bsSize="small" onClick={() => this.sort(sortByExp)}>By XP</Button>
+                        <Button bsStyle="primary" bsSize="small" onClick={() => sortByExp(!isAscendingOrder)}>By XP</Button>
                     </ButtonGroup>
                     <ButtonGroup>
-                        <Button bsStyle="success" bsSize="small" onClick={handlePlay} disabled={!canPlay}>Play!</Button>
+                        <Button
+                            bsStyle="success"
+                            bsSize="small"
+                            onClick={() => handlePlay(selectedUsers)}
+                            disabled={!canPlay}>
+                            Play!
+                        </Button>
                     </ButtonGroup>
                 </ButtonGroup>
             </Col>

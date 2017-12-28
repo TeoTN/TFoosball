@@ -23,3 +23,19 @@ export class APIForbiddenError extends APIError {
         super('Access denied', serverResponse);
     }
 }
+
+
+export class APIValidationError extends ExtendableError {
+    constructor(serverResponse) {
+        if (serverResponse.hasOwnProperty('non_field_errors')) {
+            super(serverResponse.non_field_errors.join(', '));
+        } else {
+            super('Failed to validate data');
+        }
+        this.serverResponse = serverResponse;
+    }
+
+    toDebugString() {
+        return JSON.stringify(this.serverResponse, null, 2);
+    }
+}

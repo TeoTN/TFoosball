@@ -3,7 +3,6 @@ import {browserHistory as history} from 'react-router';
 import {profileMatches, profileStats} from '../profile/profile.sagas';
 import {fetchUsers} from '../users/users.sagas';
 import {listMatches} from '../matches/matches.sagas';
-import {settings} from '../settings/settings.sagas';
 import {fetchPendingMembers, fetchTeams} from '../teams/teams.sagas';
 import {cleanNotifications, whatsNewModal} from './shared.sagas';
 import {acceptInvitation} from "./auth/auth.sagas";
@@ -16,15 +15,16 @@ const options = {
 };
 
 const routes = {
+    '/match': fetchUsers,
     '/profile/:username/*': profileStats,
     '/profile/:username/matches/:page?': profileMatches,
-    '/profile/:username/teams': function* () {
+    '/clubs/joined': function* () {
         yield [fetchPendingMembers(), fetchTeams()];
     },
+    '/clubs/admin': fetchUsers,
+    '/clubs/admin/:username': profileStats,
     '/matches/:page': listMatches,
-    '/match': fetchUsers,
     '/ranking': fetchUsers,
-    '/settings': settings,
     '/accept/:activation_code': acceptInvitation,
 };
 
