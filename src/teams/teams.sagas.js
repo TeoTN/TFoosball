@@ -30,11 +30,12 @@ export function* getCurrentTeam() {
     return getSelectedTeam(teamsState);
 }
 
+export function* onTeamSelect(team) {
+    yield call(fetchProfile, team.id, team.member_id);
+    yield call([browserHistory, browserHistory.push], `/clubs/joined`);
+}
+
 export function* handleSelectTeam() {
-    function* onTeamSelect(team) {
-        yield call(fetchProfile, team.id, team.member_id);
-        yield call([browserHistory, browserHistory.push], `/clubs/joined`);
-    }
     yield takeLatest(SELECT_TEAM, onTeamSelect);
 }
 
@@ -71,15 +72,16 @@ export function* leaveTeam() {
     yield takeEvery(LEAVE_TEAM, leave);
 }
 
+export function* onTeamCreate(action) {
+    // TODO First validate form data
+    yield call(authenticate); // TODO check if not authenticated within this generator itself
+    const team = yield call(createTeam, action);
+    yield call(fetchTeams);
+    yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
+    yield call([browserHistory, browserHistory.push], '/match');
+}
+
 export function* teamCreationFlow() {
-    function* onTeamCreate(action) {
-        // TODO First validate form data
-        yield call(authenticate); // TODO check if not authenticated within this generator itself
-        const team = yield call(createTeam, action);
-        yield call(fetchTeams);
-        yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
-        yield call([browserHistory, browserHistory.push], '/match');
-    }
     yield takeLatest(REQUEST_CREATE_TEAM, onTeamCreate);
 }
 
@@ -139,40 +141,42 @@ export function* fetchPendingMembers() {
     }
 }
 
-export function* memberAcceptance() {
-    while (true) {
-        const action = yield take(MEMBER_ACCEPTANCE);
-        const currentTeam = yield call(getCurrentTeam);
-        const url = api.urls.teamMemberEntity(currentTeam.id, action.id);
-        try {
-            if (action.shouldAccept) {
-                yield call(api.requests.patch, url, { is_accepted: true }, 'Cannot accept membership of this user.');
-            } else {
-                yield call(api.requests['delete'], url, { is_accepted: true }, 'Cannot reject membership of this user');
-            }
-            yield put(showInfo(`User membership ${action.shouldAccept ? 'confirmed' : 'rejected'} successfully.`))
-        } catch (error) {
-            yield put(raiseError(error));
-        } finally {
-            yield call(fetchPendingMembers);
+export function* onMemberAccept(action) {
+    const currentTeam = yield call(getCurrentTeam);
+    const url = api.urls.teamMemberEntity(currentTeam.id, action.id);
+    try {
+        if (action.shouldAccept) {
+            yield call(api.requests.patch, url, { is_accepted: true }, 'Cannot accept membership of this user.');
+        } else {
+            yield call(api.requests['delete'], url, { is_accepted: true }, 'Cannot reject membership of this user');
         }
+        yield put(showInfo(`User membership ${action.shouldAccept ? 'confirmed' : 'rejected'} successfully.`))
+    } catch (error) {
+        yield put(raiseError(error));
+    } finally {
+        yield call(fetchPendingMembers);
+    }
+}
+
+export function* memberAcceptance() {
+    yield takeLatest(MEMBER_ACCEPTANCE, onMemberAccept);
+}
+
+export function* onManageUser({updatedProfile: {id, username, is_team_admin, hidden}}) {
+    const error_msg = `Failed to manage ${username} settings.`;
+    const currentTeam = yield call(getCurrentTeam);
+    const url = api.urls.teamMemberEntity(currentTeam.id, id);
+    try {
+        const response = yield call(api.requests.patch, url, {is_team_admin, hidden}, error_msg);
+        yield put(showInfo(`Updated ${username} settings.`));
+        yield put(profileUpdate(response));
+    }
+    catch (error) {
+        yield put(raiseError(error));
     }
 }
 
 export function* manageUser() {
-    function* onManageUser({updatedProfile: {id, username, is_team_admin, hidden}}) {
-        const error_msg = `Failed to manage ${username} settings.`;
-        const currentTeam = yield call(getCurrentTeam);
-        const url = api.urls.teamMemberEntity(currentTeam.id, id);
-        try {
-            const response = yield call(api.requests.patch, url, {is_team_admin, hidden}, error_msg);
-            yield put(showInfo(`Updated ${username} settings.`));
-            yield put(profileUpdate(response));
-        }
-        catch (error) {
-            yield put(raiseError(error));
-        }
-    }
     yield takeLatest(MANAGE_USER, onManageUser);
 }
 

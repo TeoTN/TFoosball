@@ -1,6 +1,6 @@
-import { call, put, take, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import api from '../api';
-import { raiseError, showInfo } from '../shared/notifier.actions';
+import {  showInfo } from '../shared/notifier.actions';
 import {
     saveSettings, onRequestSaveSettings, validateMember
 } from '../settings/settings.sagas';
@@ -28,33 +28,14 @@ describe('onRequestSaveSettings saga', () => {
 });
 
 describe('Save settings saga', () => {
-    const memberSettings = { username: 'ABC123', };
-    const profileSettings = { first_name: 'ABC', last_name: '123', };
+    const settings = { first_name: 'ABC', last_name: '123', username: 'ABC123', hidden: true};
     const currentTeam = { id: 1, member_id: 15, };
-    const successMsg = 'Profile settings were saved';
-    const errorMsg = 'Failed to save profile settings';
+    const successMsg = 'Your settings were saved';
+    const errorMsg = 'Failed to save settings';
 
-    describe('Scenario 1: Should save profile only', () => {
-        const action = requestSaveSettings({}, profileSettings);
-        const iterator = saveSettings(action);
-        const profileUrl = api.urls.profile();
 
-        it('should call API with PATCH request to save profile', () => {
-            const iter = iterator.next(action).value;
-            expect(iter).toEqual(call(api.requests.patch, profileUrl, action.values, errorMsg))
-        });
-
-        it('should show info about success', () => {
-            expect(iterator.next().value).toEqual(put(showInfo(successMsg)));
-        });
-
-        it('should dispatch action SETTINGS_SAVED', () => {
-            expect(iterator.next().value).toEqual(put(settingsSaved(action.values)));
-        });
-    });
-
-    describe('Scenario 2: Should save member only', () => {
-        const action = requestSaveSettings({}, memberSettings);
+    describe('Scenario 1: Should save settings', () => {
+        const action = requestSaveSettings({}, settings);
         const iterator = saveSettings(action);
         const memberUrl = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
 
@@ -80,42 +61,6 @@ describe('Save settings saga', () => {
             expect(iterator.next().value).toEqual(expected);
         });
     });
-
-    describe('Scenario 3: Should both profile and member', () => {
-        const action = requestSaveSettings({}, { ...memberSettings, ...profileSettings });
-        const iterator = saveSettings(action);
-        const profileUrl = api.urls.profile();
-        const memberUrl = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
-
-        it('should call API with PATCH request to save profile', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(call(api.requests.patch, profileUrl, profileSettings, errorMsg));
-        });
-
-        it('should get current team', () => {
-            expect(iterator.next().value).toEqual(call(getCurrentTeam));
-        });
-
-        it('should call API with PATCH request to save profile', () => {
-            const iter = iterator.next(currentTeam).value;
-            expect(iter).toEqual(call(api.requests.patch, memberUrl, memberSettings, errorMsg));
-        });
-
-        it('should show info about success', () => {
-            expect(iterator.next().value).toEqual(put(showInfo(successMsg)));
-        });
-
-        it('should dispatch action SETTINGS_SAVED', () => {
-            expect(iterator.next().value).toEqual(put(settingsSaved(action.values)));
-        });
-
-        it('should redir to new profile url', () => {
-            const expected = call([browserHistory, browserHistory.push], '/profile/ABC123/settings');
-            expect(iterator.next().value).toEqual(expected);
-        });
-    });
-
-
 });
 
 describe('Validate member profile data', () => {

@@ -10,7 +10,7 @@ import {
     initTeam,
     handleJoinTeam,
     fetchPendingMembers,
-    getCurrentTeam
+    getCurrentTeam, onTeamCreate, onTeamSelect
 } from '../teams/teams.sagas';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { requestJoinTeam } from '../teams/teams.actions';
@@ -60,16 +60,12 @@ describe('StateTeamsSelector', () => {
 
 describe('TeamCreationFlow saga', () => {
     describe('Scenario 1: Typical [Success]', () => {
-        const iterator = teamCreationFlow();
         const action = requestCreateTeam('Team', 'Username');
+        const iterator = onTeamCreate(action);
         const team = { id: 1, name: 'Team', member_id: 7 };
 
-        it('should wait for REQUEST_CREATE_TEAM', () => {
-            expect(iterator.next().value).toEqual(take(action.type));
-        });
-
         it('should attempt authenticating user', () => {
-            const iter = iterator.next(action).value;
+            const iter = iterator.next().value;
             expect(iter).toEqual(call(authenticate));
         });
 
@@ -149,14 +145,14 @@ describe('CreateTeam saga - success scenario', () => {
 });
 
 describe('HandleSelectTeam saga', () => {
-    const iterator = handleSelectTeam();
     const team = {
         id: 7,
         member_id: 15,
         username: 'Axis'
     };
+    const iterator = onTeamSelect(team);
 
-    it('should wait to take SELECT_TEAM', () => {
+    xit('should wait to take SELECT_TEAM', () => {
         const iter = iterator.next().value;
         expect(iter).toEqual(take(SELECT_TEAM));
     });
@@ -171,7 +167,7 @@ describe('HandleSelectTeam saga', () => {
         expect(iter).toEqual(call([browserHistory, browserHistory.push], `/clubs/joined`));
     });
 
-    it('should not return from saga', () => {
+    xit('should not return from saga', () => {
         const iter = iterator.next();
         expect(iter.done).toEqual(false);
         expect(iter.value).toEqual(take(SELECT_TEAM));
