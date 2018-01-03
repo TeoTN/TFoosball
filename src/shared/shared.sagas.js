@@ -17,7 +17,8 @@ export function* whatsNewModal() {
         const action = yield take(SET_PROFILE);
         profile = action.response;
     }
-    if (profile && profile.whats_new_version && WHATS_NEW_VERSION > profile.whats_new_version) {
+    const localWhatsNewVersion = parseInt(profile.whats_new_version) || 0;
+    if (localWhatsNewVersion && WHATS_NEW_VERSION > localWhatsNewVersion) {
         return;
     }
     const info = {
@@ -25,6 +26,8 @@ export function* whatsNewModal() {
         text: whatsnew,
         markdown: true,
         onAccept: () => {},
+        local: localWhatsNewVersion,
+        global: WHATS_NEW_VERSION,
     };
     yield put(showModalInfo(info));
     yield take(ACCEPT);
