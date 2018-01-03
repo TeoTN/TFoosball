@@ -14,7 +14,7 @@ export function* whatsNewModal() {
     // TODO Extract auth profile selector and cache with reselect
     let profile = yield select(state => state.auth.profile);
     if (!profile) {
-        const action = yield take(SET_PROFILE};
+        const action = yield take(SET_PROFILE);
         profile = action.response;
     }
     if (profile && profile.whats_new_version && WHATS_NEW_VERSION > profile.whats_new_version) {
