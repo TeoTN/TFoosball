@@ -9,4 +9,4 @@ export const IS_MOBILE = checkMobile();
 export const FS_INVITATIONS =
     process.env.REACT_APP_FS_INVITATIONS === 'true' ||
     process.env.REACT_APP_FS_INVITATIONS === true;
-export const WHATS_NEW_VERSION = process.env.REACT_APP_WHATS_NEW_VERSION || 0;
+export const WHATS_NEW_VERSION = parseInt(process.env.REACT_APP_WHATS_NEW_VERSION) || 0;
