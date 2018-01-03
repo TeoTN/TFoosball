@@ -1,5 +1,5 @@
 import { call, put, take, select } from 'redux-saga/effects';
-import { requestCreateTeam } from '../teams/teams.actions';
+import { browserHistory } from 'react-router';
 import {
     teamCreationFlow,
     createTeam,
@@ -10,11 +10,11 @@ import {
     initTeam,
     handleJoinTeam,
     fetchPendingMembers,
-    getCurrentTeam, onTeamCreate, onTeamSelect
+    getCurrentTeam,
+    onTeamCreate,
+    onTeamSelect
 } from '../teams/teams.sagas';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
-import { requestJoinTeam } from '../teams/teams.actions';
-import { browserHistory } from 'react-router';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import {
@@ -24,9 +24,10 @@ import {
     setTeams,
     selectTeam,
     setPendingMembers,
+    requestJoinTeam,
+    requestCreateTeam
 } from '../teams/teams.actions.js';
 import { showQuestionModal } from '../shared/modal.actions';
-
 
 
 describe('StateTokenSelector', () => {
@@ -150,7 +151,8 @@ describe('HandleSelectTeam saga', () => {
         member_id: 15,
         username: 'Axis'
     };
-    const iterator = onTeamSelect(team);
+    const action = selectTeam(team);
+    const iterator = onTeamSelect(action);
 
     xit('should wait to take SELECT_TEAM', () => {
         const iter = iterator.next().value;

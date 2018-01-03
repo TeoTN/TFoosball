@@ -30,7 +30,7 @@ export function* getCurrentTeam() {
     return getSelectedTeam(teamsState);
 }
 
-export function* onTeamSelect(team) {
+export function* onTeamSelect({team}) {
     yield call(fetchProfile, team.id, team.member_id);
     yield call([browserHistory, browserHistory.push], `/clubs/joined`);
 }
