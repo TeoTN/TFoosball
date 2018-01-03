@@ -6,11 +6,9 @@ import {
     fetchTeams,
     handleSelectTeam,
     stateTokenSelector,
-    stateTeamsSelector,
     initTeam,
     handleJoinTeam,
     fetchPendingMembers,
-    getCurrentTeam,
     onTeamCreate,
     onTeamSelect
 } from '../teams/teams.sagas';
@@ -28,6 +26,7 @@ import {
     requestCreateTeam
 } from '../teams/teams.actions.js';
 import { showQuestionModal } from '../shared/modal.actions';
+import { getSelectedTeam, getTeamsState } from "../teams/teams.reducer";
 
 
 describe('StateTokenSelector', () => {
@@ -44,18 +43,6 @@ describe('StateTokenSelector', () => {
     it('should return false when auth is not present', () => {
         const state = {};
         expect(stateTokenSelector(state)).toBe(false);
-    });
-});
-
-describe('StateTeamsSelector', () => {
-    it('should return list of joined teams when possible', () => {
-        const state = { teams: { joined: [{id: 5}]}};
-        expect(stateTeamsSelector(state)).toEqual(state.teams);
-    });
-
-    it('should return empty list when teams is not present', () => {
-        const state = {};
-        expect(stateTeamsSelector(state)).toEqual({ joined: [] });
     });
 });
 
@@ -275,12 +262,17 @@ describe('InitTeam saga', () => {
     describe('Scenario 1: Success - team selected', () => {
         const iterator = initTeam();
         it('should get teams from store', () => {
-            const iter = iterator.next(stateWithTeamsAndSelected).value;
-            expect(iter).toEqual(select(stateTeamsSelector));
+            const iter = iterator.next().value;
+            expect(iter).toEqual(select(getTeamsState));
+        });
+
+        it('should get selected team', () => {
+            const iter = iterator.next(stateWithTeamsAndSelected.teams).value;
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should put SELECT_TEAM with the team', () => {
-            const iter = iterator.next(stateWithTeamsAndSelected.teams).value;
+            const iter = iterator.next({id: stateWithTeamsAndSelected.teams.selected}).value;
             expect(iter).toEqual(put(selectTeam(stateWithTeamsAndSelected.teams.joined[1])))
         });
 
@@ -294,12 +286,17 @@ describe('InitTeam saga', () => {
     describe('Scenario 2: No teams were joined', () => {
         const iterator = initTeam();
         it('should get teams from store', () => {
-            const iter = iterator.next(stateWithoutTeams).value;
-            expect(iter).toEqual(select(stateTeamsSelector));
+            const iter = iterator.next().value;
+            expect(iter).toEqual(select(getTeamsState));
+        });
+
+        it('should get selected team', () => {
+            const iter = iterator.next(stateWithoutTeams.teams).value;
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should redirect to /welcome page', () => {
-            const iter = iterator.next(stateWithoutTeams.teams).value;
+            const iter = iterator.next().value;
             expect(iter).toEqual(call([browserHistory, browserHistory.push], '/welcome'));
         });
 
@@ -313,18 +310,23 @@ describe('InitTeam saga', () => {
         const iterator = initTeam();
 
         it('should get teams from store', () => {
-            const iter = iterator.next(stateWithTeams).value;
-            expect(iter).toEqual(select(stateTeamsSelector));
+            const iter = iterator.next().value;
+            expect(iter).toEqual(select(getTeamsState));
+        });
+
+        it('should get selected team', () => {
+            const iter = iterator.next(stateWithTeams.teams).value;
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should put SELECT_TEAM with the team', () => {
-            const iter = iterator.next(stateWithTeams.teams).value;
-            expect(iter).toEqual(put(selectTeam(stateWithTeamsAndSelected.teams.joined[0])))
+            const iter = iterator.next({id: stateWithTeams.teams.joined[0].id}).value;
+            expect(iter).toEqual(put(selectTeam(stateWithTeams.teams.joined[0])))
         });
 
         it('should return from the saga with the team selected', () => {
             const iter = iterator.next();
-            expect(iter.value).toEqual(stateWithTeamsAndSelected.teams.joined[0]);
+            expect(iter.value).toEqual(stateWithTeams.teams.joined[0]);
             expect(iter.done).toBe(true);
         });
     })
@@ -404,7 +406,7 @@ describe('FetchPendingMembers saga', () => {
 
         it('should get current team', () => {
             const iter = iterator.next(stateWithTeamsAndSelected).value;
-            expect(iter).toEqual(call(getCurrentTeam));
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should call API with GET request to fetch not accepted members', () => {
@@ -430,7 +432,7 @@ describe('FetchPendingMembers saga', () => {
 
         it('should get current team', () => {
             const iter = iterator.next(stateWithTeamsAndSelected).value;
-            expect(iter).toEqual(call(getCurrentTeam));
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should call API with GET request to fetch not accepted members', () => {

@@ -1,17 +1,17 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import api from '../api';
 import {  showInfo } from '../shared/notifier.actions';
 import {
     saveSettings, onRequestSaveSettings, validateMember
 } from '../settings/settings.sagas';
 import { settingsSaved } from '../settings/settings.actions';
-import { getCurrentTeam } from '../teams/teams.sagas';
 import { browserHistory } from 'react-router'
 
 import {
     REQUEST_SAVE_SETTINGS,
     requestSaveSettings,
 } from '../settings/settings.actions';
+import { getSelectedTeam } from "../teams/teams.reducer";
 
 
 
@@ -40,7 +40,7 @@ describe('Save settings saga', () => {
         const memberUrl = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
 
         it('should get current team', () => {
-            expect(iterator.next().value).toEqual(call(getCurrentTeam));
+            expect(iterator.next().value).toEqual(select(getSelectedTeam));
         });
 
         it('should call API with PATCH request to save profile', () => {

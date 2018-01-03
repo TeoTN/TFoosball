@@ -1,9 +1,9 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import api from '../api';
 import { REQUEST_SAVE_SETTINGS, settingsSaved } from './settings.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
-import { getCurrentTeam } from '../teams/teams.sagas';
 import { browserHistory } from 'react-router'
+import { getSelectedTeam } from "../teams/teams.reducer";
 
 
 // TODO move it somewhere
@@ -20,7 +20,7 @@ export const validateMember = (data) => {
 export function* saveSettings({values}) {
     const successMsg = 'Your settings were saved';
     const errorMsg = 'Failed to save settings';
-    const currentTeam = yield call(getCurrentTeam);
+    const currentTeam = yield select(getSelectedTeam);
     const memberUrl = api.urls.teamMemberEntity(currentTeam.id, currentTeam.member_id);
     try {
         yield call(api.requests.patch, memberUrl, values, errorMsg);

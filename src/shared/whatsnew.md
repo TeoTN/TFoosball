@@ -1,3 +1,12 @@
+### Release 2.3.1 - January 2018
+
+This release fixes some issues:
+
+* Unable to change team briefly after logging in
+* What's New modal window should be shown once per version
+
+
+
 ### Release 2.3.0 - December 2017
 
 The main goal of this release was to provide Admins feature and to separate 

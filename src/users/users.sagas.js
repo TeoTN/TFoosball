@@ -1,11 +1,11 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import api from '../api';
 import * as fromUsers from './users.actions';
 import { raiseError, showInfo } from '../shared/notifier.actions';
-import { getCurrentTeam } from '../teams/teams.sagas';
+import { getSelectedTeam } from "../teams/teams.reducer";
 
 export function* fetchUsers() {
-    const currentTeam = yield call(getCurrentTeam);
+    const currentTeam = yield select(getSelectedTeam);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
         yield put(fromUsers.fetchEntities());
@@ -18,7 +18,7 @@ export function* fetchUsers() {
 }
 
 export function* fetchUpdateUsers() {
-    const currentTeam = yield call(getCurrentTeam);
+    const currentTeam = yield select(getSelectedTeam);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
         yield put(fromUsers.fetchEntities());
@@ -46,7 +46,7 @@ export function* emailAutocompletion({input}) {
 }
 
 export function* userInvitation({email}) {
-    const currentTeam = yield call(getCurrentTeam);
+    const currentTeam = yield select(getSelectedTeam);
     const url = api.urls.teamInvite(currentTeam.id);
     try {
         const {message} = yield call(api.requests.post, url, {email}, `Failed to send invitation to ${email}`);

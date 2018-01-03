@@ -1,11 +1,11 @@
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import api from '../api';
 import response from '../assets/mocks/users.json';
 import * as UserActions from '../users/users.actions';
 import * as fromUsers from '../users/users.actions';
 import { raiseError } from '../shared/notifier.actions';
 import { fetchUsers, fetchUpdateUsers } from '../users/users.sagas.js';
-import { getCurrentTeam } from '../teams/teams.sagas';
+import { getSelectedTeam } from "../teams/teams.reducer";
 
 describe('FetchUsers saga ', () => {
     const iterator = fetchUsers();
@@ -15,7 +15,7 @@ describe('FetchUsers saga ', () => {
     describe('Scenario 1 - success scenario', () => {
         it('should select team id', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(call(getCurrentTeam));
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should put metadata loading entities', () => {
@@ -45,7 +45,7 @@ describe('FetchUsers saga ', () => {
 
         it('should select team id', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(call(getCurrentTeam));
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should put metadata loading entities', () => {
@@ -88,7 +88,7 @@ describe('FetchUpdateUsers saga', () => {
 
         it('should call to get current team', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(call(getCurrentTeam))
+            expect(iter).toEqual(select(getSelectedTeam))
         });
 
         it('should put metadata loading entities', () => {
@@ -117,7 +117,7 @@ describe('FetchUpdateUsers saga', () => {
 
         it('should call to get current team', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(call(getCurrentTeam))
+            expect(iter).toEqual(select(getSelectedTeam))
         });
 
         it('should put metadata loading entities', () => {

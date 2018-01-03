@@ -3,9 +3,9 @@ import api from '../api';
 import { raiseError } from '../shared/notifier.actions';
 import { fetchPlayScore, playScore } from '../play/play.sagas';
 import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/users.actions';
-import { getCurrentTeam } from '../teams/teams.sagas';
 import { requestStatsDone } from '../play/play.actions';
 import { arePositionsSet, getUsersPlayingById } from "../users/users.reducer";
+import { getSelectedTeam } from "../teams/teams.reducer";
 
 describe('PlayScore saga', () => {
     const currentTeam = {
@@ -39,7 +39,7 @@ describe('PlayScore saga', () => {
 
         it('should obtain current team', () => {
             const iter = iterator.next(players).value;
-            expect(iter).toEqual(call(getCurrentTeam));
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should make GET request to team match points', () => {
@@ -72,7 +72,7 @@ describe('PlayScore saga', () => {
 
         it('should obtain current team', () => {
             const iter = iterator.next(players).value;
-            expect(iter).toEqual(call(getCurrentTeam));
+            expect(iter).toEqual(select(getSelectedTeam));
         });
 
         it('should make GET request to team match points', () => {

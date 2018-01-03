@@ -9,6 +9,7 @@ import get from 'lodash/get';
 const mapStateToProps = (state) => ({
     teams: state.teams,
     isTeamAdmin: get(state, 'auth.profile.is_team_admin'),
+    selectedTeam: getSelectedTeam(state),
 });
 
 @connect(mapStateToProps, null)
@@ -18,8 +19,8 @@ class ClubsLayout extends React.PureComponent {
             teams,
             children,
             isTeamAdmin,
+            selectedTeam
         } = this.props;
-        const selectedTeam = getSelectedTeam(teams);
         return (
             <div className="container">
                 <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">

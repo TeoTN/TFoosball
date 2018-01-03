@@ -7,7 +7,7 @@ import {
 } from './teams.actions';
 import { UPDATE_PROFILE } from '../profile/profile.types';
 import { SIGNED_OUT } from '../shared/auth/auth.types';
-export const getSelectedTeam = (state) => state.joined.find(team => team.id === state.selected);
+import { createSelector } from "reselect";
 
 const defaultState = {
     joined: [],
@@ -62,3 +62,7 @@ export const teams = (state = defaultState, action) => {
 };
 
 export default teams;
+
+export const getTeamsState = state => state.teams || defaultState;
+export const getSelectedTeam = createSelector(getTeamsState, teams => teams.joined.find(team => team.id === teams.selected));
+

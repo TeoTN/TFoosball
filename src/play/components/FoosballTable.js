@@ -13,7 +13,7 @@ import { getSelectedTeam } from "../../teams/teams.reducer";
 import { getSelectedUsers, getUsersPlaying, arePositionsSet } from "../../users/users.reducer";
 
 const mapStateToProps = (state) => {
-    const selectedTeam = getSelectedTeam(state.teams);
+    const selectedTeam = getSelectedTeam(state);
     return {
         players: getUsersPlaying(state),
         arePositionsSet: arePositionsSet(state),

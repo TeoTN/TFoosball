@@ -17,19 +17,13 @@ import { showInfo, raiseError } from '../shared/notifier.actions';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
-import { getSelectedTeam } from './teams.reducer';
+import { getSelectedTeam, getTeamsState } from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
 
 
 // TODO Extract selectors and use reselect
 export const stateTokenSelector = state => state && state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
-export const stateTeamsSelector = state => state && state.hasOwnProperty('teams') ? state.teams : { joined: [] };
-
-export function* getCurrentTeam() {
-    const teamsState = yield select(stateTeamsSelector);
-    return getSelectedTeam(teamsState);
-}
 
 export function* onTeamSelect({team}) {
     yield call(fetchProfile, team.id, team.member_id);
@@ -99,14 +93,14 @@ export function* fetchTeams() {
 }
 
 export function* initTeam() {
-    const teamsState = yield select(stateTeamsSelector);
-    let currentTeam = getSelectedTeam(teamsState);
+    const teamsState = yield select(getTeamsState);
+    let currentTeam = yield select(getSelectedTeam);
     if (teamsState.joined.length === 0) {
         yield call([browserHistory, browserHistory.push], '/welcome');
         return;
     }
     if (!currentTeam) {
-        currentTeam = teamsState.joined[0];
+        currentTeam = teamsState.joined[0]; // TODO Prefer default
     }
     yield put(selectTeam(currentTeam));
     return currentTeam;
@@ -132,7 +126,7 @@ export function* handleJoinTeam() {
 
 export function* fetchPendingMembers() {
     const errorMsg = 'Failed to fetch pending members';
-    const currentTeam = yield call(getCurrentTeam);
+    const currentTeam = yield select(getSelectedTeam);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
         const response = yield call(api.requests.get, url, { is_accepted: 'False' }, errorMsg);
@@ -143,7 +137,7 @@ export function* fetchPendingMembers() {
 }
 
 export function* onMemberAccept(action) {
-    const currentTeam = yield call(getCurrentTeam);
+    const currentTeam = yield select(getSelectedTeam);
     const url = api.urls.teamMemberEntity(currentTeam.id, action.id);
     try {
         if (action.shouldAccept) {
@@ -165,7 +159,7 @@ export function* memberAcceptance() {
 
 export function* onManageUser({updatedProfile: {id, username, is_team_admin, hidden}}) {
     const error_msg = `Failed to manage ${username} settings.`;
-    const currentTeam = yield call(getCurrentTeam);
+    const currentTeam = yield select(getSelectedTeam);
     const url = api.urls.teamMemberEntity(currentTeam.id, id);
     try {
         const response = yield call(api.requests.patch, url, {is_team_admin, hidden}, error_msg);

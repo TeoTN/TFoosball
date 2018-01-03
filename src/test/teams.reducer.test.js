@@ -164,9 +164,11 @@ describe('Teams teams', () => {
 describe('getSelectedTeam', () => {
     it('should get selected team', () => {
         const state = {
-            selected: 2,
-            pending: [],
-            joined: [{ id: 1, name: 'Team1', }, { id: 2, name: 'Team2', }],
+            teams: {
+                selected: 2,
+                pending: [],
+                joined: [{id: 1, name: 'Team1',}, {id: 2, name: 'Team2',}],
+            }
         };
         expect(getSelectedTeam(state)).toEqual({ id: 2, name: 'Team2', });
     });
