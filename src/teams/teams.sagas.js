@@ -22,8 +22,9 @@ import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
 
 
-export const stateTokenSelector = state => state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
-export const stateTeamsSelector = state => state.hasOwnProperty('teams') ? state.teams : { joined: [] };
+// TODO Extract selectors and use reselect
+export const stateTokenSelector = state => state && state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
+export const stateTeamsSelector = state => state && state.hasOwnProperty('teams') ? state.teams : { joined: [] };
 
 export function* getCurrentTeam() {
     const teamsState = yield select(stateTeamsSelector);
