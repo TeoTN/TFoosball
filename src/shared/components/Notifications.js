@@ -9,7 +9,6 @@ const mapDispatchToProps = (dispatch) => ({
     dismiss: (id) => dispatch(actions.handleMsg(id)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
 class Notifications extends React.Component {
     shouldComponentUpdate({notifications: newNotifications}) {
         const {notifications} = this.props;
@@ -40,4 +39,4 @@ class Notifications extends React.Component {
     }
 }
 
-export default Notifications;
+export default connect(mapStateToProps, mapDispatchToProps)(Notifications);

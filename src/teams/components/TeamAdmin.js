@@ -16,8 +16,6 @@ const mapDispatchToProps = dispatch => ({
     manageUser: (updatedProfile) => dispatch(manageUser(updatedProfile))
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-@reduxForm({form: 'username'})
 class TeamAdmin extends React.PureComponent {
     getOptions = () => Object
         .values(this.props.users)
@@ -66,4 +64,4 @@ class TeamAdmin extends React.PureComponent {
     }
 }
 
-export default TeamAdmin;
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({form: 'username'})(TeamAdmin));

@@ -22,8 +22,7 @@ const mapDispatchToProps = (dispatch) => ({
     sortByName: (direction) => dispatch(UserActions.sortBy("username", direction)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-class MatchToolbar extends React.Component {
+class MatchToolbar extends React.PureComponent {
     render() {
         const { sortByName, sortByExp, canPlay, sorting: {isAscendingOrder}, handlePlay, selectedUsers} = this.props;
         return (
@@ -50,4 +49,4 @@ class MatchToolbar extends React.Component {
     }
 }
 
-export default MatchToolbar;
+export default connect(mapStateToProps, mapDispatchToProps)(MatchToolbar);

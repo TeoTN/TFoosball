@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Row, Col, ButtonGroup, Image } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { publish } from '../../matches/match.actions';
@@ -36,8 +36,7 @@ const mapDispatchToProps = (dispatch) => ({
     publishMatch: (data, callback) => dispatch(publish(data, callback)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-class FoosballTable extends Component {
+class FoosballTable extends React.PureComponent {
     onRegenerate = () => {
         const {regenerate, selectedUsers} = this.props;
         regenerate(selectedUsers);
@@ -79,4 +78,4 @@ class FoosballTable extends Component {
     }
 }
 
-export default FoosballTable;
+export default connect(mapStateToProps, mapDispatchToProps)(FoosballTable)

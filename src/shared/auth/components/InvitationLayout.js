@@ -5,8 +5,7 @@ import Loading from "../../components/Loading";
 
 const mapStateToProps = ({auth}) => ({auth});
 
-@connect(mapStateToProps, null)
-class InvitationLayout extends React.Component {
+class InvitationLayout extends React.PureComponent {
     render() {
         const {auth: {activate}} = this.props;
         return (
@@ -35,4 +34,4 @@ class InvitationLayout extends React.Component {
     }
 }
 
-export default InvitationLayout;
+export default connect(mapStateToProps, null)(InvitationLayout);

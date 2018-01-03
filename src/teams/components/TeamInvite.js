@@ -16,8 +16,6 @@ const mapDispatchToProps = (dispatch) => ({
     submitInvitation: ({email}) => dispatch(inviteUser(email.value)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-@reduxForm({form: 'teamInvite'})
 class TeamInvite extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -65,4 +63,4 @@ class TeamInvite extends React.PureComponent {
     }
 }
 
-export default TeamInvite;
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({form: 'teamInvite'})(TeamInvite));

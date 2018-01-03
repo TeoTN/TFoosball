@@ -28,8 +28,7 @@ const mapDispatchToProps = (dispatch) => ({
     rejectMember: (id) => dispatch(memberAcceptance(id, false)),
 });
 
-@connect(null, mapDispatchToProps)
-export default class PendingMemberList extends React.PureComponent {
+class PendingMemberList extends React.PureComponent {
     render() {
         const {teams: {pending = []}, acceptMember, rejectMember} = this.props;
         return pending.length > 0 ?
@@ -46,3 +45,5 @@ export default class PendingMemberList extends React.PureComponent {
             <h6 className="text-muted">There are no pending club members</h6>
     }
 }
+
+export default connect(null, mapDispatchToProps)(PendingMemberList)

@@ -13,10 +13,7 @@ const mapStateToProps = ({profile, auth}) => ({
     myUsername: auth.profile ? auth.profile.username : '',
 });
 
-
-@withRouter
-@connect(mapStateToProps, null)
-export default class ProfileLayout extends React.Component {
+class ProfileLayout extends React.PureComponent {
     render() {
         const {children, profile, params: {username}, myUsername} = this.props;
 
@@ -73,3 +70,5 @@ export default class ProfileLayout extends React.Component {
         );
     }
 }
+
+export default withRouter(connect(mapStateToProps, null)(ProfileLayout))

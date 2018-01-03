@@ -7,8 +7,7 @@ const mapDispatchToProps = (dispatch) => ({
     createTeam: (team, username) => dispatch(requestCreateTeam(team, username)),
 });
 
-@connect(null, mapDispatchToProps)
-export default class TeamCreationForm extends React.Component {
+class TeamCreationForm extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -60,3 +59,5 @@ export default class TeamCreationForm extends React.Component {
         );
     }
 }
+
+export default connect(null, mapDispatchToProps)(TeamCreationForm)

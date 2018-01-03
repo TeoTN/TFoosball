@@ -7,8 +7,7 @@ const mapStateToProps = ({play: {stats}}) => ({
     stats
 });
 
-@connect(mapStateToProps, null)
-class PlayStats extends React.Component {
+class PlayStats extends React.PureComponent {
     renderUserStats = (player, team, position) => (
         <Row key={`stats-${team}-${position}`}>
             <Col xs={4}>
@@ -57,4 +56,4 @@ class PlayStats extends React.Component {
     }
 }
 
-export default PlayStats;
+export default connect(mapStateToProps, null)(PlayStats)

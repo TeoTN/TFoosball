@@ -9,8 +9,7 @@ const mapDispatchToProps = (dispatch) => ({
     joinTeam: (team, username) => dispatch(requestJoinTeam(team, username)),
 });
 
-@connect(null, mapDispatchToProps)
-export default class JoinTeamForm extends React.Component {
+class JoinTeamForm extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -62,3 +61,5 @@ export default class JoinTeamForm extends React.Component {
         );
     }
 }
+
+export default connect(null, mapDispatchToProps)(JoinTeamForm)

@@ -21,8 +21,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     sortBy: (column, order) => dispatch(sortBy(column, order)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class RankingLayout extends React.Component {
+class RankingLayout extends React.PureComponent {
     render() {
         const {users, sortBy, auth, winners, sorting} = this.props;
         const profile = auth.profile || {};
@@ -45,3 +44,5 @@ export default class RankingLayout extends React.Component {
         );
     };
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(RankingLayout)

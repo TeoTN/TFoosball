@@ -12,8 +12,7 @@ const mapDispatchToProps = (dispatch) => ({
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
 });
 
-@connect(null, mapDispatchToProps)
-export default class TeamList extends React.PureComponent {
+class TeamList extends React.PureComponent {
     constructor() {
         super();
         this.state = {
@@ -68,3 +67,5 @@ export default class TeamList extends React.PureComponent {
         );
     }
 }
+
+export default connect(null, mapDispatchToProps)(TeamList)

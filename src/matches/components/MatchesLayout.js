@@ -8,8 +8,7 @@ const mapStateToProps = ({matches}) => ({
     matches,
 });
 
-@connect(mapStateToProps, null)
-export default class MatchesLayout extends React.Component {
+class MatchesLayout extends React.PureComponent {
     render() {
         const { matches } = this.props;
 
@@ -34,3 +33,5 @@ export default class MatchesLayout extends React.Component {
         );
     };
 }
+
+export default connect(mapStateToProps, null)(MatchesLayout)

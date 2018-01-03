@@ -11,8 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
     toggleActive: (value) => dispatch(requestToggleActive(value)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-class ProfileSettings extends React.Component {
+class ProfileSettings extends React.PureComponent {
     onSubmit = (initialValues) => (values) => this.props.saveSettings(initialValues, values);
 
     render() {
@@ -30,4 +29,4 @@ class ProfileSettings extends React.Component {
     }
 }
 
-export default ProfileSettings;
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileSettings);

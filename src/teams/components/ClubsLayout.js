@@ -12,7 +12,6 @@ const mapStateToProps = (state) => ({
     selectedTeam: getSelectedTeam(state),
 });
 
-@connect(mapStateToProps, null)
 class ClubsLayout extends React.PureComponent {
     render() {
         const {
@@ -61,4 +60,4 @@ class ClubsLayout extends React.PureComponent {
     }
 }
 
-export default ClubsLayout;
+export default connect(mapStateToProps, null)(ClubsLayout);

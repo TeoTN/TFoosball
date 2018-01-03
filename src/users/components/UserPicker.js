@@ -12,8 +12,7 @@ const mapDispatchToProps = (dispatch, {team, position}) => ({
     userAssign: user => dispatch(fromUsers.userAssign(user, team, position)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-class UserPicker extends React.Component {
+class UserPicker extends React.PureComponent {
     getUsersOptions = () => {
         const { selectedUsers } = this.props;
         const selectedUsersList = Object.values(selectedUsers);
@@ -51,4 +50,4 @@ class UserPicker extends React.Component {
     }
 }
 
-export default UserPicker;
+export default connect(mapStateToProps, mapDispatchToProps)(UserPicker);
