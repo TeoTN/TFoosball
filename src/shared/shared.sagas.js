@@ -4,14 +4,20 @@ import {WHATS_NEW_VERSION} from "../api/config";
 import {ACCEPT, showModalInfo} from "./modal.actions";
 import api from "../api/index";
 import {whatsNewShown} from "./auth/auth.actions";
+import {SET_PROFILE} from './auth/auth.types';
 import whatsnew from './whatsnew.md';
 export function* cleanNotifications() {
     yield put(clean());
 }
 
 export function* whatsNewModal() {
-    const profile = yield select(state => state.auth.profile);
-    if (profile.whats_new_version && WHATS_NEW_VERSION <= profile.whats_new_version) {
+    // TODO Extract auth profile selector and cache with reselect
+    let profile = yield select(state => state.auth.profile);
+    if (!profile) {
+        const action = yield take(SET_PROFILE};
+        profile = action.response;
+    }
+    if (profile && profile.whats_new_version && WHATS_NEW_VERSION > profile.whats_new_version) {
         return;
     }
     const info = {
