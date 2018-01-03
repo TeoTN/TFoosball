@@ -10,8 +10,9 @@ export function* cleanNotifications() {
 }
 
 export function* whatsNewModal() {
+    // TODO Extract auth profile selector and cache with reselect
     const profile = yield select(state => state.auth.profile);
-    if (profile.whats_new_version && WHATS_NEW_VERSION <= profile.whats_new_version) {
+    if (profile && profile.whats_new_version && WHATS_NEW_VERSION <= profile.whats_new_version) {
         return;
     }
     const info = {
