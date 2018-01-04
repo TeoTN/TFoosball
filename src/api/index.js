@@ -72,6 +72,7 @@ const api = {
         teamMatchList: (team_id) => `${API_ROOT}/teams/${team_id}/matches/`,
         teamMatchEntity: (team_id, match_id) => `${API_ROOT}/teams/${team_id}/matches/${match_id}/`,
         teamMatchPoints: (team_id) => `${API_ROOT}/teams/${team_id}/matches/points/`,
+        whatsNew: (version) => `${API_ROOT}/whatsnew/${version}/`,
         profile: () => `${API_ROOT}/rest-auth/user/`,
         logout: () => `${API_ROOT}/rest-auth/logout/`
     }

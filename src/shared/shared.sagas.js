@@ -5,7 +5,7 @@ import {ACCEPT, showModalInfo} from "./modal.actions";
 import api from "../api/index";
 import {whatsNewShown} from "./auth/auth.actions";
 import {SET_PROFILE} from './auth/auth.types';
-import whatsnew from './whatsnew.md';
+
 export function* cleanNotifications() {
     yield put(clean());
 }
@@ -31,15 +31,22 @@ export function* whatsNewModal() {
     if (localWhatsNewVersion && WHATS_NEW_VERSION <= localWhatsNewVersion) {
         return;
     }
-    const info = {
-        title: `What's new (${WHATS_NEW_VERSION})`,
-        text: whatsnew,
-        markdown: true,
-        onAccept: () => {},
-        local: localWhatsNewVersion,
-        global: WHATS_NEW_VERSION,
-    };
-    yield put(showModalInfo(info));
+    const whatsNewUrl = api.urls.whatsNew(WHATS_NEW_VERSION);
+    try {
+        const {content} = yield call(api.requests.get, whatsNewUrl);
+        const info = {
+            title: `What's new (${WHATS_NEW_VERSION})`,
+            text: content,
+            markdown: true,
+            onAccept: () => {},
+            local: localWhatsNewVersion,
+            global: WHATS_NEW_VERSION,
+        };
+        yield put(showModalInfo(info));
+    } catch (error) {
+        yield put(raiseError('Failed to get latest What\'s New information'));
+        return;
+    }
     yield take(ACCEPT);
     yield put(whatsNewShown(WHATS_NEW_VERSION));
     yield fork(updateWhatsNewVersion, profile);
