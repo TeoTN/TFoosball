@@ -49,7 +49,7 @@ class TeamList extends React.PureComponent {
                     <Switch bsStyle="success" onChange={this.toggleMode('joinable')}>Join club mode</Switch>
                     <Switch bsStyle="danger" onChange={this.toggleMode('editable')}>Leave club mode</Switch>
                 </Row>
-                <ListGroup fill>
+                <ListGroup>
                     {joinable ? <JoinTeamItem/> : null}
                     {
                         joined.map((team) =>
