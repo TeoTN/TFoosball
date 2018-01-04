@@ -9,6 +9,7 @@ const mapStateToProps = ({play: {stats}}) => ({
 
 class PlayStats extends React.PureComponent {
     renderUserStats = (player, team, position) => (
+        player && 
         <Row key={`stats-${team}-${position}`}>
             <Col xs={4}>
                 { player.username }
