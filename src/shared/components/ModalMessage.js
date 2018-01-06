@@ -36,11 +36,11 @@ class ModalMessage extends React.PureComponent {
                 </Modal.Header>
                 {isMarkdown ?
                     <Modal.Body>
-                        <strong>{heading}</strong>
-                        <p style={{whiteSpace: 'pre-line'}}>{text}</p>
+                        <ReactMarkdown source={text}/>
                     </Modal.Body> :
                     <Modal.Body>
-                        <ReactMarkdown source={text}/>
+                        <strong>{heading}</strong>
+                        <p style={{whiteSpace: 'pre-line'}}>{text}</p>
                     </Modal.Body>
                 }
                 <Modal.Footer>

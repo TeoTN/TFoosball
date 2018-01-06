@@ -49,10 +49,9 @@ class ClubsLayout extends React.PureComponent {
                     </LinkContainer>}
                 </Nav>
                 <Panel>
-                    <h2>{selectedTeam && selectedTeam.name}</h2>
-                    <hr/>
                     {React.cloneElement(children, {
                         teams,
+                        selectedTeam
                     })}
                 </Panel>
             </div>

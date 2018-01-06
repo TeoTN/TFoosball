@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, FormGroup, Row, Col, Button } from 'react-bootstrap';
+import { Form, FormGroup, Col, Button, ControlLabel, Row } from 'react-bootstrap';
 import { reduxForm, Field } from 'redux-form';
 import { ValidatedAsyncInput } from '../../shared/components/ValidatedInput';
 import { isEmail } from '../../validators';
@@ -12,12 +12,12 @@ const mapStateToProps = (state) => ({
     autocompletion: getAutocompletionState(state),
 });
 const mapDispatchToProps = (dispatch) => ({
-    fetchEmailAutocompletion: (input) => {
-        dispatch(fetchEmailAutocompletion(input));
-        return input;
-    },
-    submitInvitation: ({email}) => dispatch(inviteUser(email.value)),
-})
+        fetchEmailAutocompletion: (input) => {
+            dispatch(fetchEmailAutocompletion(input));
+            return input;
+        },
+        submitInvitation: ({email}) => dispatch(inviteUser(email.value)),
+    })
 ;
 
 class TeamInvite extends React.PureComponent {
@@ -34,36 +34,46 @@ class TeamInvite extends React.PureComponent {
             autocompletion: {loading, emails},
             submitInvitation,
             handleSubmit,
+            selectedTeam
         } = this.props;
         const isEmailWrapped = (value, allValues, props) => isEmail(value ? value.value : '', allValues, props);
         return (
-            <Row>
-                <Col xs={12} sm={8}>
-                    <Form onSubmit={handleSubmit(submitInvitation)} horizontal>
-                        <Field
-                            autofocus
-                            name='email'
-                            label="Email"
-                            component={ValidatedAsyncInput}
-                            validate={isEmailWrapped}
-                            options={emails}
-                            onInputChange={fetchEmailAutocompletion}
-                            isLoading={loading}
-                            smLabel={3}
-                            placeholder="Friend's email"
-                            promptTextCreator={input => `Send invitation to ${input}`}
-                        />
-                        <FormGroup>
-                            <Col smOffset={3} sm={9}>
+            <div>
+                <Form onSubmit={handleSubmit(submitInvitation)} horizontal>
+                    <Row>
+                        <Col smOffset={2} sm={10}>
+                            <ControlLabel className='h4'>
+                                Invite to new member to {selectedTeam.name} club
+                            </ControlLabel>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm={10}>
+                            <Field
+                                autofocus
+                                name='email'
+                                label="Email"
+                                component={ValidatedAsyncInput}
+                                validate={isEmailWrapped}
+                                options={emails}
+                                onInputChange={fetchEmailAutocompletion}
+                                isLoading={loading}
+                                smLabel={2}
+                                placeholder="Friend's email"
+                                promptTextCreator={input => `Send invitation to ${input}`}
+                            />
+                        </Col>
+                        <Col sm={2}>
+                            <FormGroup>
                                 <Button type="submit" bsStyle={pristine || invalid ? 'default' : 'success'} block
                                         disabled={pristine || invalid}>
                                     Invite
                                 </Button>
-                            </Col>
-                        </FormGroup>
-                    </Form>
-                </Col>
-            </Row>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                </Form>
+            </div>
         );
     }
 }

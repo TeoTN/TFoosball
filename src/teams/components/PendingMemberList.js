@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 class PendingMemberList extends React.PureComponent {
     render() {
-        const {teams: {pending = []}, acceptMember, rejectMember} = this.props;
+        const {teams: {pending = []}, acceptMember, rejectMember, selectedTeam} = this.props;
         return pending.length > 0 ?
             <ListGroup>
                 {
@@ -42,7 +42,7 @@ class PendingMemberList extends React.PureComponent {
                     />)
                 }
             </ListGroup> :
-            <h6 className="text-muted">There are no pending club members</h6>
+            <h6 className="text-muted">There are no pending members awaiting to join {selectedTeam.name} club.</h6>
     }
 }
 
