@@ -11,7 +11,7 @@ import { createSelector } from "reselect";
 
 const defaultState = {
     joined: [],
-    selected: 0,
+    selected: undefined,
     pending: [],
 };
 
@@ -65,4 +65,3 @@ export default teams;
 
 export const getTeamsState = state => state.teams || defaultState;
 export const getSelectedTeam = createSelector(getTeamsState, teams => teams.joined.find(team => team.id === teams.selected));
-

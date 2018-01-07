@@ -6,7 +6,6 @@ import { isEmail } from '../../validators';
 import { getAutocompletionState } from "../../users/users.reducer";
 import { connect } from "react-redux";
 import { fetchEmailAutocompletion, inviteUser } from "../../users/users.actions";
-import Icon from 'react-fontawesome';
 import PanelHeader from "../../shared/PanelHeader";
 
 

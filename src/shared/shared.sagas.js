@@ -5,6 +5,7 @@ import {ACCEPT, showModalInfo} from "./modal.actions";
 import api from "../api/index";
 import {whatsNewShown} from "./auth/auth.actions";
 import {SET_PROFILE} from './auth/auth.types';
+import { getAuthProfile } from "./auth/auth.reducer";
 
 export function* cleanNotifications() {
     yield put(clean());
@@ -22,7 +23,7 @@ export function* updateWhatsNewVersion(profile) {
 
 export function* whatsNewModal() {
     // TODO Extract auth profile selector and cache with reselect
-    let profile = yield select(state => state.auth.profile);
+    let profile = yield select(getAuthProfile);
     if (!profile) {
         const action = yield take(SET_PROFILE);
         profile = action.response;
@@ -37,7 +38,7 @@ export function* whatsNewModal() {
         const info = {
             title: `What's new (${WHATS_NEW_VERSION})`,
             text: content,
-            markdown: true,
+            isMarkdown: true,
             onAccept: () => {},
             local: localWhatsNewVersion,
             global: WHATS_NEW_VERSION,

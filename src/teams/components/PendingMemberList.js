@@ -2,7 +2,6 @@ import React from 'react'
 import { ListGroupItem, ListGroup, Row, Col, Button, ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { memberAcceptance } from "../teams.actions";
 import { connect } from "react-redux";
-import Icon from 'react-fontawesome';
 import PanelHeader from "../../shared/PanelHeader";
 
 

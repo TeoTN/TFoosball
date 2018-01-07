@@ -8,12 +8,17 @@ export const MEMBER_ACCEPTANCE = 'TEAMS::MEMBER_ACCEPTANCE';
 export const LEAVE_TEAM = 'TEAMS::LEAVE';
 export const TEAM_LEFT = 'TEAMS::LEFT';
 export const MANAGE_USER = 'TEAMS::MANAGE_USER';
-
+export const CHANGE_DEFAULT = 'TEAMS::CHANGE_DEFAULT';
 
 export const requestCreateTeam = (name, username) => ({
     type: REQUEST_CREATE_TEAM,
     name,
     username,
+});
+
+export const changeDefault = (id) => ({
+    type: CHANGE_DEFAULT,
+    id,
 });
 
 export const teamCreated = (team) => ({

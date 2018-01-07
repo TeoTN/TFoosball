@@ -1,11 +1,10 @@
 import React from 'react'
-import { ButtonToolbar, Clearfix, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { SelectTeamItem } from './index';
 import { connect } from "react-redux";
-import { leaveTeam, selectTeam } from "../teams.actions";
+import { changeDefault, leaveTeam, selectTeam } from "../teams.actions";
 import { showQuestionModal } from "../../shared/modal.actions";
 import GlyphButton from "../../shared/components/GlyphButton";
-import Icon from 'react-fontawesome';
 import PanelHeader from "../../shared/PanelHeader";
 
 
@@ -13,8 +12,7 @@ const mapDispatchToProps = (dispatch) => ({
     selectTeam: (team) => dispatch(selectTeam(team)),
     leaveTeam: (team) => dispatch(leaveTeam(team)),
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
-    makeDefault: () => {
-    },
+    makeDefault: (team) => dispatch(changeDefault(team.id)),
 });
 
 class TeamList extends React.PureComponent {
@@ -41,13 +39,12 @@ class TeamList extends React.PureComponent {
                 </span>
             ),
             onAccept: () => makeDefault(team),
-            onReject: () => {
-            },
+            onReject: () => {},
         });
     };
 
     render() {
-        const {teams: {joined = [], selected}} = this.props;
+        const {teams: {joined = [], selected}, defaultTeam} = this.props;
         return (
             <React.Fragment>
                 <PanelHeader title="Clubs dashboard" glyph="users" isAwesome>
@@ -77,7 +74,7 @@ class TeamList extends React.PureComponent {
                                 onLeave={this.leaveTeam}
                                 onMakeDefault={this.makeTeamDefault}
                                 isSelected={selected === team.id}
-                                isDefault={-1 === team.id}
+                                isDefault={defaultTeam === team.id}
                             />
                         )
                     }

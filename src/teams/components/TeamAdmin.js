@@ -1,13 +1,12 @@
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
-import { Form, FormGroup, Col, Button, ControlLabel, Clearfix, ButtonToolbar } from 'react-bootstrap';
+import { Form, FormGroup, Col, Button, ControlLabel } from 'react-bootstrap';
 import { StaticValidatedInput } from "../../shared/components/ValidatedInput";
 import { connect } from "react-redux";
 import { getUsers } from "../../users/users.reducer";
 import { manageUser } from "../teams.actions";
 import { browserHistory } from 'react-router';
 import ManageMember from "./ManageMember";
-import Icon from 'react-fontawesome';
 import GlyphButton from "../../shared/components/GlyphButton";
 import PanelHeader from "../../shared/PanelHeader";
 

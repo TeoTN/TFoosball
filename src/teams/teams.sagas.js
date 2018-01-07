@@ -1,17 +1,5 @@
 import { call, take, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
-import {
-    REQUEST_CREATE_TEAM,
-    REQUEST_JOIN_TEAM,
-    SELECT_TEAM,
-    MEMBER_ACCEPTANCE,
-    LEAVE_TEAM,
-    MANAGE_USER,
-    teamCreated,
-    setTeams,
-    selectTeam,
-    setPendingMembers,
-    teamLeft,
-} from './teams.actions.js';
+import * as teamActions from './teams.actions.js';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
@@ -20,6 +8,7 @@ import { browserHistory } from 'react-router';
 import { getSelectedTeam, getTeamsState } from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
+import { getAuthProfile } from "../shared/auth/auth.reducer";
 
 
 // TODO Extract selectors and use reselect
@@ -31,7 +20,7 @@ export function* onTeamSelect({team}) {
 }
 
 export function* handleSelectTeam() {
-    yield takeLatest(SELECT_TEAM, onTeamSelect);
+    yield takeLatest(teamActions.SELECT_TEAM, onTeamSelect);
 }
 
 export function* createTeam(action) {
@@ -42,14 +31,14 @@ export function* createTeam(action) {
     });
     let response = {};
     try {
-        response = yield call(api.requests.post, url, data, 'Team already exists');
+        response = yield call(api.requests.post, url, data, 'Club already exists');
     } catch (error) {
         yield put(raiseError(error));
         return response;
     }
-    yield put(teamCreated(response));
+    yield put(teamActions.teamCreated(response));
     yield put(showInfo(`Team ${action.name} created.`));
-    yield put(selectTeam(response));
+    yield put(teamActions.selectTeam(response));
     return response;
 }
 
@@ -57,14 +46,14 @@ export function* leaveTeam() {
     const leave = function* ({team}) {
         const url = api.urls.teamMemberEntity(team.id, team.member_id);
         try {
-            yield call(api.requests['delete'], url, {}, `Failed to leave the team ${team.name}.`);
+            yield call(api.requests['delete'], url, {}, `Failed to leave the club ${team.name}.`);
         } catch (error) {
             yield put(raiseError(error));
         }
-        yield put(teamLeft(team));
-        yield put(showInfo(`Team ${team.name} was left.`));
+        yield put(teamActions.teamLeft(team));
+        yield put(showInfo(`Club ${team.name} was left.`));
     };
-    yield takeEvery(LEAVE_TEAM, leave);
+    yield takeEvery(teamActions.LEAVE_TEAM, leave);
 }
 
 export function* onTeamCreate(action) {
@@ -77,7 +66,7 @@ export function* onTeamCreate(action) {
 }
 
 export function* teamCreationFlow() {
-    yield takeLatest(REQUEST_CREATE_TEAM, onTeamCreate);
+    yield takeLatest(teamActions.REQUEST_CREATE_TEAM, onTeamCreate);
 }
 
 export function* fetchTeams() {
@@ -85,8 +74,8 @@ export function* fetchTeams() {
     if (!alreadyAuthenticated) return;
     const url = api.urls.teamListJoined();
     try {
-        const response = yield call(api.requests.get, url, {}, 'Failed to fetch user teams');
-        yield put(setTeams(response));
+        const response = yield call(api.requests.get, url, {}, 'Failed to fetch user clubs');
+        yield put(teamActions.setTeams(response));
     } catch (error) {
         yield put(raiseError(error))
     }
@@ -99,26 +88,28 @@ export function* initTeam() {
         yield call([browserHistory, browserHistory.push], '/welcome');
         return;
     }
-    if (!currentTeam) {
-        currentTeam = teamsState.joined[0]; // TODO Prefer default
+    if (currentTeam === undefined) {
+        const defaultTeam = yield select(getAuthProfile).default_team;
+        currentTeam = teamsState.joined.find(team => team.id === defaultTeam) || teamsState.joined[0];
     }
-    yield put(selectTeam(currentTeam));
+    yield put(teamActions.selectTeam(currentTeam));
     return currentTeam;
 }
 
 export function* handleJoinTeam() {
     while (true) {
-        const action = yield take(REQUEST_JOIN_TEAM);
+        const action = yield take(teamActions.REQUEST_JOIN_TEAM);
         const url = api.urls.teamJoin();
         try {
-            const errorMsg = 'Team doesn\'t exist or username already taken';
+            const errorMsg = 'Club doesn\'t exist or username already taken';
             const response = yield call(api.requests.post, url, action.data, errorMsg);
             yield put(showQuestionModal({
                 title: 'Notice',
                 text: response,
-                onAccept: () => {},
+                onAccept: () => {
+                },
             }));
-        } catch(error) {
+        } catch (error) {
             yield put(raiseError(error));
         }
     }
@@ -129,8 +120,8 @@ export function* fetchPendingMembers() {
     const currentTeam = yield select(getSelectedTeam);
     const url = api.urls.teamMemberList(currentTeam.id);
     try {
-        const response = yield call(api.requests.get, url, { is_accepted: 'False' }, errorMsg);
-        yield put(setPendingMembers(response));
+        const response = yield call(api.requests.get, url, {is_accepted: 'False'}, errorMsg);
+        yield put(teamActions.setPendingMembers(response));
     } catch (error) {
         yield put(raiseError(error));
     }
@@ -141,9 +132,9 @@ export function* onMemberAccept(action) {
     const url = api.urls.teamMemberEntity(currentTeam.id, action.id);
     try {
         if (action.shouldAccept) {
-            yield call(api.requests.patch, url, { is_accepted: true }, 'Cannot accept membership of this user.');
+            yield call(api.requests.patch, url, {is_accepted: true}, 'Cannot accept membership of this user.');
         } else {
-            yield call(api.requests['delete'], url, { is_accepted: true }, 'Cannot reject membership of this user');
+            yield call(api.requests['delete'], url, {is_accepted: true}, 'Cannot reject membership of this user');
         }
         yield put(showInfo(`User membership ${action.shouldAccept ? 'confirmed' : 'rejected'} successfully.`))
     } catch (error) {
@@ -154,7 +145,7 @@ export function* onMemberAccept(action) {
 }
 
 export function* memberAcceptance() {
-    yield takeLatest(MEMBER_ACCEPTANCE, onMemberAccept);
+    yield takeLatest(teamActions.MEMBER_ACCEPTANCE, onMemberAccept);
 }
 
 export function* onManageUser({updatedProfile: {id, username, is_team_admin, hidden}}) {
@@ -172,10 +163,22 @@ export function* onManageUser({updatedProfile: {id, username, is_team_admin, hid
 }
 
 export function* manageUser() {
-    yield takeLatest(MANAGE_USER, onManageUser);
+    yield takeLatest(teamActions.MANAGE_USER, onManageUser);
+}
+
+export function* onChangeDefault({id}) {
+    const player = yield select(getAuthProfile);
+    const url = api.urls.playerEntity(player.user_id);
+    try {
+        yield call(api.requests.patch, url, {default_team: id}, 'Failed to set default club.');
+        yield put(showInfo(`Updated default club.`));
+    } catch (error) {
+        yield put(raiseError(error));
+    }
 }
 
 export function* teams() {
+    yield takeLatest(teamActions.CHANGE_DEFAULT, onChangeDefault);
     yield [
         fetchTeams(),
         teamCreationFlow(),
