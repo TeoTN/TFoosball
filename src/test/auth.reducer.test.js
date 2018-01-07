@@ -4,7 +4,7 @@ import {
     setProfile,
     signedOut,
 } from '../shared/auth/auth.actions';
-import { profile, auth } from '../shared/auth/auth.reducer';
+import { profile, auth, getToken } from '../shared/auth/auth.reducer';
 
 describe('Profile reducer', () => {
     it('should not change profile state on default', () => {
@@ -100,5 +100,23 @@ describe('Auth reducer', () => {
         deepFreeze(action);
 
         expect(auth(stateBefore, action)).toEqual(stateAfter);
+    });
+});
+
+
+describe('Token selector', () => {
+    it('should return token when token is present', () => {
+        const state = { auth: {token: 'abc123'}};
+        expect(getToken(state)).toBe('abc123');
+    });
+
+    it('should return undefined when token is not present', () => {
+        const state = { auth: {}};
+        expect(getToken(state)).toBeUndefined();
+    });
+
+    it('should return undefined when auth is not present', () => {
+        const state = {};
+        expect(getToken(state)).toBeUndefined();
     });
 });

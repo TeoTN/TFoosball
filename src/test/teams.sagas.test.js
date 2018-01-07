@@ -1,11 +1,8 @@
 import { call, put, take, select } from 'redux-saga/effects';
 import { browserHistory } from 'react-router';
 import {
-    teamCreationFlow,
     createTeam,
     fetchTeams,
-    handleSelectTeam,
-    stateTokenSelector,
     initTeam,
     handleJoinTeam,
     fetchPendingMembers,
@@ -27,24 +24,8 @@ import {
 } from '../teams/teams.actions.js';
 import { showQuestionModal } from '../shared/modal.actions';
 import { getSelectedTeam, getTeamsState } from "../teams/teams.reducer";
+import { getToken } from "../shared/auth/auth.reducer";
 
-
-describe('StateTokenSelector', () => {
-    it('should return true when token is present', () => {
-        const state = { auth: {token: 'abc123'}};
-        expect(stateTokenSelector(state)).toBe(true);
-    });
-
-    it('should return false when token is not present', () => {
-        const state = { auth: {}};
-        expect(stateTokenSelector(state)).toBe(false);
-    });
-
-    it('should return false when auth is not present', () => {
-        const state = {};
-        expect(stateTokenSelector(state)).toBe(false);
-    });
-});
 
 describe('TeamCreationFlow saga', () => {
     describe('Scenario 1: Typical [Success]', () => {
@@ -87,7 +68,7 @@ describe('CreateTeam saga - success scenario', () => {
 
         it('should call api: POST request', () => {
             const iter = iterator.next(team).value;
-            expect(iter).toEqual(call(api.requests.post, url, team, 'Team already exists'));
+            expect(iter).toEqual(call(api.requests.post, url, team, 'Club already exists'));
         });
 
         it('should put TEAM_CREATED', () => {
@@ -97,7 +78,7 @@ describe('CreateTeam saga - success scenario', () => {
 
         it('should put SHOW_INFO about created team', () => {
             const iter = iterator.next(team).value;
-            expect(iter).toEqual(put(showInfo(`Team ${team.name} created.`)));
+            expect(iter).toEqual(put(showInfo(`Club ${team.name} successfully created.`)));
         });
 
         it('should SELECT_TEAM', () => {
@@ -113,7 +94,7 @@ describe('CreateTeam saga - success scenario', () => {
 
     describe('Scenario 2: Failed to POST a new team', () => {
         const iterator = createTeam(team);
-        const errorMsg = 'Team already exists';
+        const errorMsg = 'Club already exists';
         it('should call api: POST request', () => {
             const iter = iterator.next(team).value;
             expect(iter).toEqual(call(api.requests.post, url, team, errorMsg));
@@ -171,14 +152,14 @@ describe('FetchTeams saga', () => {
     };
     const unauthenticatedStoreMock = {};
     const responseMock = { teams: [{id: 5}, {id: 7},], pending: 0 };
-    const errorMsg = 'Failed to fetch user teams';
+    const errorMsg = 'Failed to fetch user clubs';
 
     describe('Scenario 1: Success', () => {
         const iterator = fetchTeams();
 
         it('should check whether token is present in store', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(stateTokenSelector));
+            expect(iter).toEqual(select(getToken));
         });
 
         it('should call API to fetch user teams', () => {
@@ -202,7 +183,7 @@ describe('FetchTeams saga', () => {
 
         it('should check whether token is present in store', () => {
             const iter = iterator.next(unauthenticatedStoreMock).value;
-            expect(iter).toEqual(select(stateTokenSelector));
+            expect(iter).toEqual(select(getToken));
         });
 
         it('should call API to fetch user teams', () => {
@@ -217,7 +198,7 @@ describe('FetchTeams saga', () => {
 
         it('should check whether token is present in store', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(stateTokenSelector));
+            expect(iter).toEqual(select(getToken));
         });
 
         it('should call API to fetch user teams', () => {
@@ -334,7 +315,7 @@ describe('InitTeam saga', () => {
 
 describe('HandleJoinTeam saga', () => {
     const url = api.urls.teamJoin();
-    const errorMsg = 'Team doesn\'t exist or username already taken';
+    const errorMsg = 'Club doesn\'t exist or username already taken';
     const action = requestJoinTeam({id: 17}, 'Dodo');
 
     describe('Scenario 1: Successful POST with join request', () => {

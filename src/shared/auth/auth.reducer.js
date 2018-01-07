@@ -29,7 +29,12 @@ export const activate = (state = {pending: true, success: false}, action = {}) =
     }
 };
 
-export const auth = (state = {activate: activate()}, action) => {
+const defaultAuthState = {
+    activate: activate(),
+    token: undefined
+};
+
+export const auth = (state = defaultAuthState, action) => {
     switch (action.type) {
         case types.SET_TOKEN:
             return {
@@ -63,9 +68,9 @@ export const auth = (state = {activate: activate()}, action) => {
     }
 };
 
-export const getAuthState = state => state.auth;
-export const getAuthProfile = createSelector(getAuthState, state => state.profile || {});
+export const getAuthState = state => state.auth  || defaultAuthState;
+export const getAuthProfile = createSelector(getAuthState, state => state.profile);
 export const getDefaultTeam = createSelector(getAuthProfile, profile => profile.default_team);
 export const isTeamAdmin = createSelector(getAuthProfile, profile => profile.is_team_admin);
-
+export const getToken = createSelector(getAuthState, state => state.token);
 export default auth;

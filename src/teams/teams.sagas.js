@@ -8,11 +8,8 @@ import { browserHistory } from 'react-router';
 import { getSelectedTeam, getTeamsState } from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
-import { getAuthProfile } from "../shared/auth/auth.reducer";
+import { getAuthProfile, getToken } from "../shared/auth/auth.reducer";
 
-
-// TODO Extract selectors and use reselect
-export const stateTokenSelector = state => state && state.hasOwnProperty('auth') && state.auth.hasOwnProperty('token');
 
 export function* onTeamSelect({team}) {
     yield call(fetchProfile, team.id, team.member_id);
@@ -37,7 +34,7 @@ export function* createTeam(action) {
         return response;
     }
     yield put(teamActions.teamCreated(response));
-    yield put(showInfo(`Team ${action.name} created.`));
+    yield put(showInfo(`Club ${action.name} successfully created.`));
     yield put(teamActions.selectTeam(response));
     return response;
 }
@@ -65,13 +62,9 @@ export function* onTeamCreate(action) {
     yield call([browserHistory, browserHistory.push], '/match');
 }
 
-export function* teamCreationFlow() {
-    yield takeLatest(teamActions.REQUEST_CREATE_TEAM, onTeamCreate);
-}
-
 export function* fetchTeams() {
-    const alreadyAuthenticated = yield select(stateTokenSelector);
-    if (!alreadyAuthenticated) return;
+    const token = yield select(getToken);
+    if (token === undefined) return;
     const url = api.urls.teamListJoined();
     try {
         const response = yield call(api.requests.get, url, {}, 'Failed to fetch user clubs');
@@ -144,10 +137,6 @@ export function* onMemberAccept(action) {
     }
 }
 
-export function* memberAcceptance() {
-    yield takeLatest(teamActions.MEMBER_ACCEPTANCE, onMemberAccept);
-}
-
 export function* onManageUser({updatedProfile: {id, username, is_team_admin, hidden}}) {
     const error_msg = `Failed to manage ${username} settings.`;
     const currentTeam = yield select(getSelectedTeam);
@@ -160,10 +149,6 @@ export function* onManageUser({updatedProfile: {id, username, is_team_admin, hid
     catch (error) {
         yield put(raiseError(error));
     }
-}
-
-export function* manageUser() {
-    yield takeLatest(teamActions.MANAGE_USER, onManageUser);
 }
 
 export function* onChangeDefault({id}) {
@@ -179,6 +164,10 @@ export function* onChangeDefault({id}) {
 
 export function* teams() {
     yield takeLatest(teamActions.CHANGE_DEFAULT, onChangeDefault);
+    yield takeLatest(teamActions.MANAGE_USER, onManageUser);
+    yield takeLatest(teamActions.MEMBER_ACCEPTANCE, onMemberAccept);
+    yield takeLatest(teamActions.REQUEST_CREATE_TEAM, onTeamCreate);
+
     yield [
         fetchTeams(),
         teamCreationFlow(),
