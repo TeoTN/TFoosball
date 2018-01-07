@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table } from 'react-bootstrap';
-import { SelectTeamItem } from './index';
+import { JoinTeamForm, SelectTeamItem } from './index';
 import { connect } from "react-redux";
 import { changeDefault, leaveTeam, selectTeam } from "../teams.actions";
 import { showQuestionModal } from "../../shared/modal.actions";
@@ -16,6 +16,14 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class TeamList extends React.PureComponent {
+    constructor() {
+        super();
+        this.state = {
+            joining: false,
+            adding: false,
+        };
+    }
+
     leaveTeam = (team) => {
         const {showModal, leaveTeam} = this.props;
         showModal({
@@ -39,19 +47,32 @@ class TeamList extends React.PureComponent {
                 </span>
             ),
             onAccept: () => makeDefault(team),
-            onReject: () => {},
+            onReject: () => {
+            },
         });
+    };
+
+    onJoin = () => {
+        const {joining, adding} = this.state;
+        this.setState({joining: !joining, adding: !joining ? false : adding});
+    };
+
+    onAdd = () => {
+        const {joining, adding} = this.state;
+        this.setState({adding: !adding, joining: !adding ? false : joining});
     };
 
     render() {
         const {teams: {joined = [], selected}, defaultTeam} = this.props;
+        const {joining, adding} = this.state;
+
         return (
             <React.Fragment>
                 <PanelHeader title="Clubs dashboard" glyph="users" isAwesome>
-                    <GlyphButton bsStyle="success" bsSize="small" glyph="plus">
+                    <GlyphButton bsStyle="success" bsSize="small" glyph="plus" onClick={this.onAdd}>
                         Create a club
                     </GlyphButton>
-                    <GlyphButton bsStyle="success" bsSize="small" glyph="log-in">
+                    <GlyphButton bsStyle="success" bsSize="small" glyph="log-in" onClick={this.onJoin}>
                         Join a club
                     </GlyphButton>
                 </PanelHeader>
@@ -64,7 +85,6 @@ class TeamList extends React.PureComponent {
                     </tr>
                     </thead>
                     <tbody>
-                    {/*{joinable ? <JoinTeamItem/> : null}*/}
                     {
                         joined.map((team) =>
                             <SelectTeamItem
@@ -80,6 +100,8 @@ class TeamList extends React.PureComponent {
                     }
                     </tbody>
                 </Table>
+                {joining && <JoinTeamForm/>}
+                {adding && <span>Create new club</span>}
             </React.Fragment>
         );
     }

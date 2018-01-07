@@ -1,8 +1,9 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {Col, InputGroup, Form, FormGroup, FormControl, Button} from 'react-bootstrap';
-import {requestJoinTeam} from '../teams.actions.js';
+import { connect } from 'react-redux';
+import { Col, InputGroup, Form, FormGroup, FormControl, Button, ControlLabel, Row } from 'react-bootstrap';
+import { requestJoinTeam } from '../teams.actions.js';
 import Icon from 'react-fontawesome';
+import GlyphButton from "../../shared/components/GlyphButton";
 
 
 const mapDispatchToProps = (dispatch) => ({
@@ -30,32 +31,38 @@ class JoinTeamForm extends React.PureComponent {
 
     render() {
         return (
-            <Form className="row" horizontal>
-                <FormGroup className="col-xs-12 row" style={{marginBottom: 0}}>
-                    <InputGroup style={{width: '100%'}}>
-                        <Col xs={12} sm={5}>
-                            <FormControl
-                                placeholder="Enter team name..."
-                                style={{border: 0}}
-                                onChange={this.handleChange('team')}
-                                value={this.state.team}
-                                className="no-horizontal-padding"
-                            />
-                        </Col>
-                        <Col xs={12} sm={6}>
-                            <FormControl
-                                placeholder="Enter new username..."
-                                style={{border: 0}}
-                                onChange={this.handleChange('username')}
-                                value={this.state.username}
-                                className="no-horizontal-padding"
-                            />
-                        </Col>
-                        <Button bsStyle="link" onClick={this.handleJoinTeam} className="pull-right"
-                                style={{marginRight: '-15px'}}>
-                            Join&nbsp;&nbsp;<Icon name="chevron-right"/>
-                        </Button>
-                    </InputGroup>
+            <Form horizontal>
+                <FormGroup>
+                    <Col xsHidden sm={2} className="text-right">
+                        <ControlLabel>Club name</ControlLabel>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                        <FormControl
+                            placeholder="Enter club name..."
+                            onChange={this.handleChange('team')}
+                            value={this.state.team}
+                        />
+                    </Col>
+                </FormGroup>
+                <FormGroup>
+                    <Col xsHidden sm={2} className="text-right">
+                        <ControlLabel>Nickname</ControlLabel>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                        <FormControl
+                            placeholder="Enter new username..."
+                            onChange={this.handleChange('username')}
+                            value={this.state.username}
+                        />
+                    </Col>
+                </FormGroup>
+                <FormGroup>
+                    <Col smOffset={2} sm={10}>
+                        <GlyphButton glyph="log-in" bsSize="small" bsStyle="primary"
+                                     onClick={this.handleJoinTeam}>
+                            Join the club
+                        </GlyphButton>
+                    </Col>
                 </FormGroup>
             </Form>
         );

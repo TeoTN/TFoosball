@@ -170,11 +170,8 @@ export function* teams() {
 
     yield [
         fetchTeams(),
-        teamCreationFlow(),
         handleSelectTeam(),
         handleJoinTeam(),
-        memberAcceptance(),
         leaveTeam(),
-        manageUser(),
     ];
 }
