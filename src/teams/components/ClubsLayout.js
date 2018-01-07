@@ -21,7 +21,7 @@ class ClubsLayout extends React.PureComponent {
             selectedTeam
         } = this.props;
         return (
-            <div className="container">
+            <div className="container-responsive">
                 <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">
                     <LinkContainer to={{pathname: `/clubs/joined`}}>
                         <NavItem eventKey="1" href="#">

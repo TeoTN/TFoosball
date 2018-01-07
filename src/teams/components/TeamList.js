@@ -1,15 +1,20 @@
 import React from 'react'
-import { Button, ButtonToolbar, Glyphicon, Table } from 'react-bootstrap';
+import { ButtonToolbar, Clearfix, Table } from 'react-bootstrap';
 import { SelectTeamItem } from './index';
 import { connect } from "react-redux";
 import { leaveTeam, selectTeam } from "../teams.actions";
 import { showQuestionModal } from "../../shared/modal.actions";
+import GlyphButton from "../../shared/components/GlyphButton";
+import Icon from 'react-fontawesome';
+import PanelHeader from "../../shared/PanelHeader";
+
 
 const mapDispatchToProps = (dispatch) => ({
     selectTeam: (team) => dispatch(selectTeam(team)),
     leaveTeam: (team) => dispatch(leaveTeam(team)),
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
-    makeDefault: () => {},
+    makeDefault: () => {
+    },
 });
 
 class TeamList extends React.PureComponent {
@@ -19,7 +24,8 @@ class TeamList extends React.PureComponent {
             title: 'Are you sure?',
             text: `You are about to leave team ${team.name}. Proceed?`,
             onAccept: () => leaveTeam(team),
-            onReject: () => {},
+            onReject: () => {
+            },
         });
     };
 
@@ -35,24 +41,28 @@ class TeamList extends React.PureComponent {
                 </span>
             ),
             onAccept: () => makeDefault(team),
-            onReject: () => {},
+            onReject: () => {
+            },
         });
     };
 
     render() {
         const {teams: {joined = [], selected}} = this.props;
         return (
-            <div> {/* TODO Migrate to React.Fragment */}
-                <ButtonToolbar className="pull-right">
-                    <Button bsStyle="success" bsSize="xsmall">
-                        <Glyphicon glyph="plus"/>&nbsp;Join club
-                    </Button>
-                </ButtonToolbar>
+            <React.Fragment>
+                <PanelHeader title="Clubs dashboard" glyph="users" isAwesome>
+                    <GlyphButton bsStyle="success" bsSize="small" glyph="plus">
+                        Create a club
+                    </GlyphButton>
+                    <GlyphButton bsStyle="success" bsSize="small" glyph="log-in">
+                        Join a club
+                    </GlyphButton>
+                </PanelHeader>
                 <Table hover>
                     <thead>
                     <tr className="club-item">
                         <th scope='col'>Club name</th>
-                        <th scope='col'>Member name</th>
+                        <th scope='col'>Nickname</th>
                         <th scope='col'>Action</th>
                     </tr>
                     </thead>
@@ -73,7 +83,7 @@ class TeamList extends React.PureComponent {
                     }
                     </tbody>
                 </Table>
-            </div>
+            </React.Fragment>
         );
     }
 }

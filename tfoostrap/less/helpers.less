@@ -93,3 +93,20 @@
     }
   }
 }
+
+hr {
+  margin: @panel-body-padding 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  & > .fa,
+  & > .glyphicon {
+    margin-right: @padding-base-horizontal;
+  }
+
+  &.text-right > .fa,
+  &.text-right > .glyphicon{
+    margin-left: @padding-base-horizontal;
+  }
+}

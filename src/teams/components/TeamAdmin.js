@@ -1,17 +1,22 @@
 import React from 'react';
 import { reduxForm, Field } from 'redux-form';
-import { Form, FormGroup, Col, Button, ControlLabel } from 'react-bootstrap';
+import { Form, FormGroup, Col, Button, ControlLabel, Clearfix, ButtonToolbar } from 'react-bootstrap';
 import { StaticValidatedInput } from "../../shared/components/ValidatedInput";
 import { connect } from "react-redux";
 import { getUsers } from "../../users/users.reducer";
 import { manageUser } from "../teams.actions";
 import { browserHistory } from 'react-router';
 import ManageMember from "./ManageMember";
+import Icon from 'react-fontawesome';
+import GlyphButton from "../../shared/components/GlyphButton";
+import PanelHeader from "../../shared/PanelHeader";
+
 
 const mapStateToProps = state => ({
     users: getUsers(state),
     profile: state.profile,
 });
+
 const mapDispatchToProps = dispatch => ({
     manageUser: (updatedProfile) => dispatch(manageUser(updatedProfile))
 });
@@ -25,10 +30,22 @@ class TeamAdmin extends React.PureComponent {
         browserHistory.push(`/clubs/admin/${value}`);
     };
 
+    goBack = () => {
+        browserHistory.push('/clubs/admin/');
+    };
+
     render() {
         const {handleSubmit, manageUser, params: {username}, profile} = this.props;
         return (
-            <div>
+            <React.Fragment>
+                <PanelHeader
+                    title={username ? `Manage member ${username}` : 'Manage member'}
+                    glyph="superpowers"
+                    isAwesome>
+                    { username && <GlyphButton onClick={this.goBack} bsSize="small" glyph="chevron-left" bsStyle="success">
+                        Back to user picker
+                    </GlyphButton> }
+                </PanelHeader>
                 {
                     username ?
                         <ManageMember
@@ -36,7 +53,6 @@ class TeamAdmin extends React.PureComponent {
                             initialValues={profile}
                         /> :
                         <Form onSubmit={handleSubmit(this.goToUser)} horizontal>
-                            <h4 className='text-info'>Manage member</h4>
                             <Col sm={2}>
                                 <ControlLabel>Username</ControlLabel>
                             </Col>
@@ -51,7 +67,7 @@ class TeamAdmin extends React.PureComponent {
                                 />
                             </Col>
                             <FormGroup>
-                                <Col sm={2}>
+                                <Col xs={12} sm={2}>
                                     <Button type="submit" bsStyle='success' block>
                                         Manage
                                     </Button>
@@ -59,7 +75,7 @@ class TeamAdmin extends React.PureComponent {
                             </FormGroup>
                         </Form>
                 }
-            </div>
+            </React.Fragment>
         );
     }
 }

@@ -2,6 +2,9 @@ import React from 'react'
 import { ListGroupItem, ListGroup, Row, Col, Button, ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { memberAcceptance } from "../teams.actions";
 import { connect } from "react-redux";
+import Icon from 'react-fontawesome';
+import PanelHeader from "../../shared/PanelHeader";
+
 
 const PendingMemberItem = ({user, onAccept, onReject}) => (
     <ListGroupItem key={`${user.username}.${user.id}`}>
@@ -31,18 +34,25 @@ const mapDispatchToProps = (dispatch) => ({
 class PendingMemberList extends React.PureComponent {
     render() {
         const {teams: {pending = []}, acceptMember, rejectMember, selectedTeam} = this.props;
-        return pending.length > 0 ?
-            <ListGroup>
-                {
-                    pending.map(user => <PendingMemberItem
-                        key={user.username}
-                        user={user}
-                        onAccept={acceptMember}
-                        onReject={rejectMember}
-                    />)
-                }
-            </ListGroup> :
-            <h6 className="text-muted">There are no pending members awaiting to join {selectedTeam.name} club.</h6>
+        return <React.Fragment>
+            <PanelHeader title="Awaiting members" glyph="inbox" isAwesome />
+            {
+                pending.length > 0 ?
+                    <ListGroup>
+                        {
+                            pending.map(user => <PendingMemberItem
+                                key={user.username}
+                                user={user}
+                                onAccept={acceptMember}
+                                onReject={rejectMember}
+                            />)
+                        }
+                    </ListGroup> :
+                    <h6 className="text-muted">
+                        There are no pending members awaiting to join {selectedTeam.name} club.
+                    </h6>
+            }
+        </React.Fragment>
     }
 }
 
