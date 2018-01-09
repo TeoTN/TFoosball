@@ -4,7 +4,7 @@ import GlyphButton from "../../shared/components/GlyphButton";
 import TeamFormHOC from "./TeamFormHOC";
 
 
-const JoinTeamForm = ({team, username, handleChange, handleAction}) => (
+const CreateTeamForm = ({team, username, handleChange, handleAction}) => (
     <Form horizontal>
         <FormGroup>
             <Col xsHidden sm={2} className="text-right">
@@ -32,13 +32,12 @@ const JoinTeamForm = ({team, username, handleChange, handleAction}) => (
         </FormGroup>
         <FormGroup>
             <Col smOffset={2} sm={10}>
-                <GlyphButton glyph="log-in" bsSize="small" bsStyle="primary"
-                             onClick={handleAction}>
-                    Join the club
+                <GlyphButton glyph="plus" bsSize="small" bsStyle="primary" onClick={handleAction}>
+                    Create the club
                 </GlyphButton>
             </Col>
         </FormGroup>
     </Form>
 );
 
-export default TeamFormHOC(JoinTeamForm);
+export default TeamFormHOC(CreateTeamForm);

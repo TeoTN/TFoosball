@@ -2,10 +2,11 @@ import React from 'react'
 import { Table } from 'react-bootstrap';
 import { JoinTeamForm, SelectTeamItem } from './index';
 import { connect } from "react-redux";
-import { changeDefault, leaveTeam, selectTeam } from "../teams.actions";
+import { changeDefault, leaveTeam, requestCreateTeam, requestJoinTeam, selectTeam } from "../teams.actions";
 import { showQuestionModal } from "../../shared/modal.actions";
 import GlyphButton from "../../shared/components/GlyphButton";
 import PanelHeader from "../../shared/PanelHeader";
+import CreateTeamForm from "./CreateTeamForm";
 
 
 const mapDispatchToProps = (dispatch) => ({
@@ -13,6 +14,8 @@ const mapDispatchToProps = (dispatch) => ({
     leaveTeam: (team) => dispatch(leaveTeam(team)),
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
     makeDefault: (team) => dispatch(changeDefault(team.id)),
+    createTeam: (team, username) => dispatch(requestCreateTeam(team, username)),
+    joinTeam: (team, username) => dispatch(requestJoinTeam(team, username)),
 });
 
 class TeamList extends React.PureComponent {
@@ -63,7 +66,7 @@ class TeamList extends React.PureComponent {
     };
 
     render() {
-        const {teams: {joined = [], selected}, defaultTeam} = this.props;
+        const {teams: {joined = [], selected}, defaultTeam, createTeam, joinTeam} = this.props;
         const {joining, adding} = this.state;
 
         return (
@@ -100,8 +103,8 @@ class TeamList extends React.PureComponent {
                     }
                     </tbody>
                 </Table>
-                {joining && <JoinTeamForm/>}
-                {adding && <span>Create new club</span>}
+                {joining && <JoinTeamForm action={joinTeam}/>}
+                {adding && <CreateTeamForm action={createTeam}/>}
             </React.Fragment>
         );
     }

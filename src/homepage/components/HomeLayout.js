@@ -4,9 +4,11 @@ import {signIn} from "../../shared/auth/auth.actions";
 import HomeJumbotron from "./HomeJumbotron";
 import MobileHomepage from "./MobileHomepage";
 import PromoBar from "./PromoBar";
+import { requestCreateTeam } from "../../teams/teams.actions";
 
 const mapDispatchToProps = dispatch => ({
     signIn: () => dispatch(signIn()),
+    createTeam: (team, username) => dispatch(requestCreateTeam(team, username)),
 });
 
 class HomeLayout extends React.Component {
@@ -26,14 +28,14 @@ class HomeLayout extends React.Component {
     onMediaChange = ({matches}) => this.setState({isMobile: matches});
 
     render() {
-        const {signIn} = this.props;
+        const {signIn, createTeam} = this.props;
         return (
             window.matchMedia("(min-width: 769px)").matches ?
                 <div>
-                    <HomeJumbotron />
+                    <HomeJumbotron onCreateTeam={createTeam} />
                     <PromoBar />
                 </div> :
-                <MobileHomepage onSignIn={signIn} />
+                <MobileHomepage onSignIn={signIn} onCreateTeam={createTeam} />
         );
     }
 }

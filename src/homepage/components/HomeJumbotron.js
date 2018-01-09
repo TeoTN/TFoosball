@@ -2,7 +2,7 @@ import React from 'react'
 import {Col, Grid, Jumbotron, Row} from "react-bootstrap";
 import TeamCreationForm from "./TeamCreationForm";
 
-const HomeJumbotron = () => {
+const HomeJumbotron = ({onCreateTeam}) => {
     return (
         <Jumbotron>
             <Grid>
@@ -20,7 +20,7 @@ const HomeJumbotron = () => {
                             Compete with your friends, compare your achievements, keep your duels history<br />
                             and have lots of fun with TFoosball.
                         </p>
-                        <TeamCreationForm />
+                        <TeamCreationForm action={onCreateTeam} />
                     </Col>
                 </Row>
             </Grid>

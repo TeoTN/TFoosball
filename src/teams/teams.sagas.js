@@ -55,7 +55,7 @@ export function* leaveTeam() {
 
 export function* onTeamCreate(action) {
     // TODO First validate form data
-    yield call(authenticate); // TODO check if not authenticated within this generator itself
+    yield call(authenticate);
     const team = yield call(createTeam, action);
     yield call(fetchTeams);
     yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
