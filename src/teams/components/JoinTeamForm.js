@@ -1,39 +1,44 @@
 import React from 'react';
 import { Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import GlyphButton from "../../shared/components/GlyphButton";
-import TeamFormHOC from "./TeamFormHOC";
+import { Field, reduxForm } from "redux-form";
+import {
+    FieldInput, StaticValidatedAsyncInput, StaticValidatedInput,
+    ValidatedAsyncInput
+} from "../../shared/components/ValidatedInput";
 
 
-const JoinTeamForm = ({team, username, handleChange, handleAction}) => (
-    <Form horizontal>
-        <FormGroup>
-            <Col xsHidden sm={2} className="text-right">
-                <ControlLabel>Club name</ControlLabel>
-            </Col>
-            <Col xs={12} sm={6}>
-                <FormControl
-                    placeholder="Enter club name..."
-                    onChange={handleChange('team')}
-                    value={team}
-                />
-            </Col>
-        </FormGroup>
+const JoinTeamForm = ({team, username, autocompletion, fetchAutocompletion, action, handleSubmit}) => (
+    <Form onSubmit={handleSubmit(action)} horizontal>
+        <Field
+            autofocus
+            name='name'
+            label="Club name"
+            smLabel={2}
+            xsHiddenLabel
+            maxSize={8}
+            component={ValidatedAsyncInput}
+            options={autocompletion.teamNames}
+            onInputChange={fetchAutocompletion}
+            isLoading={autocompletion.loading}
+            placeholder="Enter club name..."
+            promptTextCreator={input => `Join ${input} club...`}
+        />
         <FormGroup>
             <Col xsHidden sm={2} className="text-right">
                 <ControlLabel>Nickname</ControlLabel>
             </Col>
             <Col xs={12} sm={6}>
-                <FormControl
+                <Field
+                    component={FieldInput}
+                    name="username"
                     placeholder="Enter new username..."
-                    onChange={handleChange('username')}
-                    value={username}
                 />
             </Col>
         </FormGroup>
         <FormGroup>
             <Col smOffset={2} sm={10}>
-                <GlyphButton glyph="log-in" bsSize="small" bsStyle="primary"
-                             onClick={handleAction}>
+                <GlyphButton type="submit" glyph="log-in" bsSize="small" bsStyle="primary">
                     Join the club
                 </GlyphButton>
             </Col>
@@ -41,4 +46,4 @@ const JoinTeamForm = ({team, username, handleChange, handleAction}) => (
     </Form>
 );
 
-export default TeamFormHOC(JoinTeamForm);
+export default reduxForm({form: 'clubJoin'})(JoinTeamForm);

@@ -71,6 +71,6 @@ export const auth = (state = defaultAuthState, action) => {
 export const getAuthState = state => state.auth  || defaultAuthState;
 export const getAuthProfile = createSelector(getAuthState, state => state.profile);
 export const getDefaultTeam = createSelector(getAuthProfile, profile => profile.default_team);
-export const isTeamAdmin = createSelector(getAuthProfile, profile => profile.is_team_admin);
+export const isTeamAdmin = createSelector(getAuthProfile, profile => profile && profile.is_team_admin);
 export const getToken = createSelector(getAuthState, state => state.token);
 export default auth;

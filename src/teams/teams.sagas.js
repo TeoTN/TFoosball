@@ -1,4 +1,4 @@
-import { call, take, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, take, put, select, takeEvery, takeLatest, throttle } from 'redux-saga/effects';
 import * as teamActions from './teams.actions.js';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
@@ -162,11 +162,27 @@ export function* onChangeDefault({id}) {
     }
 }
 
+export function* nameAutocompletion({input}) {
+    if (input.length < 3) {
+        yield put(teamActions.receivedAutocompletion([]));
+        return;
+    }
+    const url = api.urls.teamList();
+    const response = yield call(api.requests.get, url, { name_prefix: input }, 'Cannot get clubs autocompletion');
+    const cbData = response.map(team => ({
+        value: team.name,
+        label: team.name,
+    }));
+    yield put(teamActions.receivedAutocompletion(cbData))
+}
+
+
 export function* teams() {
     yield takeLatest(teamActions.CHANGE_DEFAULT, onChangeDefault);
     yield takeLatest(teamActions.MANAGE_USER, onManageUser);
     yield takeLatest(teamActions.MEMBER_ACCEPTANCE, onMemberAccept);
     yield takeLatest(teamActions.REQUEST_CREATE_TEAM, onTeamCreate);
+    yield throttle(500, teamActions.FETCH_AUTOCOMPLETION, nameAutocompletion);
 
     yield [
         fetchTeams(),

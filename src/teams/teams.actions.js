@@ -9,6 +9,9 @@ export const LEAVE_TEAM = 'TEAMS::LEAVE';
 export const TEAM_LEFT = 'TEAMS::LEFT';
 export const MANAGE_USER = 'TEAMS::MANAGE_USER';
 export const CHANGE_DEFAULT = 'TEAMS::CHANGE_DEFAULT';
+export const FETCH_AUTOCOMPLETION = 'TEAMS::FETCH_AUTOCOMPLETION';
+export const RECEIVED_AUTOCOMPLETION = 'TEAMS::RECEIVED_AUTOCOMPLETION';
+
 
 export const requestCreateTeam = (name, username) => ({
     type: REQUEST_CREATE_TEAM,
@@ -69,4 +72,14 @@ export const memberAcceptance = (id, shouldAccept) => ({
 export const manageUser = (updatedProfile) => ({
     type: MANAGE_USER,
     updatedProfile,
+});
+
+export const fetchAutocompletion = (input) => ({
+    type: FETCH_AUTOCOMPLETION,
+    input,
+});
+
+export const receivedAutocompletion = (response) => ({
+    type: RECEIVED_AUTOCOMPLETION,
+    teamNames: response
 });

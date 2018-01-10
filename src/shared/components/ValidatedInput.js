@@ -3,12 +3,12 @@ import { ControlLabel, FormControl, FormGroup, Col, OverlayTrigger, Tooltip } fr
 import Select from 'react-select';
 
 
-const withLabel = (InputComponent) => ({label, xsLabel, smLabel, mdLabel, lgLabel, ...props}) => {
-    const inv = size => size ? 12 - size : undefined;
+const withLabel = (InputComponent) => ({label, xsLabel, smLabel, mdLabel, lgLabel, xsHiddenLabel, maxSize, ...props}) => {
+    const inv = size => size ? maxSize - size : undefined;
     if (!label) return (<InputComponent {...props} />);
     return (
         <div>
-            <Col xs={xsLabel} sm={smLabel} md={mdLabel} lg={lgLabel} className="text-right">
+            <Col xs={xsLabel} sm={smLabel} md={mdLabel} lg={lgLabel} xsHidden={xsHiddenLabel} className="text-right">
                     <ControlLabel>{label}</ControlLabel>
             </Col>
             <Col xs={inv(xsLabel)} sm={inv(smLabel)} md={inv(mdLabel)} lg={inv(lgLabel)}>
@@ -48,6 +48,18 @@ const withValidation = (InputComponent) => class extends React.Component {
             </FormGroup>
         );
     }
+};
+
+export const FieldInput = ({ input, type, placeholder, ...props}) => {
+    return (
+        <FormControl
+            type={type}
+            placeholder={placeholder}
+            value={input.value}
+            onChange={input.onChange}
+            {...props}
+        />
+    )
 };
 
 export const StaticValidatedInput = withValidation(Select.Creatable);

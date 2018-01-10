@@ -1,34 +1,53 @@
-import {
-    TEAM_CREATED,
-    SET_TEAMS,
-    SELECT_TEAM,
-    PENDING_MEMBERS,
-    TEAM_LEFT,
-} from './teams.actions';
+import * as fromTeams from './teams.actions';
 import { UPDATE_PROFILE } from '../profile/profile.types';
 import { SIGNED_OUT } from '../shared/auth/auth.types';
 import { createSelector } from "reselect";
+
+const defaultAutocompletion = {
+    loading: false,
+    teamNames: [],
+};
 
 const defaultState = {
     joined: [],
     selected: undefined,
     pending: [],
+    autocompletion: defaultAutocompletion,
 };
+
+export function autocompletion(state = defaultAutocompletion, action) {
+    switch (action.type) {
+        case fromTeams.FETCH_AUTOCOMPLETION:
+            return {
+                ...state,
+                loading: true,
+                teamNames: defaultAutocompletion.teamNames
+            };
+        case fromTeams.RECEIVED_AUTOCOMPLETION:
+            return {
+                ...state,
+                loading: false,
+                teamNames: action.teamNames
+            };
+        default:
+            return state;
+    }
+}
 
 export const teams = (state = defaultState, action) => {
     switch (action.type) {
-        case TEAM_CREATED:
+        case fromTeams.TEAM_CREATED:
             return {
                 ...state,
                 joined: [action.team, ...state.joined],
             };
-        case SET_TEAMS:
+        case fromTeams.SET_TEAMS:
             return {
                 ...state,
                 joined: action.teams || [],
                 my_pending: action.my_pending || 0,
             };
-        case SELECT_TEAM:
+        case fromTeams.SELECT_TEAM:
             return {
                 ...state,
                 selected: action.team.id,
@@ -45,16 +64,22 @@ export const teams = (state = defaultState, action) => {
                 ),
             };
         case SIGNED_OUT:
-            return { joined: [], selected: 0, pending: [] };
-        case PENDING_MEMBERS:
+            return defaultState;
+        case fromTeams.PENDING_MEMBERS:
             return {
                 ...state,
                 pending: action.list,
             };
-        case TEAM_LEFT:
+        case fromTeams.TEAM_LEFT:
             return {
                 ...state,
                 joined: state.joined.filter(t => t.id !== action.team.id),
+            };
+        case fromTeams.FETCH_AUTOCOMPLETION:
+        case fromTeams.RECEIVED_AUTOCOMPLETION:
+            return {
+                ...state,
+                autocompletion: autocompletion(state.autocompletion, action),
             };
         default:
             return state;
@@ -65,3 +90,4 @@ export default teams;
 
 export const getTeamsState = state => state.teams || defaultState;
 export const getSelectedTeam = createSelector(getTeamsState, teams => teams.joined.find(team => team.id === teams.selected));
+export const getAutocompletionState = createSelector(getTeamsState, teams => teams.autocompletion);

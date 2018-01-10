@@ -2,12 +2,20 @@ import React from 'react'
 import { Table } from 'react-bootstrap';
 import { JoinTeamForm, SelectTeamItem } from './index';
 import { connect } from "react-redux";
-import { changeDefault, leaveTeam, requestCreateTeam, requestJoinTeam, selectTeam } from "../teams.actions";
+import {
+    changeDefault, fetchAutocompletion, leaveTeam, requestCreateTeam, requestJoinTeam,
+    selectTeam
+} from "../teams.actions";
 import { showQuestionModal } from "../../shared/modal.actions";
 import GlyphButton from "../../shared/components/GlyphButton";
 import PanelHeader from "../../shared/PanelHeader";
 import CreateTeamForm from "./CreateTeamForm";
+import { getAutocompletionState } from "../teams.reducer";
 
+
+const mapStateToProps = (state) => ({
+    autocompletion: getAutocompletionState(state),
+});
 
 const mapDispatchToProps = (dispatch) => ({
     selectTeam: (team) => dispatch(selectTeam(team)),
@@ -15,7 +23,11 @@ const mapDispatchToProps = (dispatch) => ({
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
     makeDefault: (team) => dispatch(changeDefault(team.id)),
     createTeam: (team, username) => dispatch(requestCreateTeam(team, username)),
-    joinTeam: (team, username) => dispatch(requestJoinTeam(team, username)),
+    joinTeam: ({name: {value}, username}) => dispatch(requestJoinTeam(value, username)),
+    fetchAutocompletion: (input) => {
+        dispatch(fetchAutocompletion(input));
+        return input;
+    },
 });
 
 class TeamList extends React.PureComponent {
@@ -66,9 +78,11 @@ class TeamList extends React.PureComponent {
     };
 
     render() {
-        const {teams: {joined = [], selected}, defaultTeam, createTeam, joinTeam} = this.props;
+        const {
+            teams: {joined = [], selected},
+            defaultTeam, createTeam, joinTeam, autocompletion, fetchAutocompletion
+        } = this.props;
         const {joining, adding} = this.state;
-
         return (
             <React.Fragment>
                 <PanelHeader title="Clubs dashboard" glyph="users" isAwesome>
@@ -103,11 +117,15 @@ class TeamList extends React.PureComponent {
                     }
                     </tbody>
                 </Table>
-                {joining && <JoinTeamForm action={joinTeam}/>}
+                {joining && <JoinTeamForm
+                    action={joinTeam}
+                    autocompletion={autocompletion}
+                    fetchAutocompletion={fetchAutocompletion}
+                />}
                 {adding && <CreateTeamForm action={createTeam}/>}
             </React.Fragment>
         );
     }
 }
 
-export default connect(null, mapDispatchToProps)(TeamList)
+export default connect(mapStateToProps, mapDispatchToProps)(TeamList)
