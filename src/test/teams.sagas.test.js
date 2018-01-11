@@ -334,7 +334,7 @@ describe('HandleJoinTeam saga', () => {
             const response = 'OK';
             const iter = iterator.next(response).value;
             const expected = put(showQuestionModal({
-                title: 'Notice',
+                title: 'One second, please...',
                 text: response,
                 onAccept: () => {},
             }));

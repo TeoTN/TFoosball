@@ -70,13 +70,15 @@ describe('Teams teams', () => {
     it('should clean on signed out', () => {
         const teamList = [{ id: 1, name: 'Team1', }, { id: 2, name: 'Team2', }];
         const stateBefore = {
+            autocompletion: {loading: false, teamNames: []},
             selected: 5,
             pending: [teamList],
             joined: [teamList],
         };
         const action = signedOut();
         const stateAfter = {
-            selected: 0,
+            autocompletion: {loading: false, teamNames: []},
+            selected: undefined,
             pending: [],
             joined: [],
         };
