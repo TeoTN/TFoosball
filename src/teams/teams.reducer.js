@@ -41,11 +41,16 @@ export const teams = (state = defaultState, action) => {
                 ...state,
                 joined: [action.team, ...state.joined],
             };
+        case fromTeams.SET_MY_PENDING:
+            return {
+                ...state,
+                myPending: action.count,
+            };
         case fromTeams.SET_TEAMS:
             return {
                 ...state,
                 joined: action.teams || [],
-                my_pending: action.my_pending || 0,
+                myPending: action.myPending || 0,
             };
         case fromTeams.SELECT_TEAM:
             return {
@@ -91,4 +96,4 @@ export default teams;
 export const getTeamsState = state => state.teams || defaultState;
 export const getSelectedTeam = createSelector(getTeamsState, teams => teams.joined.find(team => team.id === teams.selected));
 export const getAutocompletionState = createSelector(getTeamsState, teams => teams.autocompletion);
-export const getMyRequestsPending = createSelector(getTeamsState, state => state.my_pending);
+export const getMyRequestsPending = createSelector(getTeamsState, state => state.myPending);

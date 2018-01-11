@@ -11,6 +11,7 @@ export const MANAGE_USER = 'TEAMS::MANAGE_USER';
 export const CHANGE_DEFAULT = 'TEAMS::CHANGE_DEFAULT';
 export const FETCH_AUTOCOMPLETION = 'TEAMS::FETCH_AUTOCOMPLETION';
 export const RECEIVED_AUTOCOMPLETION = 'TEAMS::RECEIVED_AUTOCOMPLETION';
+export const SET_MY_PENDING = 'TEAMS::SET_MY_PENDING';
 
 
 export const requestCreateTeam = (name, username) => ({
@@ -32,7 +33,7 @@ export const teamCreated = (team) => ({
 export const setTeams = ({ teams, pending }) => ({
     type: SET_TEAMS,
     teams,
-    my_pending: pending
+    myPending: pending
 });
 
 export const selectTeam = (team) => ({
@@ -83,3 +84,5 @@ export const receivedAutocompletion = (response) => ({
     type: RECEIVED_AUTOCOMPLETION,
     teamNames: response
 });
+
+export const updateMyPending = count => ({ type: SET_MY_PENDING, count });

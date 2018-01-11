@@ -5,7 +5,7 @@ import { showInfo, raiseError } from '../shared/notifier.actions';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
-import { getSelectedTeam, getTeamsState } from './teams.reducer';
+import { getSelectedTeam, getTeamsState, getMyRequestsPending } from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
 import { getAuthProfile, getToken } from "../shared/auth/auth.reducer";
@@ -101,6 +101,8 @@ export function* handleJoinTeam() {
                 text: response,
                 onAccept: () => {},
             }));
+            const myPending = yield select(getMyRequestsPending);
+            yield put(teamActions.updateMyPending(myPending + 1));
         } catch (error) {
             yield put(raiseError(error));
         }

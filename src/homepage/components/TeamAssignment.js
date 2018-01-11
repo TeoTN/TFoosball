@@ -7,7 +7,7 @@ import { getAutocompletionState, getMyRequestsPending } from "../../teams/teams.
 import CreateTeamForm from "../../teams/components/CreateTeamForm";
 
 const mapStateToProps = (state) => ({
-    my_pending: getMyRequestsPending(state),
+    myPending: getMyRequestsPending(state),
     autocompletion: getAutocompletionState(state),
 
 });
@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch) => ({
     },
 });
 
-const TeamAssignment = ({my_pending, createTeam, joinTeam, autocompletion, fetchAutocompletion}) => (
+const TeamAssignment = ({myPending, createTeam, joinTeam, autocompletion, fetchAutocompletion}) => (
     <Grid>
         <Row>
             <Panel>
@@ -34,8 +34,8 @@ const TeamAssignment = ({my_pending, createTeam, joinTeam, autocompletion, fetch
                     <span className="text-success"> create</span> or <span className="text-info">join</span> existing club.
                 </p>
                 {
-                    my_pending > 0 &&
-                        <h5>Number of pending join requests: <span className="text-info h4">{my_pending}</span></h5>
+                    myPending > 0 &&
+                        <h5>Number of pending join requests: <span className="text-info h4">{myPending}</span></h5>
                 }
                 <h3>Create a club:</h3>
                 <CreateTeamForm action={createTeam} />
