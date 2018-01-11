@@ -26,13 +26,7 @@ export function* createTeam(action) {
         name: action.name,
         username: action.username,
     });
-    let response = {};
-    try {
-        response = yield call(api.requests.post, url, data, 'Club already exists');
-    } catch (error) {
-        yield put(raiseError(error));
-        return response;
-    }
+    const response = yield call(api.requests.post, url, data, 'Club already exists');
     yield put(teamActions.teamCreated(response));
     yield put(showInfo(`Club ${action.name} successfully created.`));
     yield put(teamActions.selectTeam(response));
@@ -54,12 +48,19 @@ export function* leaveTeam() {
 }
 
 export function* onTeamCreate(action) {
-    // TODO First validate form data
-    yield call(authenticate);
-    const team = yield call(createTeam, action);
-    yield call(fetchTeams);
-    yield call(fetchProfile, team.id, team.member_id); // TODO Should not get there if failed during any previous steps
-    yield call([browserHistory, browserHistory.push], '/match');
+    try {
+        yield call(authenticate);
+    } catch (error) {
+        yield put(raiseError(error));
+    }
+    try {
+        const team = yield call(createTeam, action);
+        yield call(fetchTeams);
+        yield call(fetchProfile, team.id, team.member_id);
+        yield call([browserHistory, browserHistory.push], '/match');
+    } catch (error) {
+        yield put(raiseError('Club with this name already exists or username is taken.'));
+    }
 }
 
 export function* fetchTeams() {

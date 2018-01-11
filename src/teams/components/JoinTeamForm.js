@@ -1,9 +1,9 @@
 import React from 'react';
-import { Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { Col, Form, FormGroup, ControlLabel } from 'react-bootstrap';
 import GlyphButton from "../../shared/components/GlyphButton";
 import { Field, reduxForm } from "redux-form";
 import {
-    FieldInput, StaticValidatedAsyncInput, StaticValidatedInput,
+    FieldInput,
     ValidatedAsyncInput
 } from "../../shared/components/ValidatedInput";
 

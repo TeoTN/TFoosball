@@ -91,26 +91,6 @@ describe('CreateTeam saga - success scenario', () => {
             expect(iter.done).toEqual(true);
         });
     });
-
-    describe('Scenario 2: Failed to POST a new team', () => {
-        const iterator = createTeam(team);
-        const errorMsg = 'Club already exists';
-        it('should call api: POST request', () => {
-            const iter = iterator.next(team).value;
-            expect(iter).toEqual(call(api.requests.post, url, team, errorMsg));
-        });
-
-        it('should put RAISE_ERROR with error message', () => {
-            const iter = iterator.throw(errorMsg).value;
-            expect(iter).toEqual(put(raiseError(errorMsg)));
-        });
-
-        it('should return from the saga with empty object', () => {
-            const iter = iterator.next();
-            expect(iter.done).toEqual(true);
-            expect(iter.value).toEqual({});
-        });
-    });
 });
 
 describe('HandleSelectTeam saga', () => {
