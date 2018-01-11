@@ -2,7 +2,7 @@ import ExtendableError from 'es6-error';
 
 export class APIError extends ExtendableError {
     constructor(message, response) {
-        const msg = response.hasOwnProperty('shouldDisplay') && response.shouldDisplay ? response.message : message;
+        const msg = response && response.shouldDisplay ? response.message : message;
         super(msg);
         this.serverResponse = response;
     }

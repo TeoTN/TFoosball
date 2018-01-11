@@ -91,3 +91,4 @@ export default teams;
 export const getTeamsState = state => state.teams || defaultState;
 export const getSelectedTeam = createSelector(getTeamsState, teams => teams.joined.find(team => team.id === teams.selected));
 export const getAutocompletionState = createSelector(getTeamsState, teams => teams.autocompletion);
+export const getMyRequestsPending = createSelector(getTeamsState, state => state.my_pending);

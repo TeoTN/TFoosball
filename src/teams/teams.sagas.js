@@ -97,10 +97,9 @@ export function* handleJoinTeam() {
             const errorMsg = 'Club doesn\'t exist or username already taken';
             const response = yield call(api.requests.post, url, action.data, errorMsg);
             yield put(showQuestionModal({
-                title: 'Notice',
+                title: 'One second, please...',
                 text: response,
-                onAccept: () => {
-                },
+                onAccept: () => {},
             }));
         } catch (error) {
             yield put(raiseError(error));
