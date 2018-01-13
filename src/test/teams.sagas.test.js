@@ -8,7 +8,7 @@ import { showInfo, raiseError } from '../shared/notifier.actions';
 import { showQuestionModal } from '../shared/modal.actions';
 import { getMyRequestsPending, getSelectedTeam, getTeamsState } from "../teams/teams.reducer";
 import { getToken } from "../shared/auth/auth.reducer";
-import { FETCH_AUTOCOMPLETION, INVITE, inviteUser } from "../users/users.actions";
+import { FETCH_AUTOCOMPLETION, INVITE, inviteUser, receivedEmailAutocompletion } from "../users/users.actions";
 import { fetchUsers } from "../users/users.sagas";
 
 
@@ -459,7 +459,94 @@ describe('Team invite saga', function() {
             expect(iter.done).toBe(true);
         });
     });
+});
 
+describe('Email autocompletion', function() {
+    describe('on short input', function() {
+        const action = {input: 'ab'};
+        const iterator = teamSagas.emailAutocompletion(action);
+
+        it('should ignore short inputs', function() {
+            const iter = iterator.next();
+            expect(iter.value).toEqual(put(receivedEmailAutocompletion([])));
+        });
+
+        it('should return from the saga', () => {
+            const iter = iterator.next();
+            expect(iter.done).toBe(true);
+        });
+    });
+
+    describe('on valid input', function() {
+        const email = 'abc@def.gh';
+        const action = {input: 'abc@'};
+        const iterator = teamSagas.emailAutocompletion(action);
+        const url = api.urls.playerList();
+        const errorMsg = 'Cannot get email autocompletion';
+
+        it('should call the API endpoint', function() {
+            const iter = iterator.next();
+            const expected = call(api.requests.get, url, {email_prefix: action.input}, errorMsg);
+            expect(iter.value).toEqual(expected);
+        });
+
+        it('should store suggestions', function() {
+            const iter = iterator.next([{email}]);
+            expect(iter.value).toEqual(put(receivedEmailAutocompletion([{
+                value: email,
+                label: email,
+            }])));
+        });
+
+        it('should return from the saga', () => {
+            const iter = iterator.next();
+            expect(iter.done).toBe(true);
+        });
+    });
+});
+
+describe('Team name autocompletion', function() {
+    describe('on short input', function() {
+        const action = {input: 'ab'};
+        const iterator = teamSagas.nameAutocompletion(action);
+
+        it('should ignore short inputs', function() {
+            const iter = iterator.next();
+            expect(iter.value).toEqual(put(teamActions.receivedAutocompletion([])));
+        });
+
+        it('should return from the saga', () => {
+            const iter = iterator.next();
+            expect(iter.done).toBe(true);
+        });
+    });
+
+    describe('on valid input', function() {
+        const name = 'abcdef';
+        const action = {input: 'abcd'};
+        const iterator = teamSagas.nameAutocompletion(action);
+        const url = api.urls.teamList();
+        const errorMsg = 'Cannot get clubs autocompletion';
+
+        it('should call the API endpoint', function() {
+            const iter = iterator.next();
+            const expected = call(api.requests.get, url, {name_prefix: action.input}, errorMsg);
+            expect(iter.value).toEqual(expected);
+        });
+
+        it('should store suggestions', function() {
+            const iter = iterator.next([{name}]);
+            expect(iter.value).toEqual(put(teamActions.receivedAutocompletion([{
+                value: name,
+                label: name,
+            }])));
+        });
+
+        it('should return from the saga', () => {
+            const iter = iterator.next();
+            expect(iter.done).toBe(true);
+        });
+    });
 });
 
 

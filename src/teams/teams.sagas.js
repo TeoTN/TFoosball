@@ -182,7 +182,9 @@ export function* emailAutocompletion({input}) {
     const response = yield call(api.requests.get, url, {email_prefix: input}, 'Cannot get email autocompletion');
     const cbData = response.map(player => ({
         value: player.email,
-        label: `${player.email} [${player.first_name} ${player.last_name}]`,
+        label: player.first_name && player.last_name ?
+            `${player.email} [${player.first_name} ${player.last_name}]` :
+            player.email,
     }));
     yield put(fromUsers.receivedEmailAutocompletion(cbData))
 }
