@@ -8,7 +8,7 @@ import { showInfo, raiseError } from '../shared/notifier.actions';
 import { showQuestionModal } from '../shared/modal.actions';
 import { getMyRequestsPending, getSelectedTeam, getTeamsState } from "../teams/teams.reducer";
 import { getToken } from "../shared/auth/auth.reducer";
-import { FETCH_AUTOCOMPLETION, INVITE } from "../users/users.actions";
+import { FETCH_AUTOCOMPLETION, INVITE, inviteUser } from "../users/users.actions";
 import { fetchUsers } from "../users/users.sagas";
 
 
@@ -401,6 +401,67 @@ describe('FetchPendingMembers saga', () => {
         });
     });
 });
+
+
+describe('Team invite saga', function() {
+    describe('Scenario 1: Handled invitation', function() {
+        const email = 'a@b.co';
+        const action = inviteUser(email);
+        const iterator = teamSagas.onTeamInvite(action);
+        const url = api.urls.teamInvite(5);
+        const errorMsg = `Failed to send invitation to ${email}`;
+
+        it('should get selected team', function() {
+            const iter = iterator.next();
+            expect(iter.value).toEqual(select(getSelectedTeam));
+        });
+
+        it('should send invitation request', function() {
+            const iter = iterator.next({id: 5});
+            expect(iter.value).toEqual(call(api.requests.post, url, {email}, errorMsg));
+        });
+
+        it('should show info', function() {
+            const iter = iterator.next({message: 'DONE'});
+            expect(iter.value).toEqual(put(showInfo('DONE')));
+        });
+
+        it('should return from the saga', () => {
+            const iter = iterator.next();
+            expect(iter.done).toBe(true);
+        });
+    });
+
+    describe('Scenario 2: Handle on fail', function() {
+        const email = 'a@b.co';
+        const action = inviteUser(email);
+        const iterator = teamSagas.onTeamInvite(action);
+        const url = api.urls.teamInvite(5);
+        const errorMsg = `Failed to send invitation to ${email}`;
+
+        it('should get selected team', function() {
+            const iter = iterator.next();
+            expect(iter.value).toEqual(select(getSelectedTeam));
+        });
+
+        it('should send invitation request', function() {
+            const iter = iterator.next({id: 5});
+            expect(iter.value).toEqual(call(api.requests.post, url, {email}, errorMsg));
+        });
+
+        it('should show info', function() {
+            const iter = iterator.throw('FAILED');
+            expect(iter.value).toEqual(put(raiseError('FAILED')));
+        });
+
+        it('should return from the saga', () => {
+            const iter = iterator.next();
+            expect(iter.done).toBe(true);
+        });
+    });
+
+});
+
 
 describe('Routes sagas', function() {
     describe('Joined list route', function() {
