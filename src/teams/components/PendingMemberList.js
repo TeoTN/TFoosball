@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 class PendingMemberList extends React.PureComponent {
     render() {
-        const {teams: {pending = []}, acceptMember, rejectMember, selectedTeam} = this.props;
+        const {teams: {pending = []}, acceptMember, rejectMember, selectedTeam = {}} = this.props;
         return <React.Fragment>
             <PanelHeader title="Awaiting members" glyph="inbox" isAwesome />
             {

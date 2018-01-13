@@ -3,7 +3,7 @@ import {browserHistory as history} from 'react-router';
 import {profileMatches, profileStats} from '../profile/profile.sagas';
 import {fetchUsers} from '../users/users.sagas';
 import {listMatches} from '../matches/matches.sagas';
-import {fetchPendingMembers, fetchTeams} from '../teams/teams.sagas';
+import { teamAdmin, teamInvite, teamList, teamPending } from '../teams/teams.sagas';
 import {cleanNotifications, whatsNewModal} from './shared.sagas';
 import {acceptInvitation} from "./auth/auth.sagas";
 
@@ -18,10 +18,10 @@ const routes = {
     '/match': fetchUsers,
     '/profile/:username/*': profileStats,
     '/profile/:username/matches/:page?': profileMatches,
-    '/clubs/joined': function* () {
-        yield [fetchPendingMembers(), fetchTeams()];
-    },
-    '/clubs/admin': fetchUsers,
+    '/clubs/joined': teamList,
+    '/clubs/invite': teamInvite,
+    '/clubs/pending': teamPending,
+    '/clubs/admin/?*': teamAdmin,
     '/clubs/admin/:username': profileStats,
     '/matches/:page': listMatches,
     '/ranking': fetchUsers,

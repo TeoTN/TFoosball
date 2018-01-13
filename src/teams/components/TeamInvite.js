@@ -48,7 +48,7 @@ class TeamInvite extends React.PureComponent {
                     </Col>
                     <Col xs={12} sm={8}>
                         <Field
-                            autofocus
+                            autoFocus
                             name='email'
                             component={ValidatedAsyncInput}
                             validate={isEmailWrapped}

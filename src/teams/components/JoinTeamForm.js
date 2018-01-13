@@ -11,7 +11,7 @@ import {
 const JoinTeamForm = ({team, username, autocompletion, fetchAutocompletion, action, handleSubmit}) => (
     <Form onSubmit={handleSubmit(action)} horizontal>
         <Field
-            autofocus
+            autoFocus
             name='name'
             label="Club name"
             smLabel={2}

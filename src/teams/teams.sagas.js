@@ -1,5 +1,6 @@
-import { call, take, put, select, takeEvery, takeLatest, throttle } from 'redux-saga/effects';
+import { call, put, select, takeEvery, takeLatest, throttle, fork } from 'redux-saga/effects';
 import * as teamActions from './teams.actions.js';
+import * as fromUsers from '../users/users.actions';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
@@ -9,15 +10,12 @@ import { getSelectedTeam, getTeamsState, getMyRequestsPending } from './teams.re
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
 import { getAuthProfile, getToken } from "../shared/auth/auth.reducer";
+import { fetchUsers } from "../users/users.sagas";
 
 
 export function* onTeamSelect({team}) {
     yield call(fetchProfile, team.id, team.member_id);
     yield call([browserHistory, browserHistory.push], `/clubs/joined`);
-}
-
-export function* handleSelectTeam() {
-    yield takeLatest(teamActions.SELECT_TEAM, onTeamSelect);
 }
 
 export function* createTeam(action) {
@@ -33,18 +31,15 @@ export function* createTeam(action) {
     return response;
 }
 
-export function* leaveTeam() {
-    const leave = function* ({team}) {
-        const url = api.urls.teamMemberEntity(team.id, team.member_id);
-        try {
-            yield call(api.requests['delete'], url, {}, `Failed to leave the club ${team.name}.`);
-        } catch (error) {
-            yield put(raiseError(error));
-        }
-        yield put(teamActions.teamLeft(team));
-        yield put(showInfo(`Club ${team.name} was left.`));
-    };
-    yield takeEvery(teamActions.LEAVE_TEAM, leave);
+export function* onTeamLeave({team}) {
+    const url = api.urls.teamMemberEntity(team.id, team.member_id);
+    try {
+        yield call(api.requests['delete'], url, {}, `Failed to leave the club ${team.name}.`);
+    } catch (error) {
+        yield put(raiseError(error));
+    }
+    yield put(teamActions.teamLeft(team));
+    yield put(showInfo(`Club ${team.name} was left.`));
 }
 
 export function* onTeamCreate(action) {
@@ -90,23 +85,22 @@ export function* initTeam() {
     return currentTeam;
 }
 
-export function* handleJoinTeam() {
-    while (true) {
-        const action = yield take(teamActions.REQUEST_JOIN_TEAM);
-        const url = api.urls.teamJoin();
-        try {
-            const errorMsg = 'Club doesn\'t exist or username already taken';
-            const response = yield call(api.requests.post, url, action.data, errorMsg);
-            yield put(showQuestionModal({
-                title: 'One second, please...',
-                text: response,
-                onAccept: () => {},
-            }));
-            const myPending = yield select(getMyRequestsPending);
-            yield put(teamActions.updateMyPending(myPending + 1));
-        } catch (error) {
-            yield put(raiseError(error));
-        }
+export function* onTeamJoin(action) {
+    const url = api.urls.teamJoin();
+    const errorMsg = 'Club doesn\'t exist or username already taken';
+
+    try {
+        const response = yield call(api.requests.post, url, action.data, errorMsg);
+        yield put(showQuestionModal({
+            title: 'One second, please...',
+            text: response,
+            onAccept: () => {
+            },
+        }));
+        const myPending = yield select(getMyRequestsPending);
+        yield put(teamActions.updateMyPending(myPending + 1));
+    } catch (error) {
+        yield put(raiseError(error));
     }
 }
 
@@ -170,7 +164,7 @@ export function* nameAutocompletion({input}) {
         return;
     }
     const url = api.urls.teamList();
-    const response = yield call(api.requests.get, url, { name_prefix: input }, 'Cannot get clubs autocompletion');
+    const response = yield call(api.requests.get, url, {name_prefix: input}, 'Cannot get clubs autocompletion');
     const cbData = response.map(team => ({
         value: team.name,
         label: team.name,
@@ -179,17 +173,52 @@ export function* nameAutocompletion({input}) {
 }
 
 
-export function* teams() {
-    yield takeLatest(teamActions.CHANGE_DEFAULT, onChangeDefault);
-    yield takeLatest(teamActions.MANAGE_USER, onManageUser);
-    yield takeLatest(teamActions.MEMBER_ACCEPTANCE, onMemberAccept);
-    yield takeLatest(teamActions.REQUEST_CREATE_TEAM, onTeamCreate);
-    yield throttle(500, teamActions.FETCH_AUTOCOMPLETION, nameAutocompletion);
+export function* emailAutocompletion({input}) {
+    if (input.length < 3) {
+        yield put(fromUsers.receivedEmailAutocompletion([]));
+        return;
+    }
+    const url = api.urls.playerList();
+    const response = yield call(api.requests.get, url, {email_prefix: input}, 'Cannot get email autocompletion');
+    const cbData = response.map(player => ({
+        value: player.email,
+        label: `${player.email} [${player.first_name} ${player.last_name}]`,
+    }));
+    yield put(fromUsers.receivedEmailAutocompletion(cbData))
+}
 
-    yield [
-        fetchTeams(),
-        handleSelectTeam(),
-        handleJoinTeam(),
-        leaveTeam(),
-    ];
+export function* onTeamInvite({email}) {
+    const currentTeam = yield select(getSelectedTeam);
+    const url = api.urls.teamInvite(currentTeam.id);
+    try {
+        const {message} = yield call(api.requests.post, url, {email}, `Failed to send invitation to ${email}`);
+        yield put(showInfo(message));
+    } catch (error) {
+        yield put(raiseError(error));
+    }
+}
+
+export function* teamList() {
+    yield fork(fetchTeams);
+    yield takeLatest(teamActions.CHANGE_DEFAULT, onChangeDefault);
+    yield takeLatest(teamActions.REQUEST_CREATE_TEAM, onTeamCreate);
+    yield takeLatest(teamActions.REQUEST_JOIN_TEAM, onTeamJoin);
+    yield takeLatest(teamActions.SELECT_TEAM, onTeamSelect);
+    yield throttle(500, teamActions.FETCH_AUTOCOMPLETION, nameAutocompletion);
+    yield takeEvery(teamActions.LEAVE_TEAM, onTeamLeave);
+}
+
+export function* teamPending() {
+    yield fork(fetchPendingMembers);
+    yield takeLatest(teamActions.MEMBER_ACCEPTANCE, onMemberAccept);
+}
+
+export function* teamInvite() {
+    yield throttle(500, fromUsers.FETCH_AUTOCOMPLETION, emailAutocompletion);
+    yield takeLatest(fromUsers.INVITE, onTeamInvite);
+}
+
+export function* teamAdmin() {
+    yield fork(fetchUsers);
+    yield takeLatest(teamActions.MANAGE_USER, onManageUser);
 }
