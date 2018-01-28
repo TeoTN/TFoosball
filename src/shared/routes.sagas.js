@@ -6,6 +6,7 @@ import {listMatches} from '../matches/matches.sagas';
 import { teamAdmin, teamInvite, teamList, teamPending } from '../teams/teams.sagas';
 import {cleanNotifications, whatsNewModal} from './shared.sagas';
 import {acceptInvitation} from "./auth/auth.sagas";
+import { playRoute } from "../play/play.sagas";
 
 const options = {
     matchAll: true,
@@ -15,7 +16,7 @@ const options = {
 };
 
 const routes = {
-    '/match': fetchUsers,
+    '/match': playRoute,
     '/profile/:username/*': profileStats,
     '/profile/:username/matches/:page?': profileMatches,
     '/clubs/joined': teamList,

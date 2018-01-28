@@ -6,11 +6,12 @@ import { isEmail } from '../../validators';
 import { getAutocompletionState } from "../../users/users.reducer";
 import { connect } from "react-redux";
 import { fetchEmailAutocompletion, inviteUser } from "../../users/users.actions";
-import PanelHeader from "../../shared/PanelHeader";
+import PanelHeader from "../../shared/components/PanelHeader";
+import { getSelectedTeam } from "../teams.reducer";
 
 
 const mapStateToProps = (state) => ({
-    teams: state.teams,
+    selectedTeam: getSelectedTeam(state) || {},
     autocompletion: getAutocompletionState(state),
 });
 

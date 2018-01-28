@@ -1,26 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Panel, Nav, NavItem } from 'react-bootstrap';
+import { LinkContainer } from "react-router-bootstrap";
 import Icon from 'react-fontawesome';
 import { getSelectedTeam } from '../../teams/teams.reducer';
-import { LinkContainer } from "react-router-bootstrap";
-import { getDefaultTeam, isTeamAdmin } from "../../shared/auth/auth.reducer";
+import { isTeamAdmin } from "../../shared/auth/auth.reducer";
+
 
 const mapStateToProps = (state) => ({
     teams: state.teams,
     isTeamAdmin: isTeamAdmin(state),
     selectedTeam: getSelectedTeam(state),
-    defaultTeam: getDefaultTeam(state),
 });
 
 class ClubsLayout extends React.PureComponent {
     render() {
         const {
-            teams,
             children,
             isTeamAdmin,
-            selectedTeam,
-            defaultTeam,
         } = this.props;
         return (
             <div className="container-responsive">
@@ -51,11 +48,7 @@ class ClubsLayout extends React.PureComponent {
                     </LinkContainer>}
                 </Nav>
                 <Panel>
-                    {React.cloneElement(children, {
-                        teams,
-                        selectedTeam,
-                        defaultTeam
-                    })}
+                    {children}
                 </Panel>
             </div>
         );

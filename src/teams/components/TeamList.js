@@ -1,31 +1,30 @@
 import React from 'react'
-import { Table } from 'react-bootstrap';
-import { JoinTeamForm, SelectTeamItem } from './index';
 import { connect } from "react-redux";
-import {
-    changeDefault, fetchAutocompletion, leaveTeam, requestCreateTeam, requestJoinTeam,
-    selectTeam
-} from "../teams.actions";
+import { Col, Row, Table } from 'react-bootstrap';
+import { JoinTeamForm, SelectTeamItem, CreateTeamForm } from './index';
+import * as teamsActions from "../teams.actions";
 import { showQuestionModal } from "../../shared/modal.actions";
-import GlyphButton from "../../shared/components/GlyphButton";
-import PanelHeader from "../../shared/PanelHeader";
-import CreateTeamForm from "./CreateTeamForm";
-import { getAutocompletionState } from "../teams.reducer";
+import { GlyphButton, PanelHeader } from "../../shared/components";
+import { getAutocompletionState, getDefaultTeamId, getJoinedTeams, getSelectedTeam } from "../teams.reducer";
+import EventFeed from "./EventFeed";
 
 
 const mapStateToProps = (state) => ({
     autocompletion: getAutocompletionState(state),
+    joined: getJoinedTeams(state),
+    selectedTeam: getSelectedTeam(state),
+    defaultTeam: getDefaultTeamId(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    selectTeam: (team) => dispatch(selectTeam(team)),
-    leaveTeam: (team) => dispatch(leaveTeam(team)),
+    selectTeam: (team) => dispatch(teamsActions.selectTeam(team)),
+    leaveTeam: (team) => dispatch(teamsActions.leaveTeam(team)),
     showModal: (modalParams) => dispatch(showQuestionModal(modalParams)),
-    makeDefault: (team) => dispatch(changeDefault(team.id)),
-    createTeam: (team, username) => dispatch(requestCreateTeam(team, username)),
-    joinTeam: ({name: {value}, username}) => dispatch(requestJoinTeam(value, username)),
+    makeDefault: (team) => dispatch(teamsActions.changeDefault(team.id)),
+    createTeam: (team, username) => dispatch(teamsActions.requestCreateTeam(team, username)),
+    joinTeam: ({name: {value}, username}) => dispatch(teamsActions.requestJoinTeam(value, username)),
     fetchAutocompletion: (input) => {
-        dispatch(fetchAutocompletion(input));
+        dispatch(teamsActions.fetchAutocompletion(input));
         return input;
     },
 });
@@ -79,8 +78,7 @@ class TeamList extends React.PureComponent {
 
     render() {
         const {
-            teams: {joined = [], selected},
-            defaultTeam, createTeam, joinTeam, autocompletion, fetchAutocompletion
+            joined, selectedTeam, defaultTeam, createTeam, joinTeam, selectTeam, autocompletion, fetchAutocompletion
         } = this.props;
         const {joining, adding} = this.state;
         return (
@@ -93,36 +91,43 @@ class TeamList extends React.PureComponent {
                         Join a club
                     </GlyphButton>
                 </PanelHeader>
-                <Table hover>
-                    <thead>
-                    <tr className="club-item">
-                        <th scope='col'>Club name</th>
-                        <th scope='col'>Nickname</th>
-                        <th scope='col'>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        joined.map((team) =>
-                            <SelectTeamItem
-                                key={team.id}
-                                team={team}
-                                onSelect={this.props.selectTeam}
-                                onLeave={this.leaveTeam}
-                                onMakeDefault={this.makeTeamDefault}
-                                isSelected={selected === team.id}
-                                isDefault={defaultTeam === team.id}
-                            />
-                        )
-                    }
-                    </tbody>
-                </Table>
-                {joining && <JoinTeamForm
-                    action={joinTeam}
-                    autocompletion={autocompletion}
-                    fetchAutocompletion={fetchAutocompletion}
-                />}
-                {adding && <CreateTeamForm action={createTeam}/>}
+                <Row>
+                    <Col xs={12} sm={12} md={9}>
+                        <Table hover>
+                            <thead>
+                            <tr className="club-item">
+                                <th scope='col'>Club name</th>
+                                <th scope='col'>Nickname</th>
+                                <th scope='col'>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                joined.map((team) =>
+                                    <SelectTeamItem
+                                        key={team.id}
+                                        team={team}
+                                        onSelect={selectTeam}
+                                        onLeave={this.leaveTeam}
+                                        onMakeDefault={this.makeTeamDefault}
+                                        isSelected={selectedTeam.id === team.id}
+                                        isDefault={defaultTeam === team.id}
+                                    />
+                                )
+                            }
+                            </tbody>
+                        </Table>
+                        {joining && <JoinTeamForm
+                            action={joinTeam}
+                            autocompletion={autocompletion}
+                            fetchAutocompletion={fetchAutocompletion}
+                        />}
+                        {adding && <CreateTeamForm action={createTeam}/>}
+                    </Col>
+                    <Col xsHidden smHidden md={3}>
+                        <EventFeed/>
+                    </Col>
+                </Row>
             </React.Fragment>
         );
     }

@@ -1,6 +1,7 @@
 import { API_ROOT } from './config';
 import { loadState } from '../persistence';
 import { ensureJSON, ensureSuccessOr } from './helpers';
+import { APIError } from "../errors";
 
 const getDefaultHeaders = () => {
     const persistedState = loadState();
@@ -67,8 +68,19 @@ const api = {
         teamEntity: (team_id) => `${API_ROOT}/teams/${team_id}/`,
         teamAccept: () => `${API_ROOT}/teams/accept/`,
         teamInvite: (team_id) => `${API_ROOT}/teams/${team_id}/invite/`,
-        teamMemberList: (team_id) => `${API_ROOT}/teams/${team_id}/members/`,
-        teamMemberEntity: (team_id, member_id) => `${API_ROOT}/teams/${team_id}/members/${member_id}/`,
+        teamEvents: (team_id) => `${API_ROOT}/teams/${team_id}/events/`,
+        teamMemberList: (team_id) => {
+            if (team_id === undefined) {
+                throw new APIError('Failed to identify selected club. Please log in again');
+            }
+            return `${API_ROOT}/teams/${team_id}/members/`;
+        },
+        teamMemberEntity: (team_id, member_id) => {
+            if (team_id === undefined || member_id === undefined) {
+                throw new APIError('Failed to identify selected club. Please log in again');
+            }
+            return `${API_ROOT}/teams/${team_id}/members/${member_id}/`
+        },
         teamMatchList: (team_id) => `${API_ROOT}/teams/${team_id}/matches/`,
         teamMatchEntity: (team_id, match_id) => `${API_ROOT}/teams/${team_id}/matches/${match_id}/`,
         teamMatchPoints: (team_id) => `${API_ROOT}/teams/${team_id}/matches/points/`,

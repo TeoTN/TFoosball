@@ -66,3 +66,4 @@ export const StaticValidatedInput = withValidation(Select.Creatable);
 export const ValidatedInput = withValidation(withLabel(withErrorTooltip(FormControl)));
 export const StaticValidatedAsyncInput = withValidation(Select);
 export const ValidatedAsyncInput = withValidation(withLabel(withErrorTooltip(Select.Creatable)));
+export default ValidatedInput;

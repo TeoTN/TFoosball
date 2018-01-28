@@ -2,7 +2,8 @@ import React from 'react'
 import { ListGroupItem, ListGroup, Row, Col, Button, ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { memberAcceptance } from "../teams.actions";
 import { connect } from "react-redux";
-import PanelHeader from "../../shared/PanelHeader";
+import PanelHeader from "../../shared/components/PanelHeader";
+import { getSelectedTeam, getTeamPending } from "../teams.reducer";
 
 
 const PendingMemberItem = ({user, onAccept, onReject}) => (
@@ -25,6 +26,11 @@ const PendingMemberItem = ({user, onAccept, onReject}) => (
     </ListGroupItem>
 );
 
+const mapStateToProps = (state) => ({
+    pending: getTeamPending(state),
+    selectedTeam: getSelectedTeam(state) || {},
+});
+
 const mapDispatchToProps = (dispatch) => ({
     acceptMember: (id) => dispatch(memberAcceptance(id, true)),
     rejectMember: (id) => dispatch(memberAcceptance(id, false)),
@@ -32,9 +38,9 @@ const mapDispatchToProps = (dispatch) => ({
 
 class PendingMemberList extends React.PureComponent {
     render() {
-        const {teams: {pending = []}, acceptMember, rejectMember, selectedTeam = {}} = this.props;
+        const {pending, acceptMember, rejectMember, selectedTeam} = this.props;
         return <React.Fragment>
-            <PanelHeader title="Awaiting members" glyph="inbox" isAwesome />
+            <PanelHeader title="Awaiting members" glyph="inbox" isAwesome/>
             {
                 pending.length > 0 ?
                     <ListGroup>
@@ -55,4 +61,4 @@ class PendingMemberList extends React.PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(PendingMemberList)
+export default connect(mapStateToProps, mapDispatchToProps)(PendingMemberList)

@@ -7,5 +7,7 @@ export { default as Notifications } from './Notifications';
 export { default as ModalMessage } from './ModalMessage';
 export { default as SignInButton } from './SignInButton';
 export { default as Switch } from './Switch';
-export { default as ValidatedInput } from './ValidatedInput';
+export * from './ValidatedInput';
 export { default as Widget } from './Widget';
+export { default as PanelHeader } from './PanelHeader';
+export { default as GlyphButton } from './GlyphButton';

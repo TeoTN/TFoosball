@@ -6,8 +6,8 @@ import { getSelectedTeam } from "../teams/teams.reducer";
 
 export function* fetchUsers() {
     const currentTeam = yield select(getSelectedTeam);
-    const url = api.urls.teamMemberList(currentTeam.id);
     try {
+        const url = api.urls.teamMemberList(currentTeam.id);
         yield put(fromUsers.fetchEntities());
         const response = yield call(api.requests.get, url);
         yield put(fromUsers.receiveUsers(response));
@@ -19,8 +19,8 @@ export function* fetchUsers() {
 
 export function* fetchUpdateUsers() {
     const currentTeam = yield select(getSelectedTeam);
-    const url = api.urls.teamMemberList(currentTeam.id);
     try {
+        const url = api.urls.teamMemberList(currentTeam.id);
         yield put(fromUsers.fetchEntities());
         const response = yield call(api.requests.get, url, {}, 'Failed to fetch users list');
         yield put(fromUsers.updateUsers(response));
@@ -29,3 +29,4 @@ export function* fetchUpdateUsers() {
         yield put(raiseError(error));
     }
 }
+

@@ -12,6 +12,9 @@ export const CHANGE_DEFAULT = 'TEAMS::CHANGE_DEFAULT';
 export const FETCH_AUTOCOMPLETION = 'TEAMS::FETCH_AUTOCOMPLETION';
 export const RECEIVED_AUTOCOMPLETION = 'TEAMS::RECEIVED_AUTOCOMPLETION';
 export const SET_MY_PENDING = 'TEAMS::SET_MY_PENDING';
+export const FETCH_EVENTS = 'TEAMS::EVENTS::FETCH';
+export const FETCHED_EVENTS = 'TEAMS::EVENTS::FETCHED';
+export const ERROR_EVENTS = 'TEAMS::EVENTS::ERROR';
 
 
 export const requestCreateTeam = (name, username) => ({
@@ -30,10 +33,11 @@ export const teamCreated = (team) => ({
     team
 });
 
-export const setTeams = ({ teams, pending }) => ({
+export const setTeams = ({ teams, pending: myPending, default_team: defaultTeam }) => ({
     type: SET_TEAMS,
     teams,
-    myPending: pending
+    myPending,
+    defaultTeam,
 });
 
 export const selectTeam = (team) => ({
@@ -82,7 +86,10 @@ export const fetchAutocompletion = (input) => ({
 
 export const receivedAutocompletion = (response) => ({
     type: RECEIVED_AUTOCOMPLETION,
-    teamNames: response
+    teamNames: response,
 });
 
 export const updateMyPending = count => ({ type: SET_MY_PENDING, count });
+export const fetchEvents = () => ({type: FETCH_EVENTS});
+export const fetchedEvents = (response) => ({type: FETCHED_EVENTS, response});
+export const erroredEvents = (error) => ({type: ERROR_EVENTS, error});

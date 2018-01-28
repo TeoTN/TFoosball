@@ -1,7 +1,7 @@
 import {take, call, put, fork, cancel, select, takeLatest} from 'redux-saga/effects';
 import {browserHistory} from 'react-router'
 import {SIGN_IN, SIGN_OUT} from './auth.types';
-import {setToken, setProfile, signedOut, activateRequest, activateSuccess, activateFailure} from './auth.actions';
+import * as authActions from './auth.actions';
 import {raiseError, clean, RAISE_UNAUTHORIZED, showInfo} from '../notifier.actions';
 import {initTeam, fetchTeams} from '../../teams/teams.sagas';
 import {prepareWindow} from '../../api/oauth';
@@ -16,7 +16,7 @@ export function* authenticate(reauthenticate = false) {
     const promptWindow = prepareWindow();
     try {
         const {token, expires_at} = yield call([promptWindow, promptWindow.open]);
-        yield put(setToken(token, expires_at));
+        yield put(authActions.setToken(token, expires_at));
         return {token};
     } catch (error) {
         const errorMsg = getOAuthErrorMsg(error);
@@ -32,7 +32,7 @@ export function* fetchProfile(team_id, member_id) {
         if (profile.hidden) {
             yield put(showInfo('You have been marked as inactive player. You can change that in profile settings.'));
         }
-        yield put(setProfile(profile));
+        yield put(authActions.setProfile(profile));
     } catch (error) {
         yield put(raiseError(error));
     }
@@ -69,7 +69,7 @@ export function* loginFlow() {
             yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
         } catch (error) {
         }
-        yield put(signedOut());
+        yield put(authActions.signedOut());
         yield put(clean());
         yield call(removeState);
         yield call([browserHistory, browserHistory.push], '/');
@@ -100,15 +100,15 @@ export function* acceptInvitation({activation_code}) {
         yield call(authenticate, false);
     }
     const url = api.urls.teamAccept();
-    yield put(activateRequest());
+    yield put(authActions.activateRequest());
     try {
         yield call(api.requests.post, url, {activation_code}, 'Failed to activate with given code.');
     } catch (error) {
         yield put(raiseError(error));
-        yield put(activateFailure());
+        yield put(authActions.activateFailure());
         return;
     }
-    yield put(activateSuccess());
+    yield put(authActions.activateSuccess());
     yield call(fetchTeams);
     const currentTeam = yield call(initTeam);
     yield call(fetchProfile, currentTeam.id, currentTeam.member_id);

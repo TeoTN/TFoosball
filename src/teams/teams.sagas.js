@@ -6,11 +6,12 @@ import { showInfo, raiseError } from '../shared/notifier.actions';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
-import { getSelectedTeam, getTeamsState, getMyRequestsPending } from './teams.reducer';
+import { getSelectedTeam, getMyRequestsPending, getJoinedTeams, getDefaultTeamId } from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
 import { getAuthProfile, getToken } from "../shared/auth/auth.reducer";
 import { fetchUsers } from "../users/users.sagas";
+import { erroredEvents, fetchedEvents } from "./teams.actions";
 
 
 export function* onTeamSelect({team}) {
@@ -71,15 +72,18 @@ export function* fetchTeams() {
 }
 
 export function* initTeam() {
-    const teamsState = yield select(getTeamsState);
-    let currentTeam = yield select(getSelectedTeam);
-    if (teamsState.joined.length === 0) {
+    const {joinedTeams, defaultTeamId, selectedTeam} = yield select(state => ({
+        joinedTeams: getJoinedTeams(state),
+        defaultTeamId: getDefaultTeamId(state),
+        selectedTeam: getSelectedTeam(state),
+    }));
+    let currentTeam = selectedTeam;
+    if (joinedTeams.length === 0) {
         yield call([browserHistory, browserHistory.push], '/welcome');
         return;
     }
-    if (currentTeam === undefined) {
-        const defaultTeam = yield select(getAuthProfile).default_team;
-        currentTeam = teamsState.joined.find(team => team.id === defaultTeam) || teamsState.joined[0];
+    if (!currentTeam || !currentTeam.id) {
+        currentTeam = joinedTeams.find(team => team.id === defaultTeamId) || joinedTeams[0];
     }
     yield put(teamActions.selectTeam(currentTeam));
     return currentTeam;
@@ -200,8 +204,22 @@ export function* onTeamInvite({email}) {
     }
 }
 
+
+export function* fetchEvents() {
+    const selectedTeam = yield select(getSelectedTeam);
+    const url = api.urls.teamEvents(selectedTeam.id);
+    try {
+        const response = yield call(api.requests.get, url);
+        yield put(fetchedEvents(response));
+    }
+    catch (error) {
+        yield put(erroredEvents(error));
+    }
+}
+
 export function* teamList() {
     yield fork(fetchTeams);
+    yield fork(fetchEvents);
     yield takeLatest(teamActions.CHANGE_DEFAULT, onChangeDefault);
     yield takeLatest(teamActions.REQUEST_CREATE_TEAM, onTeamCreate);
     yield takeLatest(teamActions.REQUEST_JOIN_TEAM, onTeamJoin);

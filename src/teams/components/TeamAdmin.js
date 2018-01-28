@@ -8,7 +8,7 @@ import { manageUser } from "../teams.actions";
 import { browserHistory } from 'react-router';
 import ManageMember from "./ManageMember";
 import GlyphButton from "../../shared/components/GlyphButton";
-import PanelHeader from "../../shared/PanelHeader";
+import PanelHeader from "../../shared/components/PanelHeader";
 
 
 const mapStateToProps = state => ({
