@@ -143,7 +143,7 @@ export function* onManageUser({updatedProfile: {id, username, is_team_admin, hid
     try {
         const response = yield call(api.requests.patch, url, {is_team_admin, hidden}, error_msg);
         yield put(showInfo(`Updated ${username} settings.`));
-        yield put(profileUpdate(response));
+        yield put(profileUpdate(response, currentTeam.id));
     }
     catch (error) {
         yield put(raiseError(error));

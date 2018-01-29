@@ -38,7 +38,7 @@ export const joined = (state = [], action={}) => {
                 return state;
             }
             return state.map(
-                t => t.id !== state.selected ? t : Object.assign({}, t, {username: action.response.username})
+                t => t.id !== action.selectedTeamId ? t : Object.assign({}, t, {username: action.response.username})
             );
         case fromTeams.TEAM_LEFT:
             return state.filter(t => t.id !== action.team.id);
