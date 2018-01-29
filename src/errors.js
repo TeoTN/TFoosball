@@ -27,7 +27,7 @@ export class APIForbiddenError extends APIError {
 
 export class APIValidationError extends ExtendableError {
     constructor(serverResponse) {
-        if (serverResponse.hasOwnProperty('non_field_errors')) {
+        if (serverResponse && serverResponse.hasOwnProperty('non_field_errors')) {
             super(serverResponse.non_field_errors.join(', '));
         } else {
             super('Failed to validate data');

@@ -1,15 +1,12 @@
+import api from '../api';
+import { browserHistory } from 'react-router';
 import { call, put, select, takeEvery, takeLatest, throttle, fork } from 'redux-saga/effects';
 import * as teamActions from './teams.actions.js';
 import * as fromUsers from '../users/users.actions';
-import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
-import { browserHistory } from 'react-router';
-import {
-    getSelectedTeam, getMyRequestsPending, getJoinedTeams, getDefaultTeamId,
-    getTeamBasics
-} from './teams.reducer';
+import { getSelectedTeam, getMyRequestsPending, getTeamBasics} from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
 import { getAuthProfile, getToken } from "../shared/auth/auth.reducer";
