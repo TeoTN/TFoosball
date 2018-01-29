@@ -3,8 +3,8 @@ import {
     setToken,
     setProfile,
     signedOut,
-} from '../shared/auth/auth.actions';
-import { profile, auth, getToken } from '../shared/auth/auth.reducer';
+} from './auth.actions';
+import { profile, auth, getToken } from './auth.reducer';
 
 describe('Profile reducer', () => {
     it('should not change profile state on default', () => {

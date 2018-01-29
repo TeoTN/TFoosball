@@ -1,11 +1,11 @@
-import * as actions from '../teams/teams.actions';
+import * as actions from './teams.actions';
 import { signedOut } from '../shared/auth/auth.actions';
 import { profileUpdate } from '../profile/profile.actions';
 import {
     teams, getSelectedTeam, getTeamsState, getJoinedTeams, getTeamsMetadata,
     getEventsState, getMyRequestsPending, getAutocompletionState, getSelectedTeamId, getDefaultTeamId, getTeamPending,
     getTeamBasics
-} from '../teams/teams.reducer';
+} from './teams.reducer';
 import deepFreeze from 'deep-freeze';
 
 describe('Teams teams', () => {

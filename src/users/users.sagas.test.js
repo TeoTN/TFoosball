@@ -1,10 +1,10 @@
 import { call, put, select } from 'redux-saga/effects';
-import api from '../api';
+import api from '../api/index';
 import response from '../assets/mocks/users.json';
-import * as UserActions from '../users/users.actions';
-import * as fromUsers from '../users/users.actions';
+import * as UserActions from './users.actions';
+import * as fromUsers from './users.actions';
 import { raiseError } from '../shared/notifier.actions';
-import { fetchUsers, fetchUpdateUsers } from '../users/users.sagas.js';
+import { fetchUsers, fetchUpdateUsers } from './users.sagas.js';
 import { getSelectedTeam } from "../teams/teams.reducer";
 
 describe('FetchUsers saga ', () => {

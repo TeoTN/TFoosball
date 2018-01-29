@@ -1,8 +1,8 @@
 import deepFreeze from 'deep-freeze';
 import usersMock from '../assets/mocks/users.json';
-import * as usersReducers from '../users/users.reducer';
-import * as usersActions from '../users/users.actions';
-import { users } from "../users/users.sagas";
+import * as usersReducers from './users.reducer';
+import * as usersActions from './users.actions';
+import { users } from "./users.sagas";
 
 
 describe('Metadata reducer', function() {

@@ -1,9 +1,9 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects';
-import api from '../api';
+import api from '../api/index';
 import { raiseError } from '../shared/notifier.actions';
-import { fetchPlayScore, playScore } from '../play/play.sagas';
+import { fetchPlayScore, playScore } from './play.sagas';
 import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/users.actions';
-import { requestStatsDone } from '../play/play.actions';
+import { requestStatsDone } from './play.actions';
 import { arePositionsSet, getUsersPlayingById } from "../users/users.reducer";
 import { getSelectedTeam } from "../teams/teams.reducer";
 
