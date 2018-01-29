@@ -6,7 +6,10 @@ import { showInfo, raiseError } from '../shared/notifier.actions';
 import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
 import { browserHistory } from 'react-router';
-import { getSelectedTeam, getMyRequestsPending, getJoinedTeams, getDefaultTeamId } from './teams.reducer';
+import {
+    getSelectedTeam, getMyRequestsPending, getJoinedTeams, getDefaultTeamId,
+    getTeamBasics
+} from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
 import { getAuthProfile, getToken } from "../shared/auth/auth.reducer";
@@ -72,11 +75,7 @@ export function* fetchTeams() {
 }
 
 export function* initTeam() {
-    const {joinedTeams, defaultTeamId, selectedTeam} = yield select(state => ({
-        joinedTeams: getJoinedTeams(state),
-        defaultTeamId: getDefaultTeamId(state),
-        selectedTeam: getSelectedTeam(state),
-    }));
+    const {joinedTeams, defaultTeamId, selectedTeam} = yield select(getTeamBasics);
     let currentTeam = selectedTeam;
     if (joinedTeams.length === 0) {
         yield call([browserHistory, browserHistory.push], '/welcome');

@@ -1,6 +1,5 @@
 import * as fromTeams from './teams.actions';
 import { UPDATE_PROFILE } from '../profile/profile.types';
-import { SIGNED_OUT } from '../shared/auth/auth.types';
 import { createSelector } from "reselect";
 import { combineReducers } from "redux";
 
@@ -9,14 +8,7 @@ const defaultAutocompletion = {
     teamNames: [],
 };
 
-const defaultState = {
-    joined: [],
-    selected: undefined,
-    pending: [],
-    autocompletion: defaultAutocompletion,
-};
-
-export function autocompletion(state = defaultAutocompletion, action) {
+export function autocompletion(state = defaultAutocompletion, action={}) {
     switch (action.type) {
         case fromTeams.FETCH_AUTOCOMPLETION:
             return {
@@ -35,7 +27,7 @@ export function autocompletion(state = defaultAutocompletion, action) {
     }
 }
 
-export const joined = (state = [], action) => {
+export const joined = (state = [], action={}) => {
     switch (action.type) {
         case fromTeams.TEAM_CREATED:
             return [action.team, ...state];
@@ -62,7 +54,7 @@ export const defaultMetaState = {
     defaultTeam: undefined,
 };
 
-export const meta = (state = defaultMetaState, action) => {
+export const meta = (state = defaultMetaState, action={}) => {
     switch (action.type) {
         case fromTeams.SET_MY_PENDING:
             return {
@@ -102,7 +94,7 @@ const defaultEvents = {
     error: undefined,
 };
 
-export const events = (state = defaultEvents, action) => {
+export const events = (state = defaultEvents, action={}) => {
     switch (action.type) {
         case fromTeams.FETCH_EVENTS:
             return {
@@ -136,7 +128,7 @@ export const teams = combineReducers({
 
 export default teams;
 
-export const getTeamsState = state => state.teams || defaultState;
+export const getTeamsState = state => state.teams;
 export const getJoinedTeams = createSelector(getTeamsState, state => state.joined);
 export const getTeamsMetadata = createSelector(getTeamsState, state => state.meta);
 export const getEventsState = createSelector(getTeamsState, state => state.events);
@@ -149,3 +141,9 @@ export const getSelectedTeam = createSelector(
     (joined, selected) => joined.find(team => team.id === selected) || {}
 );
 export const getTeamPending = createSelector(getTeamsMetadata, state => state.pending);
+export const getTeamBasics = createSelector(
+    [getJoinedTeams, getDefaultTeamId, getSelectedTeam],
+    (joinedTeams, defaultTeamId, selectedTeam) => ({
+        joinedTeams, defaultTeamId, selectedTeam,
+    })
+);

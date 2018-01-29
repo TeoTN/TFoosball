@@ -6,10 +6,11 @@ import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
 import api from '../api';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { showQuestionModal } from '../shared/modal.actions';
-import { getMyRequestsPending, getSelectedTeam, getTeamsState } from "../teams/teams.reducer";
+import { getMyRequestsPending, getSelectedTeam, getTeamBasics, getTeamsState, teams } from "../teams/teams.reducer";
 import { getToken } from "../shared/auth/auth.reducer";
 import { FETCH_AUTOCOMPLETION, INVITE, inviteUser, receivedEmailAutocompletion } from "../users/users.actions";
 import { fetchUsers } from "../users/users.sagas";
+import { initTeam } from "../teams/teams.sagas";
 
 
 describe('TeamCreationFlow saga', () => {
@@ -183,99 +184,101 @@ describe('FetchTeams saga', () => {
     });
 });
 
-describe('InitTeam saga', () => {
-    const stateWithTeamsAndSelected = {
-        teams: {
-            joined: [ {id: 3}, {id: 5} ],
-            pending: 0,
-            selected: 5
-        },
-    };
-    const stateWithTeams = {
-        teams: {
-            joined: [ {id: 3}, {id: 5} ],
-            pending: 0,
-        }
-    };
+describe('Init team', () => {
+    describe('Scenario 1: Redirect fresher to welcome page', function() {
+        const iterator = initTeam();
 
-    const stateWithoutTeams = {
-        teams: {
-            joined: [],
-            pending: 1,
-        }
-    };
-
-    describe('Scenario 1: Success - team selected', () => {
-        const iterator = teamSagas.initTeam();
-        it('should get teams from store', () => {
+        it('should select state', function() {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(getTeamsState));
+            expect(iter).toEqual(select(getTeamBasics));
         });
 
-        it('should get selected team', () => {
-            const iter = iterator.next(stateWithTeamsAndSelected.teams).value;
-            expect(iter).toEqual(select(getSelectedTeam));
-        });
-
-        it('should put teamActions.SELECT_TEAM with the team', () => {
-            const iter = iterator.next({id: stateWithTeamsAndSelected.teams.selected}).value;
-            expect(iter).toEqual(put(teamActions.selectTeam(stateWithTeamsAndSelected.teams.joined[1])))
-        });
-
-        it('should return from the saga with the team selected', () => {
-            const iter = iterator.next();
-            expect(iter.value).toEqual(stateWithTeamsAndSelected.teams.joined[1]);
-            expect(iter.done).toBe(true);
-        });
-    });
-
-    describe('Scenario 2: No teams were joined', () => {
-        const iterator = teamSagas.initTeam();
-        it('should get teams from store', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(select(getTeamsState));
-        });
-
-        it('should get selected team', () => {
-            const iter = iterator.next(stateWithoutTeams.teams).value;
-            expect(iter).toEqual(select(getSelectedTeam));
-        });
-
-        it('should redirect to /welcome page', () => {
-            const iter = iterator.next().value;
+        it('should redirect', function() {
+            const mockedState = {
+                joinedTeams: [], defaultTeamId: undefined, selectedTeam: {},
+            };
+            const iter = iterator.next(mockedState).value;
             expect(iter).toEqual(call([browserHistory, browserHistory.push], '/welcome'));
         });
 
-        it('should return from the saga', () => {
-            const iter = iterator.next();
-            expect(iter.done).toBe(true);
+        it('should return from saga', function() {
+            const iter = iterator.next().done;
+            expect(iter).toEqual(true);
         });
     });
 
-    describe('Scenario 3: No team was selected previously', () => {
-        const iterator = teamSagas.initTeam();
+    describe('Scenario 2: Pick default team', function() {
+        const iterator = initTeam();
 
-        it('should get teams from store', () => {
+        it('should select state', function() {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(getTeamsState));
+            expect(iter).toEqual(select(getTeamBasics));
         });
 
-        it('should get selected team', () => {
-            const iter = iterator.next(stateWithTeams.teams).value;
-            expect(iter).toEqual(select(getSelectedTeam));
+        it('should redirect', function() {
+            const mockedState = {
+                joinedTeams: [{id: 1}, {id: 2}, {id: 3}, {id: 4}],
+                defaultTeamId: 2,
+                selectedTeam: {},
+            };
+            const iter = iterator.next(mockedState).value;
+            expect(iter).toEqual(put(teamActions.selectTeam({id: 2})));
         });
 
-        it('should put teamActions.SELECT_TEAM with the team', () => {
-            const iter = iterator.next({id: stateWithTeams.teams.joined[0].id}).value;
-            expect(iter).toEqual(put(teamActions.selectTeam(stateWithTeams.teams.joined[0])))
+        it('should return from saga', function() {
+            const iter = iterator.next().done;
+            expect(iter).toEqual(true);
+        });
+    });
+
+    describe('Scenario 3: Pick selected team', function() {
+        const iterator = initTeam();
+
+        it('should select state', function() {
+            const iter = iterator.next().value;
+            expect(iter).toEqual(select(getTeamBasics));
         });
 
-        it('should return from the saga with the team selected', () => {
-            const iter = iterator.next();
-            expect(iter.value).toEqual(stateWithTeams.teams.joined[0]);
-            expect(iter.done).toBe(true);
+        it('should redirect', function() {
+            const mockedState = {
+                joinedTeams: [{id: 1}, {id: 2}, {id: 3}, {id: 4}],
+                defaultTeamId: undefined,
+                selectedTeam: {id: 3},
+            };
+            const iter = iterator.next(mockedState).value;
+            expect(iter).toEqual(put(teamActions.selectTeam({id: 3})));
         });
-    })
+
+        it('should return from saga', function() {
+            const iter = iterator.next().done;
+            expect(iter).toEqual(true);
+        });
+    });
+
+    describe('Scenario 4: Fallback to first joined team', function() {
+        const iterator = initTeam();
+
+        it('should select state', function() {
+            const iter = iterator.next().value;
+            expect(iter).toEqual(select(getTeamBasics));
+        });
+
+        it('should redirect', function() {
+            const mockedState = {
+                joinedTeams: [{id: 1}, {id: 2}, {id: 3}, {id: 4}],
+                defaultTeamId: undefined,
+                selectedTeam: {},
+            };
+            const iter = iterator.next(mockedState).value;
+            expect(iter).toEqual(put(teamActions.selectTeam({id: 1})));
+        });
+
+        it('should return from saga', function() {
+            const iter = iterator.next().done;
+            expect(iter).toEqual(true);
+        });
+    });
+
 });
 
 describe('HandleJoinTeam saga', () => {
@@ -553,9 +556,15 @@ describe('Team name autocompletion', function() {
 describe('Routes sagas', function() {
     describe('Joined list route', function() {
         const iterator = teamSagas.teamList();
+
         it('should fetch teams', function() {
             const iter = iterator.next();
             expect(iter.value).toEqual(fork(teamSagas.fetchTeams));
+        });
+
+        it('should fetch events', function() {
+            const iter = iterator.next();
+            expect(iter.value).toEqual(fork(teamSagas.fetchEvents));
         });
 
         it('should respond to change default', function() {
