@@ -1,7 +1,11 @@
 import * as actions from '../teams/teams.actions';
 import { signedOut } from '../shared/auth/auth.actions';
 import { profileUpdate } from '../profile/profile.actions';
-import { teams, getSelectedTeam } from '../teams/teams.reducer';
+import {
+    teams, getSelectedTeam, getTeamsState, getJoinedTeams, getTeamsMetadata,
+    getEventsState, getMyRequestsPending, getAutocompletionState, getSelectedTeamId, getDefaultTeamId, getTeamPending,
+    getTeamBasics
+} from '../teams/teams.reducer';
 import deepFreeze from 'deep-freeze';
 
 describe('Teams teams', () => {
@@ -119,17 +123,120 @@ describe('Teams teams', () => {
     });
 });
 
-describe('getSelectedTeam', () => {
-    it('should get selected team', () => {
+describe('Selectors', () => {
+    const defaultState = teams();
+    const wrap = teams => ({teams});
+    it('should get teams state', function() {
         const state = {
-            teams: {
-                meta: {
-                    selected: 2,
-                    pending: [],
-                },
-                joined: [{id: 1, name: 'Team1',}, {id: 2, name: 'Team2',}],
-            }
+            teams: defaultState,
+            users: {},
+            auth: {}
         };
-        expect(getSelectedTeam(state)).toEqual({ id: 2, name: 'Team2', });
+        expect(getTeamsState(state)).toEqual(defaultState);
     });
+
+    it('should get joined state', function() {
+        const state = Object.assign({}, defaultState, {joined: [{id: 1}]});
+        expect(getJoinedTeams(wrap(state))).toEqual([{id: 1}]);
+    });
+
+    it('should get teams metadata', function() {
+        const meta = {
+            selected: 1,
+            myPending: 10,
+            defaultTeam: 5,
+        };
+        const state = Object.assign({}, defaultState, { meta });
+        expect(getTeamsMetadata(wrap(state))).toEqual(meta);
+    });
+
+    it('should get my pending requests', function() {
+        const meta = {
+            selected: 1,
+            myPending: 10,
+            defaultTeam: 5,
+        };
+        const state = Object.assign({}, defaultState, { meta });
+        expect(getMyRequestsPending(wrap(state))).toEqual(10);
+    });
+
+    it('should get selected team id', function() {
+        const meta = {
+            selected: 1,
+            myPending: 10,
+            defaultTeam: 5,
+        };
+        const state = Object.assign({}, defaultState, { meta });
+        expect(getSelectedTeamId(wrap(state))).toEqual(1);
+    });
+
+    it('should get default team id', function() {
+        const meta = {
+            selected: {id: 1},
+            myPending: 10,
+            defaultTeam: 5,
+        };
+        const state = Object.assign({}, defaultState, { meta });
+        expect(getDefaultTeamId(wrap(state))).toEqual(5);
+    });
+
+    it('should get pending members', function() {
+        const meta = {
+            selected: {id: 1},
+            myPending: 10,
+            defaultTeam: 5,
+            pending: [{id: 15}]
+        };
+        const state = Object.assign({}, defaultState, { meta });
+        expect(getTeamPending(wrap(state))).toEqual([{id: 15}]);
+    });
+
+    it('should get selected team', function() {
+        const joined = [
+            {id: 1, x: 'o'},
+            {id: 5},
+            {id: 10},
+        ];
+        const meta = {
+            selected: 1,
+            myPending: 10,
+            defaultTeam: 5,
+        };
+        const state = Object.assign({}, defaultState, { meta, joined });
+        expect(getSelectedTeam(wrap(state))).toEqual({id: 1, x: 'o'});
+    });
+
+    it('should get events', function() {
+        const events = {
+            list: [{id: 5}],
+            loading: false,
+            error: null,
+        };
+        const state = Object.assign({}, defaultState, {events});
+        expect(getEventsState(wrap(state))).toEqual(events);
+    });
+
+    it('should get autocompletion state', function() {
+        const autocompletion = {
+            loading: true,
+            teamNames: ['a', 'bb', 'ccc'],
+        };
+        const state = Object.assign({}, defaultState, {autocompletion});
+        expect(getAutocompletionState(wrap(state))).toEqual(autocompletion);
+    });
+
+    it('should get team basics', function() {
+        const joined = [{id: 1}, {id: 2}, {id: 3}];
+        const meta = {
+            defaultTeam: 2,
+            selected: 3,
+        };
+        const state = Object.assign({}, defaultState, {meta, joined});
+        expect(getTeamBasics(wrap(state))).toEqual({
+            joinedTeams: joined,
+            defaultTeamId: 2,
+            selectedTeam: {id: 3},
+        });
+    });
+
 });
