@@ -1,6 +1,6 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import api from '../api';
-import { REQUEST_SAVE_SETTINGS, settingsSaved } from './settings.actions';
+import { settingsSaved } from './settings.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { browserHistory } from 'react-router'
 import { getSelectedTeam } from "../teams/teams.reducer";

@@ -4,14 +4,14 @@ import {profileMatches, profileStats} from '../profile/profile.sagas';
 import {fetchUsers} from '../users/users.sagas';
 import {listMatches} from '../matches/matches.sagas';
 import { teamAdmin, teamInvite, teamList, teamPending } from '../teams/teams.sagas';
-import {cleanNotifications, whatsNewModal} from './shared.sagas';
+import { checkWhatsNew, cleanNotifications } from './shared.sagas';
 import {acceptInvitation} from "./auth/auth.sagas";
 import { playRoute } from "../play/play.sagas";
 
 const options = {
     matchAll: true,
     beforeRouteChange: function* () {
-        yield [cleanNotifications(), whatsNewModal()];
+        yield [cleanNotifications(), checkWhatsNew()];
     }
 };
 
