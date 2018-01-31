@@ -14,6 +14,13 @@ class PlayResult extends React.Component {
 
     onInputChange = (team) => (event) => this.setState({[team]: event.target.value});
 
+    onInputBlur = (team) => () => {
+        const otherTeam = team === 'red' ? 'blue' : 'red';
+        if (!this.state[otherTeam]) {
+            this.setState({[otherTeam]: 10});
+        }
+    };
+
     handleFinish = () => {
         const {players, onPublish} = this.props;
         const requestData = {
@@ -40,6 +47,7 @@ class PlayResult extends React.Component {
                             type="number"
                             placeholder="Blue score"
                             onChange={this.onInputChange('blue')}
+                            onBlur={this.onInputBlur('blue')}
                             value={this.state.blue}
                         />
                     </Col>
@@ -52,6 +60,7 @@ class PlayResult extends React.Component {
                             type="number"
                             placeholder="Red score"
                             onChange={this.onInputChange('red')}
+                            onBlur={this.onInputBlur('red')}
                             value={this.state.red}
                         />
                     </Col>
