@@ -3,8 +3,6 @@ import createSagaMiddleware from 'redux-saga';
 import rootSaga from './homepage/root.sagas';
 import reducer from './homepage/root.reducer'
 import { loadState, saveState } from './persistence';
-import { teams } from "./teams/teams.reducer";
-import { difference } from "lodash";
 
 
 const createLoggingDispatch = (store) => {
@@ -29,17 +27,8 @@ const createLoggingDispatch = (store) => {
 
 const sagaMiddleware = createSagaMiddleware();
 
-// TODO Remove one-off reloading state after shape change
-
-const preloadedState = loadState() || { teams: {}};
-let store;
-const oldShape = Object.keys(preloadedState.teams);
-const newShape = Object.keys(teams(undefined, {}));
-if (difference(newShape, oldShape).length === 0) {
-    store = createStore(reducer, preloadedState, applyMiddleware(sagaMiddleware));
-} else {
-    store = createStore(reducer, reducer(undefined, {}), applyMiddleware(sagaMiddleware));
-}
+const preloadedState = loadState();
+const store = createStore(reducer, preloadedState, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);
 

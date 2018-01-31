@@ -6,6 +6,7 @@ import { removed } from './match.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { fetchUpdateUsers } from '../users/users.sagas';
 
+// TODO Use actual selector
 export const stateTeamsSelectedSelector = state => state.teams.selected;
 
 export function* publish() {

@@ -1,28 +1,31 @@
-import {take, call, put, fork, cancel, select, takeLatest} from 'redux-saga/effects';
-import {browserHistory} from 'react-router'
-import {SIGN_IN, SIGN_OUT} from './auth.types';
+import { take, call, put, select, takeLatest } from 'redux-saga/effects';
+import { browserHistory } from 'react-router'
+import { SIGN_IN, SIGN_OUT } from './auth.types';
 import * as authActions from './auth.actions';
-import {raiseError, clean, RAISE_UNAUTHORIZED, showInfo} from '../notifier.actions';
-import {initTeam, fetchTeams} from '../../teams/teams.sagas';
-import {prepareWindow} from '../../api/oauth';
+import { raiseError, clean, showInfo, RAISE_UNAUTHORIZED } from '../notifier.actions';
+import { initTeam, fetchTeams } from '../../teams/teams.sagas';
+import { prepareWindow } from '../../api/oauth';
 import api from '../../api';
-import {removeState} from '../../persistence';
-import {getOAuthErrorMsg} from './auth.utils';
-import {showModalInfo, ACCEPT} from '../modal.actions';
+import { removeState } from '../../persistence';
+import { getOAuthErrorMsg } from './auth.utils';
+import { showModalInfo, ACCEPT } from '../modal.actions';
+import { signOut } from "./auth.actions";
+import { getToken } from "./auth.reducer";
+import { APIUnauthorizedError } from "../../errors";
 
 export function* authenticate(reauthenticate = false) {
-    const token = yield select(state => state.auth.token);
+    const token = yield select(getToken);
     if (token && !reauthenticate) return {token};
     const promptWindow = prepareWindow();
     try {
         const {token, expires_at} = yield call([promptWindow, promptWindow.open]);
         yield put(authActions.setToken(token, expires_at));
-        return {token};
+        return token;
     } catch (error) {
         const errorMsg = getOAuthErrorMsg(error);
         yield put(raiseError(errorMsg));
     }
-    return {};
+    return '';
 }
 
 export function* fetchProfile(team_id, member_id) {
@@ -38,59 +41,49 @@ export function* fetchProfile(team_id, member_id) {
     }
 }
 
-export function* signIn() {
-    yield take(SIGN_IN);
-    yield call(authenticate);
+export function* onSignOut() {
+    const logout_url = api.urls.logout();
+    try {
+        yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
+    } catch (error) {
+        if (!error instanceof APIUnauthorizedError) {
+            yield put(raiseError(error));
+        }
+    }
+    yield put(authActions.signedOut());
+    yield put(clean());
+    yield call(removeState);
+    yield call([browserHistory, browserHistory.push], '/');
+}
+
+export function* onSignIn() {
+    const token = yield call(authenticate);
+    if (!token) {
+        return;
+    }
     yield call(fetchTeams);
     const currentTeam = yield call(initTeam);
     if (!currentTeam) {
         // User is not assigned to any team and we were redirected to /welcome page
         return;
     }
-    // try {
     yield call(fetchProfile, currentTeam.id, currentTeam.member_id);
-    // } catch (error) {
-    // TODO What if the entry belongs to the other user that was previously logged in?
-    // yield call(removeTeamState);
-    // yield chooseTeam();
-    // yield fetchProfile();
-    // console.error(error);
-    // }
     yield call([browserHistory, browserHistory.push], `/match`);
 }
 
-export function* loginFlow() {
-    while (true) {
-        const task = yield fork(signIn);
-        yield take(SIGN_OUT);
-        yield cancel(task);
-        const logout_url = api.urls.logout();
-        try {
-            yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
-        } catch (error) {
-        }
-        yield put(authActions.signedOut());
-        yield put(clean());
-        yield call(removeState);
-        yield call([browserHistory, browserHistory.push], '/');
-    }
-}
-
-export function* sessionExpired() {
-    const reauthenticate = function* () {
-        // TODO replay
-        const info = {
-            title: 'Unauthenticated',
-            text: 'Your session has expired, please log in again.',
-            onAccept: () => {
-            },
-        };
-        yield put(showModalInfo(info));
-        yield take(ACCEPT);
-        yield call(authenticate, true);
-        yield call([browserHistory, browserHistory.push], '/');
+export function* onSessionExpired() {
+    // TODO replay
+    const info = {
+        title: 'Unauthenticated',
+        text: 'Your session has expired, please log in again.',
+        onAccept: () => {
+        },
     };
-    yield takeLatest(RAISE_UNAUTHORIZED, reauthenticate);
+    yield put(showModalInfo(info));
+    yield take(ACCEPT);
+    yield call(removeState);
+    yield put(signOut());
+    yield call([browserHistory, browserHistory.push], '/');
 }
 
 export function* acceptInvitation({activation_code}) {
@@ -113,4 +106,26 @@ export function* acceptInvitation({activation_code}) {
     const currentTeam = yield call(initTeam);
     yield call(fetchProfile, currentTeam.id, currentTeam.member_id);
     yield call([browserHistory, browserHistory.push], '/');
+}
+
+export function* checkSessionExpired() {
+    const token = yield select(getToken);
+    if (!token) {
+        return;
+    }
+    const url = api.urls.root();
+    try {
+        yield call(api.requests.get, url);
+    } catch (error) {
+        yield put(raiseError(error));
+    }
+}
+
+export function* authSaga() {
+    yield [
+        checkSessionExpired(),
+        takeLatest(RAISE_UNAUTHORIZED, onSessionExpired),
+        takeLatest(SIGN_IN, onSignIn),
+        takeLatest(SIGN_OUT, onSignOut),
+    ];
 }

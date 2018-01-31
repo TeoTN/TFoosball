@@ -59,6 +59,7 @@ const api = {
         },
     },
     urls: {
+        root: () => API_ROOT,
         playerList: () => `${API_ROOT}/players/`,
         playerEntity: (player_id) => `${API_ROOT}/players/${player_id}/`,
         playerEntityInvite: (player_id) => `${API_ROOT}/players/${player_id}/invite/`,

@@ -34,7 +34,3 @@ export function* saveSettings({values}) {
         yield put(raiseError(errorMsg));
     }
 }
-
-export function* onRequestSaveSettings() {
-    yield takeLatest(REQUEST_SAVE_SETTINGS, saveSettings);
-}

@@ -2,6 +2,7 @@ import * as fromTeams from './teams.actions';
 import { UPDATE_PROFILE } from '../profile/profile.types';
 import { createSelector } from "reselect";
 import { combineReducers } from "redux";
+import { SIGNED_OUT } from "../shared/auth/auth.types";
 
 const defaultAutocompletion = {
     loading: false,
@@ -42,6 +43,8 @@ export const joined = (state = [], action={}) => {
             );
         case fromTeams.TEAM_LEFT:
             return state.filter(t => t.id !== action.team.id);
+        case SIGNED_OUT:
+            return [];
         default:
             return state;
     }
@@ -82,19 +85,21 @@ export const meta = (state = defaultMetaState, action={}) => {
                 ...state,
                 defaultTeam: action.id,
             };
+        case SIGNED_OUT:
+            return defaultMetaState;
         default:
             return state;
     }
 };
 
 
-const defaultEvents = {
+const defaultEventsState = {
     list: [],
     loading: true,
     error: undefined,
 };
 
-export const events = (state = defaultEvents, action={}) => {
+export const events = (state = defaultEventsState, action={}) => {
     switch (action.type) {
         case fromTeams.FETCH_EVENTS:
             return {
@@ -114,6 +119,8 @@ export const events = (state = defaultEvents, action={}) => {
                 error: action.error,
                 list: [],
             };
+        case SIGNED_OUT:
+            return defaultEventsState;
         default:
             return state;
     }
