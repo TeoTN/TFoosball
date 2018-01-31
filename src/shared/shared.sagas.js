@@ -1,4 +1,4 @@
-import {put, call, select, take, fork} from 'redux-saga/effects';
+import {put, call, select, take, fork, takeLatest} from 'redux-saga/effects';
 import { clean, raiseError } from './notifier.actions';
 import {WHATS_NEW_VERSION} from "../api/config";
 import {ACCEPT, showModalInfo} from "./modal.actions";
@@ -6,7 +6,6 @@ import api from "../api/index";
 import {whatsNewShown} from "./auth/auth.actions";
 import {SET_PROFILE} from './auth/auth.types';
 import { getAuthProfile } from "./auth/auth.reducer";
-import { takeLatest } from "redux-saga";
 import { SHOW_WHATS_NEW } from "./shared.actions";
 
 export function* cleanNotifications() {
