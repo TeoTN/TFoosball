@@ -3,8 +3,9 @@ import api from '../api/index';
 import * as MatchActions from './match.actions';
 import * as MatchTypes from './match.types';
 import { raiseError, showInfo } from '../shared/notifier.actions';
-import { publish, removeMatch, listMatches, stateTeamsSelectedSelector } from './matches.sagas';
+import { publish, removeMatch, listMatches } from './matches.sagas';
 import { fetchUpdateUsers } from '../users/users.sagas';
+import { getSelectedTeamId } from "../teams/teams.reducer";
 
 
 describe('Publish match saga', () => {
@@ -36,7 +37,8 @@ describe('Publish match saga', () => {
         });
 
         it('should select team id', () => {
-            expect(JSON.stringify(iterator.next(MatchActions.publish(matchData, callback)).value)).toEqual(JSON.stringify(select(() => 1)));
+            const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
+            expect(iter).toEqual(select(getSelectedTeamId));
         });
 
         it('should call api to publish match', () => {
@@ -87,8 +89,8 @@ describe('Publish match saga', () => {
         });
 
         it('should select team id', () => {
-            const iter = JSON.stringify(iterator.next(MatchActions.publish(matchData, callback)).value);
-            expect(iter).toEqual(JSON.stringify(select(() => currentTeamId)));
+            const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
+            expect(iter).toEqual(select(getSelectedTeamId));
         });
 
         it('should call api to publish match', () => {
@@ -175,7 +177,7 @@ describe('ListMatches saga', () => {
         const iterator = listMatches(params);
 
         it('should select team selected from store', () => {
-            expect(iterator.next(currentTeamId).value).toEqual(select(stateTeamsSelectedSelector));
+            expect(iterator.next(currentTeamId).value).toEqual(select(getSelectedTeamId));
         });
         it('should call fetch data from API', () => {
             expect(iterator.next(currentTeamId).value).toEqual(call(api.requests.get, url, params, errorMsg));
@@ -192,7 +194,7 @@ describe('ListMatches saga', () => {
         const iterator = listMatches(params);
 
         it('should select team selected from store', () => {
-            expect(iterator.next(currentTeamId).value).toEqual(select(stateTeamsSelectedSelector));
+            expect(iterator.next(currentTeamId).value).toEqual(select(getSelectedTeamId));
         });
         it('should call fetch data from API', () => {
             expect(iterator.next(currentTeamId).value).toEqual(call(api.requests.get, url, params, errorMsg));
