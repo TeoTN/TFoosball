@@ -1,4 +1,4 @@
-import { take, call, put, select, takeLatest } from 'redux-saga/effects';
+import { take, call, put, select, takeLatest, race } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import * as authActions from './auth.actions';
@@ -8,8 +8,7 @@ import { prepareWindow } from '../../api/oauth';
 import api from '../../api';
 import { removeState } from '../../persistence';
 import { getOAuthErrorMsg } from './auth.utils';
-import { showModalInfo, ACCEPT } from '../modal.actions';
-import { signOut } from "./auth.actions";
+import { showModalInfo, ACCEPT, REJECT } from '../modal.actions';
 import { getToken } from "./auth.reducer";
 import { APIUnauthorizedError } from "../../errors";
 
@@ -80,10 +79,12 @@ export function* onSessionExpired() {
         },
     };
     yield put(showModalInfo(info));
-    yield take(ACCEPT);
+    yield race({
+        accept: take(ACCEPT),
+        reject: take(REJECT),
+    });
     yield call(removeState);
-    yield put(signOut());
-    yield call([browserHistory, browserHistory.push], '/');
+    yield put(authActions.signOut());
 }
 
 export function* acceptInvitation({activation_code}) {
