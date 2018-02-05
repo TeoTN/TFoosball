@@ -1,6 +1,6 @@
 {
   "name": "tfoosball",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "private": true,
   "devDependencies": {
     "autoprefixer": "6.5.1",

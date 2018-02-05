@@ -1,3 +1,11 @@
+### Release 2.3.2 - February 2018
+
+This is a minor release that prepares client to update to release 2.4.0.
+Changes:
+
+* Log out user when session expires
+* Fix some authentication and authorization issues
+
 ### Release 2.3.1 - January 2018
 
 This release fixes some issues:
