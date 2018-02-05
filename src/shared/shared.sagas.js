@@ -1,10 +1,9 @@
 import { put, call, select, take, fork, takeLatest, race } from 'redux-saga/effects';
 import { clean, raiseError } from './notifier.actions';
-import {WHATS_NEW_VERSION} from "../api/config";
+import { WHATS_NEW_VERSION } from "../api/config";
 import { ACCEPT, REJECT, showModalInfo } from "./modal.actions";
 import api from "../api/index";
-import {whatsNewShown} from "./auth/auth.actions";
-import {SET_PROFILE} from './auth/auth.types';
+import { whatsNewShown } from "./auth/auth.actions";
 import { getAuthProfile } from "./auth/auth.reducer";
 import { SHOW_WHATS_NEW } from "./shared.actions";
 
@@ -29,7 +28,8 @@ export function* showWhatsNewModal(localWhatsNewVersion) {
             title: `What's new (${WHATS_NEW_VERSION})`,
             text: content,
             isMarkdown: true,
-            onAccept: () => {},
+            onAccept: () => {
+            },
             local: localWhatsNewVersion,
             global: WHATS_NEW_VERSION,
         };
@@ -42,9 +42,8 @@ export function* showWhatsNewModal(localWhatsNewVersion) {
 
 export function* checkWhatsNew() {
     let profile = yield select(getAuthProfile);
-    if (!profile) {
-        const action = yield take(SET_PROFILE);
-        profile = action.response;
+    if (!profile || !profile.user_id) {
+        return;
     }
     const localWhatsNewVersion = parseInt(profile.whats_new_version, 10) || 0;
     if (localWhatsNewVersion && WHATS_NEW_VERSION <= localWhatsNewVersion) {

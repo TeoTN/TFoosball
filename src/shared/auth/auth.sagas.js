@@ -88,7 +88,7 @@ export function* onSessionExpired() {
 }
 
 export function* acceptInvitation({activation_code}) {
-    const token = yield select(state => state.auth.token);
+    const token = yield select(getToken);
 
     if (!token) {
         yield call(authenticate, false);
