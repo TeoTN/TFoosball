@@ -27,7 +27,7 @@ export function* whatsNewModal() {
         const action = yield take(SET_PROFILE);
         profile = action.response;
     }
-    const localWhatsNewVersion = parseInt(profile.whats_new_version) || 0;
+    const localWhatsNewVersion = parseInt(profile.whats_new_version, 10) || 0;
     if (localWhatsNewVersion && WHATS_NEW_VERSION <= localWhatsNewVersion) {
         return;
     }

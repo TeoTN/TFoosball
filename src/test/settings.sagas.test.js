@@ -14,19 +14,6 @@ import {
 import { getSelectedTeam } from "../teams/teams.reducer";
 
 
-
-describe('onRequestSaveSettings saga', () => {
-    const iterator = onRequestSaveSettings();
-
-    it('should take latest REQUEST_SAVE_SETTINGS', () => {
-        expect(iterator.next().value).toEqual(takeLatest(REQUEST_SAVE_SETTINGS, saveSettings));
-    });
-
-    it('should return from the saga', () => {
-        expect(iterator.next().done).toBe(true);
-    });
-});
-
 describe('Save settings saga', () => {
     const settings = { first_name: 'ABC', last_name: '123', username: 'ABC123', hidden: true};
     const currentTeam = { id: 1, member_id: 15, };

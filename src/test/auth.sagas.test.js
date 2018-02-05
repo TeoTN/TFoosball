@@ -4,7 +4,7 @@ import { prepareWindow } from '../api/oauth';
 import api from '../api';
 import * as AuthActions from '../shared/auth/auth.actions';
 import { clean, raiseError } from '../shared/notifier.actions';
-import { authenticate, loginFlow, signIn, fetchProfile } from '../shared/auth/auth.sagas';
+import { authenticate, onSignIn, onSignOut, fetchProfile } from '../shared/auth/auth.sagas';
 import { getOAuthErrorMsg } from '../shared/auth/auth.utils';
 import { fetchTeams, initTeam } from '../teams/teams.sagas';
 import { removeState } from '../persistence';
@@ -34,7 +34,7 @@ describe('Authenticate saga', () => {
 
         it('should return token and complete', () => {
             const iter = iterator.next(fixture.token).value;
-            expect(iter).toEqual(fixture);
+            expect(iter).toEqual(fixture.token);
             expect(iterator.next().done).toEqual(true);
         });
     });
@@ -78,7 +78,7 @@ describe('Authenticate saga', () => {
 
         it('should complete', () => {
             const iter = iterator.next('some-token').value;
-            expect(iter).toEqual({});
+            expect(iter).toEqual('');
             expect(iterator.next().done).toEqual(true);
         });
     });
@@ -87,22 +87,18 @@ describe('Authenticate saga', () => {
 
 describe('SignIn saga', () => {
     describe('Scenario 1: Typical [Success]', () => {
-        const iterator = signIn();
+        const iterator = onSignIn();
         const fixtureTeam = {
             id: 1,
             member_id: 7,
         };
-
-        it('should wait for action SIGN_IN', () => {
-            expect(iterator.next(AuthActions.signIn()).value).toEqual(take(AuthActions.signIn().type));
-        });
 
         it('should call Authenticate saga', () => {
             expect(iterator.next().value).toEqual(call(authenticate));
         });
 
         it('should call FetchTeams saga', () => {
-            expect(iterator.next().value).toEqual(call(fetchTeams));
+            expect(iterator.next('token').value).toEqual(call(fetchTeams));
         });
 
         it('should call InitTeam saga', () => {
@@ -120,17 +116,14 @@ describe('SignIn saga', () => {
     });
 
     describe('Scenario 2: User not assigned to any team', () => {
-        const iterator = signIn();
-        it('should wait for action SIGN_IN', () => {
-            expect(iterator.next(AuthActions.signIn()).value).toEqual(take(AuthActions.signIn().type));
-        });
+        const iterator = onSignIn();
 
         it('should call Authenticate saga', () => {
             expect(iterator.next().value).toEqual(call(authenticate));
         });
 
         it('should call FetchTeams saga', () => {
-            expect(iterator.next().value).toEqual(call(fetchTeams));
+            expect(iterator.next('token').value).toEqual(call(fetchTeams));
         });
 
         it('should call InitTeam saga', () => {
@@ -141,98 +134,6 @@ describe('SignIn saga', () => {
             expect(iterator.next().done).toEqual(true);
         });
     });
-});
-
-
-describe('LoginFlow saga', () => {
-    describe('Scenario 1: Typical success', () => {
-        const iterator = loginFlow();
-        let signInSaga;
-        it('should fork SignIn saga', () => {
-            signInSaga = fork(signIn);
-            expect(iterator.next().value).toEqual(signInSaga);
-        });
-
-        it('should wait for SIGN_OUT action', () => {
-            expect(iterator.next(createMockTask()).value).toEqual(take(AuthActions.signOut().type));
-        });
-
-        it('should cancel SignIn saga', () => {
-            expect(JSON.stringify(iterator.next().value)).toEqual(JSON.stringify(cancel(createMockTask())));
-        });
-
-        it('should call API sign out', () => {
-            const logout_url = api.urls.logout();
-            const expected = call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
-            expect(iterator.next().value).toEqual(expected)
-        });
-
-        it('should dispatch SIGNED_OUT action', () => {
-            expect(iterator.next().value).toEqual(put(AuthActions.signedOut()));
-        });
-
-        it('should clean notifications', () => {
-            expect(iterator.next().value).toEqual(put(clean()));
-        });
-
-        it('should clean localStorage', () => {
-            expect(iterator.next().value).toEqual(call(removeState));
-        });
-
-        it('should redirect to home page', () => {
-            expect(iterator.next().value).toEqual(call([browserHistory, browserHistory.push], '/'));
-        });
-
-        it('should not complete the saga', () => {
-            expect(iterator.next().done).toEqual(false); // Fork signIn again
-        });
-    });
-
-    describe('Scenario 2: Failed to sign out', () => {
-        const iterator = loginFlow();
-        const error_msg = 'Failed to sign out. Please try again.';
-        let signInSaga;
-        it('should fork SignIn saga', () => {
-            signInSaga = fork(signIn);
-            expect(iterator.next().value).toEqual(signInSaga);
-        });
-
-        it('should wait for SIGN_OUT action', () => {
-            expect(iterator.next(createMockTask()).value).toEqual(take(AuthActions.signOut().type));
-        });
-
-        it('should cancel SignIn saga', () => {
-            expect(JSON.stringify(iterator.next().value)).toEqual(JSON.stringify(cancel(createMockTask())));
-        });
-
-        it('should call API sign out', () => {
-            const logout_url = api.urls.logout();
-            const expected = call(api.requests.get, logout_url, null, error_msg);
-            expect(iterator.next().value).toEqual(expected)
-        });
-
-        it('should dispatch SIGNED_OUT action', () => {
-            expect(iterator.next().value).toEqual(put(AuthActions.signedOut()));
-        });
-
-        it('should clean notifications', () => {
-            expect(iterator.next().value).toEqual(put(clean()));
-        });
-
-        it('should clean localStorage', () => {
-            expect(iterator.next().value).toEqual(call(removeState));
-        });
-
-        it('should redirect to home page', () => {
-            expect(iterator.next().value).toEqual(call([browserHistory, browserHistory.push], '/'));
-        });
-
-        it('should restart the saga', () => {
-            const iter = iterator.next();
-            expect(iter.done).toEqual(false);
-            expect(iter.value).toEqual(fork(signIn));
-        })
-    })
 });
 
 describe('Fetch profile saga', () => {
