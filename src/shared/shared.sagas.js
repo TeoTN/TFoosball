@@ -1,7 +1,7 @@
-import {put, call, select, take, fork} from 'redux-saga/effects';
+import { put, call, select, take, fork, race } from 'redux-saga/effects';
 import { clean, raiseError } from './notifier.actions';
 import {WHATS_NEW_VERSION} from "../api/config";
-import {ACCEPT, showModalInfo} from "./modal.actions";
+import { ACCEPT, REJECT, showModalInfo } from "./modal.actions";
 import api from "../api/index";
 import {whatsNewShown} from "./auth/auth.actions";
 import {SET_PROFILE} from './auth/auth.types';
@@ -40,7 +40,10 @@ export function* whatsNewModal() {
         global: WHATS_NEW_VERSION,
     };
     yield put(showModalInfo(info));
-    yield take(ACCEPT);
+    yield race({
+        accept: take(ACCEPT),
+        reject: take(REJECT),
+    });
     yield put(whatsNewShown(WHATS_NEW_VERSION));
     yield fork(updateWhatsNewVersion, profile);
 }
