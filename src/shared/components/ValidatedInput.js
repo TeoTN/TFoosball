@@ -3,7 +3,7 @@ import { ControlLabel, FormControl, FormGroup, Col, OverlayTrigger, Tooltip } fr
 import Select from 'react-select';
 
 
-const withLabel = (InputComponent) => ({label, xsLabel, smLabel, mdLabel, lgLabel, xsHiddenLabel, maxSize, ...props}) => {
+const withLabel = (InputComponent) => ({label, xsLabel, smLabel, mdLabel, lgLabel, xsHiddenLabel, maxSize = 12, ...props}) => {
     const inv = size => size ? maxSize - size : undefined;
     if (!label) return (<InputComponent {...props} />);
     return (

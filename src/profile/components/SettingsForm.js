@@ -10,7 +10,7 @@ export const ControlledSwitch = ({input, ...props}) => (
     <Switch bsStyle="info" onChange={input.onChange} checked={input.checked} />
 );
 
-const SettingsForm = ({ handleSubmit,initialValues, pristine }) => {
+const SettingsForm = ({ handleSubmit, initialValues, pristine }) => {
     console.log(initialValues);
     return (
         <Row>
