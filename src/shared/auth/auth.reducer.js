@@ -31,7 +31,9 @@ export const activate = (state = {pending: true, success: false}, action = {}) =
 
 const defaultAuthState = {
     activate: activate(),
-    token: undefined
+    token: undefined,
+    profile: {},
+    expires_at: undefined,
 };
 
 export const auth = (state = defaultAuthState, action) => {
@@ -43,7 +45,7 @@ export const auth = (state = defaultAuthState, action) => {
                 expires_at: action.expires_at,
             };
         case types.SIGNED_OUT:
-            return {};
+            return defaultAuthState;
         case types.SET_PROFILE:
             return {
                 ...state,
@@ -73,4 +75,12 @@ export const getAuthProfile = createSelector(getAuthState, state => state.profil
 export const getDefaultTeam = createSelector(getAuthProfile, profile => profile.default_team);
 export const isTeamAdmin = createSelector(getAuthProfile, profile => profile && profile.is_team_admin);
 export const getToken = createSelector(getAuthState, state => state.token);
+export const getPersistentAuthState = createSelector(
+    getAuthState,
+    ({token, expires_at, profile: {exp_history, ...profileData}}) => ({
+        token,
+        expires_at,
+        profile: profileData,
+    }),
+);
 export default auth;

@@ -154,3 +154,7 @@ export const getTeamBasics = createSelector(
         joinedTeams, defaultTeamId, selectedTeam,
     })
 );
+export const getPersistentTeamsState = createSelector(
+    [getJoinedTeams, getTeamsMetadata],
+    (joined, meta) => ({joined, meta})
+);
