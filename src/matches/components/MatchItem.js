@@ -2,7 +2,7 @@ import React from 'react';
 import {Col, Glyphicon, Button, ListGroupItem} from 'react-bootstrap';
 import Icon from 'react-fontawesome';
 
-
+const ellipsis = str => str.length < 15 ? str : `${str.slice(0, 12)}...`;
 const MatchItem = ({match, username, onRemove, withOptions, signed}) => {
     const highlight = (
             match.red_score > match.blue_score &&
@@ -19,8 +19,8 @@ const MatchItem = ({match, username, onRemove, withOptions, signed}) => {
             </Button>
             }
             <Col xs={8} className="visible-xs">
-                <h6 className="text-danger">{match.red_def}&nbsp;[D], {match.red_att}&nbsp;[A]</h6>
-                <h6 className="text-info">{match.blue_def}&nbsp;[D], {match.blue_att}&nbsp;[A]</h6>
+                <h6 className="text-danger">{ellipsis(match.red_def)}&nbsp;[D], {ellipsis(match.red_att)}&nbsp;[A]</h6>
+                <h6 className="text-info">{ellipsis(match.blue_def)}&nbsp;[D], {ellipsis(match.blue_att)}&nbsp;[A]</h6>
             </Col>
             <Col sm={5} xsHidden>
                 <h6 className="text-danger text-right h6-large">{match.red_def} [D], {match.red_att} [A]</h6>

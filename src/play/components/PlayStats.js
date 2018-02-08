@@ -11,7 +11,7 @@ class PlayStats extends React.PureComponent {
     renderUserStats = (player, team, position) => (
         player && 
         <Row key={`stats-${team}-${position}`}>
-            <Col xs={4}>
+            <Col xs={4} className='text-ellipsis'>
                 { player.username }
             </Col>
             <Col xs={2}>

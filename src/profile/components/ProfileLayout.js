@@ -21,7 +21,7 @@ class ProfileLayout extends React.PureComponent {
             <div className="container">
                 <div className="profile-head">
                     <Gravatar email={profile.email}/>
-                    <h1>{username}
+                    <h1 className='text-ellipsis'>{username}
                         <small>{profile.exp}&nbsp;XP</small>
                     </h1>
                     {

@@ -8,7 +8,7 @@ const UserItem = ({user, onSelect, selected}) => (
     <ListGroupItem
         bsStyle={selected ? selectedColor : null}
         onClick={() => onSelect(user)}>
-        <Col xs={8}>
+        <Col xs={8} className='text-ellipsis'>
             {user.username}&nbsp;
             {user.is_team_admin && <Icon name='superpowers' ariaLabel={'Team admin'} className='text-danger'/>}
         </Col>

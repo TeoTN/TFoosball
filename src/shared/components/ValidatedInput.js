@@ -1,5 +1,5 @@
 import React from 'react'
-import { ControlLabel, FormControl, FormGroup, Col, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { ControlLabel, FormControl, FormGroup, Col, HelpBlock } from 'react-bootstrap';
 import Select from 'react-select';
 
 
@@ -18,21 +18,18 @@ const withLabel = (InputComponent) => ({label, xsLabel, smLabel, mdLabel, lgLabe
     );
 };
 
-const withErrorTooltip = (WrappedComponent) => ({overlay, placement, hasError, ...props}) => {
-    if (!hasError) return <WrappedComponent {...props} />;
+const withErrorTooltip = (WrappedComponent) => ({errorMsg, hasError, ...props}) => {
     return (
-        <OverlayTrigger placement={placement} overlay={overlay}>
+        <React.Fragment>
             <WrappedComponent {...props} />
-        </OverlayTrigger>
+            { hasError && <HelpBlock>{ errorMsg.toString() }</HelpBlock> }
+        </React.Fragment>
     );
 };
 
 const withValidation = (InputComponent) => class extends React.Component {
     render() {
         const { placeholder, input, meta: {error, dirty}, ...otherProps } = this.props;
-        const tooltip = error ? (
-            <Tooltip id="error.name">{error.message}</Tooltip>
-        ) : null;
 
         return (
             <FormGroup controlId={input.name} validationState={error && dirty ? 'error' : null}>
@@ -41,8 +38,7 @@ const withValidation = (InputComponent) => class extends React.Component {
                     value={input.value}
                     onChange={input.onChange}
                     hasError={dirty && error}
-                    overlay={tooltip}
-                    placement="bottom"
+                    errorMsg={error}
                     {...otherProps}
                 />
             </FormGroup>

@@ -39,6 +39,7 @@ class UserPicker extends React.PureComponent {
         const user = players[`${team}_${position}`];
         return (
             <DropdownButton
+                className='text-ellipsis'
                 bsStyle={this.getColor(team)}
                 title={this.getTitle(user)}
                 id={`player-${team}-${position}`}

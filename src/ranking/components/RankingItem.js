@@ -7,7 +7,7 @@ const RankingItem = ({user, highlight, onClick, model}) => {
             onClick={onClick}>
             {
                 Object.entries(model).map(
-                    ([key, label]) => <td key={key}>{user[key]}</td>
+                    ([key, label]) => <td key={key} className='text-ellipsis'>{user[key]}</td>
                 )
             }
         </tr>

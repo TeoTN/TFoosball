@@ -14,9 +14,9 @@ const WinnersStand = ({ winners }) => {
         winners.length === 3 ?
         <Row className="winners-stand text-center ui-card" componentClass={Panel}>
             <Col xs={12}> <h3>Top players</h3> </Col>
-            <Face xs={4} smOffset={3} sm={2} user={winners[0]} />
-            <Face xs={4} sm={2} user={winners[1]} />
-            <Face xs={4} sm={2} user={winners[2]} />
+            <Face xs={4} smOffset={3} sm={2} user={winners[0]} className='text-ellipsis'/>
+            <Face xs={4} sm={2} user={winners[1]} className='text-ellipsis'/>
+            <Face xs={4} sm={2} user={winners[2]} className='text-ellipsis'/>
         </Row> :
         null
     );
