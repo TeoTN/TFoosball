@@ -53,17 +53,17 @@ describe('Validate member profile data', () => {
         expect(validateMember(validData)).toEqual(validData);
     });
 
-    it('should return data when username has length <= 14', () => {
+    it('should return data when username has length <= 32', () => {
         const validData = {
-            username: 'executive12345',
+            username: new Array(15).fill('a').join(''),
         };
         expect(() => validateMember(validData)).not.toThrowError();
         expect(validateMember(validData)).toEqual(validData);
     });
 
-    it('should throw error when username consists of more than 14 characters', () => {
+    it('should throw error when username consists of more than 32 characters', () => {
         const invalidData = {
-            username: 'anatomopatomorfolog',
+            username: new Array(35).fill('a').join(''),
         };
         expect(() => validateMember(invalidData)).toThrowError();
     });

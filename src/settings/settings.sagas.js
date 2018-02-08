@@ -11,8 +11,8 @@ export const validateMember = (data) => {
     if (data.username.length < 3) {
         throw new Error('Username must consist of at least 3 characters.');
     }
-    if (data.username.length >= 15) {
-        throw new Error('Username must consist of no more than 14 characters.');
+    if (data.username.length > 32) {
+        throw new Error('Username must consist of no more than 32 characters.');
     }
     return data;
 };

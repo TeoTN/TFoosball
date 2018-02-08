@@ -29,7 +29,7 @@ export const activate = (state = {pending: true, success: false}, action = {}) =
     }
 };
 
-const defaultAuthState = {
+export const defaultAuthState = {
     activate: activate(),
     token: undefined,
     profile: {},

@@ -4,7 +4,7 @@ import {
     setProfile,
     signedOut,
 } from './auth.actions';
-import { profile, auth, getToken } from './auth.reducer';
+import { profile, auth, getToken, defaultAuthState } from './auth.reducer';
 
 describe('Profile reducer', () => {
     it('should not change profile state on default', () => {
@@ -72,7 +72,7 @@ describe('Auth reducer', () => {
             profile: {},
         };
         const action = signedOut();
-        const stateAfter = {};
+        const stateAfter = defaultAuthState;
 
         deepFreeze(stateBefore);
         deepFreeze(action);
