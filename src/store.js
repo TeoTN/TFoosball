@@ -3,7 +3,6 @@ import createSagaMiddleware from 'redux-saga';
 import rootSaga from './homepage/root.sagas';
 import reducer, { getPersistentState } from './homepage/root.reducer'
 import { loadState, saveState } from './persistence';
-import { getPersistentAuthState } from "./shared/auth/auth.reducer";
 
 
 const createLoggingDispatch = (store) => {

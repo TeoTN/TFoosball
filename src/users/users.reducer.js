@@ -4,6 +4,7 @@ import { createSelector } from "reselect";
 import pick from 'lodash/pick';
 import intersection from 'lodash/intersection';
 import mapValues from 'lodash/mapValues';
+import pickBy from "lodash/pickBy";
 
 
 export const getSortedUsers = (state, column, isAscendingOrder) =>
@@ -176,7 +177,8 @@ export const reducer = combineReducers({
 
 /* SELECTORS */
 export const getUsersState = state => state.users;
-export const getUsers = createSelector(getUsersState, state => state.entities);
+export const getAllUsers = createSelector(getUsersState, state => state.entities);
+export const getUsers = createSelector(getAllUsers, entities => pickBy(entities, entity => !entity.hidden));
 export const getMetadata = createSelector(getUsersState, state => state.meta);
 export const getUsersIds = createSelector(getUsers, users => Object.keys(users));
 export const getSelectedIds = createSelector(getUsersState, state => state.selected);

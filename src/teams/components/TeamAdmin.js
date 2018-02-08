@@ -1,18 +1,17 @@
 import React from 'react';
+import { connect } from "react-redux";
 import { reduxForm, Field } from 'redux-form';
+import { browserHistory } from 'react-router';
 import { Form, FormGroup, Col, Button, ControlLabel } from 'react-bootstrap';
 import { StaticValidatedInput } from "../../shared/components/ValidatedInput";
-import { connect } from "react-redux";
-import { getUsers } from "../../users/users.reducer";
+import { getAllUsers } from "../../users/users.reducer";
 import { manageUser } from "../teams.actions";
-import { browserHistory } from 'react-router';
 import ManageMember from "./ManageMember";
-import GlyphButton from "../../shared/components/GlyphButton";
-import PanelHeader from "../../shared/components/PanelHeader";
+import {GlyphButton, PanelHeader} from "../../shared/components";
 
 
 const mapStateToProps = state => ({
-    users: getUsers(state),
+    users: getAllUsers(state),
     profile: state.profile,
 });
 
