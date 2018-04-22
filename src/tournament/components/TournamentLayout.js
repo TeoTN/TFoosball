@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Tournament from './Tournament';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => ({...state});
-@connect(mapStateToProps, null)
-class TournamentLayout extends Component {
+
+class TournamentLayout extends React.PureComponent {
     render() {
         const {tid} = this.props.params;
         return (
@@ -16,4 +16,4 @@ class TournamentLayout extends Component {
     }
 }
 
-export default TournamentLayout;
+export default connect(mapStateToProps, null)(TournamentLayout);

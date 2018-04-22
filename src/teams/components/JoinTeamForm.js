@@ -1,64 +1,49 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {Col, InputGroup, Form, FormGroup, FormControl, Button} from 'react-bootstrap';
-import {requestJoinTeam} from '../teams.actions.js';
-import Icon from 'react-fontawesome';
+import { Col, Form, FormGroup, ControlLabel } from 'react-bootstrap';
+import GlyphButton from "../../shared/components/GlyphButton";
+import { Field, reduxForm } from "redux-form";
+import {
+    FieldInput,
+    ValidatedAsyncInput
+} from "../../shared/components/ValidatedInput";
 
 
-const mapDispatchToProps = (dispatch) => ({
-    joinTeam: (team, username) => dispatch(requestJoinTeam(team, username)),
-});
+const JoinTeamForm = ({team, username, autocompletion, fetchAutocompletion, action, handleSubmit}) => (
+    <Form onSubmit={handleSubmit(action)} horizontal>
+        <Field
+            autoFocus
+            name='name'
+            label="Club name"
+            smLabel={2}
+            xsHiddenLabel
+            maxSize={8}
+            component={ValidatedAsyncInput}
+            options={autocompletion.teamNames}
+            onInputChange={fetchAutocompletion}
+            isLoading={autocompletion.loading}
+            placeholder="Enter club name..."
+            promptTextCreator={input => `Join ${input} club...`}
+        />
+        <FormGroup>
+            <Col xsHidden sm={2} className="text-right">
+                <ControlLabel>Nickname</ControlLabel>
+            </Col>
+            <Col xs={12} sm={6}>
+                <Field
+                    component={FieldInput}
+                    name="username"
+                    placeholder="Enter new username..."
+                />
+            </Col>
+        </FormGroup>
+        <FormGroup>
+            <Col smOffset={2} sm={10}>
+                <GlyphButton type="submit" glyph="log-in" bsSize="small" bsStyle="primary">
+                    Join the club
+                </GlyphButton>
+            </Col>
+        </FormGroup>
+    </Form>
+);
 
-@connect(null, mapDispatchToProps)
-export default class JoinTeamForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            team: '',
-            username: '',
-        };
-    }
-
-    handleJoinTeam = () => {
-        const {joinTeam} = this.props;
-        const {team, username} = this.state;
-        joinTeam(team, username);
-    };
-
-    handleChange = (field) => (event) => {
-        this.setState({[field]: event.target.value});
-    };
-
-    render() {
-        return (
-            <Form className="row" horizontal>
-                <FormGroup className="col-xs-12 row" style={{marginBottom: 0}}>
-                    <InputGroup style={{width: '100%'}}>
-                        <Col xs={12} sm={5}>
-                            <FormControl
-                                placeholder="Enter team name..."
-                                style={{border: 0}}
-                                onChange={this.handleChange('team')}
-                                value={this.state.team}
-                                className="no-horizontal-padding"
-                            />
-                        </Col>
-                        <Col xs={12} sm={6}>
-                            <FormControl
-                                placeholder="Enter new username..."
-                                style={{border: 0}}
-                                onChange={this.handleChange('username')}
-                                value={this.state.username}
-                                className="no-horizontal-padding"
-                            />
-                        </Col>
-                        <Button bsStyle="link" onClick={this.handleJoinTeam} className="pull-right"
-                                style={{marginRight: '-15px'}}>
-                            Join&nbsp;&nbsp;<Icon name="chevron-right"/>
-                        </Button>
-                    </InputGroup>
-                </FormGroup>
-            </Form>
-        );
-    }
-}
+export default reduxForm({form: 'clubJoin'})(JoinTeamForm);

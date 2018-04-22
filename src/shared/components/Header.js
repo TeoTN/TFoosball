@@ -16,8 +16,7 @@ const mapDispatchToProps = dispatch => ({
     signOut: () => dispatch(signOut()),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class Header extends React.Component {
+class Header extends React.PureComponent {
     render() {
         const {signIn, signOut} = this.props;
         const {username, isAuthenticated} = this.props;
@@ -50,3 +49,5 @@ export default class Header extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

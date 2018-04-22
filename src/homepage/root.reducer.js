@@ -2,13 +2,14 @@ import users from '../users/users.reducer';
 import notifications from '../shared/notifier.reducer';
 import profile from '../profile/profile.reducer';
 import tournaments from '../tournament/tournaments.reducer';
-import auth from '../shared/auth/auth.reducer';
+import auth, { getPersistentAuthState } from '../shared/auth/auth.reducer';
 import modal from '../shared/modal.reducer';
 import matches from '../matches/matches.reducer';
 import play from '../play/play.reducer';
-import teams from '../teams/teams.reducer';
+import teams, { getPersistentTeamsState } from '../teams/teams.reducer';
 import { reducer as form } from 'redux-form'
 import { combineReducers } from 'redux';
+import { createSelector } from "reselect";
 
 const reducer = combineReducers({
     users,   // Current users list from API general view
@@ -22,5 +23,10 @@ const reducer = combineReducers({
     teams,          // Available teams
     form,           // Current state of forms across the app
 });
+
+export const getPersistentState = createSelector(
+    [getPersistentAuthState, getPersistentTeamsState],
+    (auth, teams) => ({auth, teams}),
+);
 
 export default reducer;

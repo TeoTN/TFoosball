@@ -6,6 +6,7 @@ import { playScore } from '../play/play.sagas';
 import { saveSettings } from '../settings/settings.sagas';
 import { takeLatest } from "redux-saga/effects";
 import { REQUEST_SAVE_SETTINGS } from "../settings/settings.actions";
+import { onShowReleaseNotes } from "../shared/shared.sagas";
 
 export default function* rootSaga() {
     yield [
@@ -16,5 +17,6 @@ export default function* rootSaga() {
         publish(),
         removeMatch(),
         playScore(),
+        onShowReleaseNotes(),
     ];
 }

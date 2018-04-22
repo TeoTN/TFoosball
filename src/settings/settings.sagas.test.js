@@ -1,22 +1,16 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
-import api from '../api';
-import {  showInfo } from '../shared/notifier.actions';
-import {
-    saveSettings, onRequestSaveSettings, validateMember
-} from '../settings/settings.sagas';
-import { settingsSaved } from '../settings/settings.actions';
+import { call, put, select } from 'redux-saga/effects';
+import api from '../api/index';
+import { showInfo } from '../shared/notifier.actions';
+import { saveSettings, validateMember } from './settings.sagas';
+import { settingsSaved } from './settings.actions';
 import { browserHistory } from 'react-router'
-
-import {
-    REQUEST_SAVE_SETTINGS,
-    requestSaveSettings,
-} from '../settings/settings.actions';
+import { requestSaveSettings } from './settings.actions';
 import { getSelectedTeam } from "../teams/teams.reducer";
 
 
 describe('Save settings saga', () => {
-    const settings = { first_name: 'ABC', last_name: '123', username: 'ABC123', hidden: true};
-    const currentTeam = { id: 1, member_id: 15, };
+    const settings = {first_name: 'ABC', last_name: '123', username: 'ABC123', hidden: true};
+    const currentTeam = {id: 1, member_id: 15,};
     const successMsg = 'Your settings were saved';
     const errorMsg = 'Failed to save settings';
 
@@ -59,17 +53,17 @@ describe('Validate member profile data', () => {
         expect(validateMember(validData)).toEqual(validData);
     });
 
-    it('should return data when username has length <= 14', () => {
+    it('should return data when username has length <= 32', () => {
         const validData = {
-            username: 'executive12345',
+            username: new Array(15).fill('a').join(''),
         };
         expect(() => validateMember(validData)).not.toThrowError();
         expect(validateMember(validData)).toEqual(validData);
     });
 
-    it('should throw error when username consists of more than 14 characters', () => {
+    it('should throw error when username consists of more than 32 characters', () => {
         const invalidData = {
-            username: 'anatomopatomorfolog',
+            username: new Array(35).fill('a').join(''),
         };
         expect(() => validateMember(invalidData)).toThrowError();
     });

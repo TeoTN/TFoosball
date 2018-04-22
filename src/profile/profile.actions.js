@@ -1,8 +1,9 @@
 import * as types from './profile.types';
 
-export const profileUpdate = (response) => ({
+export const profileUpdate = (response, selectedTeamId) => ({
     type: types.UPDATE_PROFILE,
     response,
+    selectedTeamId,
 });
 
 export const receiveProfile = (profiles) => ({

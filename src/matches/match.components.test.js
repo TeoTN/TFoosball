@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'enzyme';
-import MatchItem from '../matches/components/MatchItem';
+import MatchItem from './components/MatchItem';
 
 const mockMatch = (red_def, red_att, blue_att, blue_def, red_score, blue_score) => ({
     red_def,

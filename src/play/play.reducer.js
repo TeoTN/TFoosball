@@ -1,13 +1,19 @@
-import { REQUEST_STATS_DONE } from './play.actions';
+import * as fromPlay from './play.actions';
+import { combineReducers } from "redux";
 
-export default (state = { stats: { red: 0, blue: 0 }}, action) => {
+const defaultStats = {
+    red: 0,
+    blue: 0
+};
+
+export const stats = (state = defaultStats, action) => {
     switch (action.type) {
-        case REQUEST_STATS_DONE:
-            return {
-                ...state,
-                stats: action.response,
-            };
+        case fromPlay.REQUEST_STATS_DONE:
+            return action.response;
         default:
             return state;
     }
-}
+};
+export default combineReducers({
+    stats,
+});

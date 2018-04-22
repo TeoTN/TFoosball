@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './homepage/root.sagas';
-import reducer from './homepage/root.reducer'
+import reducer, { getPersistentState } from './homepage/root.reducer'
 import { loadState, saveState } from './persistence';
 
 
@@ -26,14 +26,17 @@ const createLoggingDispatch = (store) => {
 };
 
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(reducer, loadState(), applyMiddleware(sagaMiddleware));
+
+const preloadedState = loadState();
+const store = createStore(reducer, preloadedState, applyMiddleware(sagaMiddleware));
+
 sagaMiddleware.run(rootSaga);
 
 let currentSavedState;
 store.subscribe(() => {
     let previousSavedState = currentSavedState;
     const stateSnapshot = store.getState();
-    currentSavedState = { auth: stateSnapshot.auth, teams: stateSnapshot.teams };
+    currentSavedState = getPersistentState(stateSnapshot);
 
     if (previousSavedState !== currentSavedState && !Object.isEmpty(currentSavedState)) {
         saveState(currentSavedState);

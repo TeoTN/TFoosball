@@ -2,18 +2,18 @@ import { take, call, put, select, takeLatest, race } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import * as authActions from './auth.actions';
-import { raiseError, clean, RAISE_UNAUTHORIZED, showInfo } from '../notifier.actions';
+import { raiseError, clean, showInfo, RAISE_UNAUTHORIZED } from '../notifier.actions';
 import { initTeam, fetchTeams } from '../../teams/teams.sagas';
 import { prepareWindow } from '../../api/oauth';
 import api from '../../api';
 import { removeState } from '../../persistence';
 import { getOAuthErrorMsg } from './auth.utils';
 import { showModalInfo, ACCEPT, REJECT } from '../modal.actions';
+import { getToken } from "./auth.reducer";
 import { APIUnauthorizedError } from "../../errors";
 
-
 export function* authenticate(reauthenticate = false) {
-    const token = yield select(state => state.auth.token);
+    const token = yield select(getToken);
     if (token && !reauthenticate) return {token};
     const promptWindow = prepareWindow();
     try {
@@ -41,9 +41,9 @@ export function* fetchProfile(team_id, member_id) {
 }
 
 export function* onSignOut() {
-    const logoutUrl = api.urls.logout();
+    const logout_url = api.urls.logout();
     try {
-        yield call(api.requests.get, logoutUrl, null, 'Failed to sign out. Please try again.');
+        yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
     } catch (error) {
         if (!error instanceof APIUnauthorizedError) {
             yield put(raiseError(error));
@@ -70,7 +70,6 @@ export function* onSignIn() {
     yield call([browserHistory, browserHistory.push], `/match`);
 }
 
-
 export function* onSessionExpired() {
     // TODO replay
     const info = {
@@ -86,11 +85,10 @@ export function* onSessionExpired() {
     });
     yield call(removeState);
     yield put(authActions.signOut());
-    // yield call([browserHistory, browserHistory.push], '/');
 }
 
 export function* acceptInvitation({activation_code}) {
-    const token = yield select(state => state.auth.token);
+    const token = yield select(getToken);
 
     if (!token) {
         yield call(authenticate, false);
@@ -111,9 +109,8 @@ export function* acceptInvitation({activation_code}) {
     yield call([browserHistory, browserHistory.push], '/');
 }
 
-
 export function* checkSessionExpired() {
-    const token = yield select(state => state.auth.token);
+    const token = yield select(getToken);
     if (!token) {
         return;
     }

@@ -3,14 +3,19 @@ import Header from '../../shared/components/Header';
 import ModalMessage from '../../shared/components/ModalMessage';
 import { ListGroupItem } from 'react-bootstrap';
 import {utils} from 'react-bootstrap';
+import { connect } from "react-redux";
+import { showWhatsNew } from "../../shared/shared.actions";
 
 utils.bootstrapUtils.addStyle(ListGroupItem, 'lt-success');
 utils.bootstrapUtils.addStyle(ListGroupItem, 'default');
 
+const mapDispatchToProps = (dispatch) => ({
+    showWhatsNew: () => dispatch(showWhatsNew()),
+});
 
-export default class App extends React.Component {
+class App extends React.Component {
     render() {
-        const { children } = this.props;
+        const { children, showWhatsNew } = this.props;
         return (
             <div id="root-react">
                 <Header />
@@ -20,10 +25,12 @@ export default class App extends React.Component {
                 </main>
                 <div className="filler"/>
                 <footer className="footer-app">
-                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>. [v2.3.2]
+                    Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>.
+                    [v2.4.1 - <a onClick={showWhatsNew}>Release notes</a>]
                 </footer>
             </div>
         );
     }
-
 }
+
+export default connect(null, mapDispatchToProps)(App);

@@ -1,5 +1,7 @@
 import * as types from './auth.types';
 import { SETTINGS_SAVED } from '../../settings/settings.actions';
+import { createSelector } from "reselect";
+import { CHANGE_DEFAULT } from "../../teams/teams.actions";
 
 export const profile = (state = {}, action) => {
     switch (action.type) {
@@ -7,6 +9,8 @@ export const profile = (state = {}, action) => {
             return Object.assign({}, state, action.values);
         case types.WHATS_NEW_SHOWN:
             return Object.assign({}, state, {whats_new_version: action.version});
+        case CHANGE_DEFAULT:
+            return Object.assign({}, state, {default_team: action.id});
         default:
             return state;
     }
@@ -25,7 +29,14 @@ export const activate = (state = {pending: true, success: false}, action = {}) =
     }
 };
 
-export const auth = (state = {activate: activate()}, action) => {
+export const defaultAuthState = {
+    activate: activate(),
+    token: undefined,
+    profile: {},
+    expires_at: undefined,
+};
+
+export const auth = (state = defaultAuthState, action) => {
     switch (action.type) {
         case types.SET_TOKEN:
             return {
@@ -34,7 +45,7 @@ export const auth = (state = {activate: activate()}, action) => {
                 expires_at: action.expires_at,
             };
         case types.SIGNED_OUT:
-            return {};
+            return defaultAuthState;
         case types.SET_PROFILE:
             return {
                 ...state,
@@ -42,6 +53,7 @@ export const auth = (state = {activate: activate()}, action) => {
             };
         case SETTINGS_SAVED:
         case types.WHATS_NEW_SHOWN:
+        case CHANGE_DEFAULT:
             return {
                 ...state,
                 profile: profile(state.profile, action),
@@ -58,4 +70,17 @@ export const auth = (state = {activate: activate()}, action) => {
     }
 };
 
+export const getAuthState = state => state.auth  || defaultAuthState;
+export const getAuthProfile = createSelector(getAuthState, state => state.profile || {});
+export const getDefaultTeam = createSelector(getAuthProfile, profile => profile.default_team);
+export const isTeamAdmin = createSelector(getAuthProfile, profile => profile && profile.is_team_admin);
+export const getToken = createSelector(getAuthState, state => state.token);
+export const getPersistentAuthState = createSelector(
+    getAuthState,
+    ({token, expires_at, profile: {exp_history, ...profileData}}) => ({
+        token,
+        expires_at,
+        profile: profileData,
+    }),
+);
 export default auth;

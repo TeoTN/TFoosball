@@ -1,28 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Panel, Nav, NavItem } from 'react-bootstrap';
+import { LinkContainer } from "react-router-bootstrap";
 import Icon from 'react-fontawesome';
 import { getSelectedTeam } from '../../teams/teams.reducer';
-import { LinkContainer } from "react-router-bootstrap";
-import get from 'lodash/get';
+import { isTeamAdmin } from "../../shared/auth/auth.reducer";
+
 
 const mapStateToProps = (state) => ({
     teams: state.teams,
-    isTeamAdmin: get(state, 'auth.profile.is_team_admin'),
+    isTeamAdmin: isTeamAdmin(state),
     selectedTeam: getSelectedTeam(state),
 });
 
-@connect(mapStateToProps, null)
 class ClubsLayout extends React.PureComponent {
     render() {
         const {
-            teams,
             children,
             isTeamAdmin,
-            selectedTeam
         } = this.props;
         return (
-            <div className="container">
+            <div className="container-responsive">
                 <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect} className="text-center">
                     <LinkContainer to={{pathname: `/clubs/joined`}}>
                         <NavItem eventKey="1" href="#">
@@ -50,15 +48,11 @@ class ClubsLayout extends React.PureComponent {
                     </LinkContainer>}
                 </Nav>
                 <Panel>
-                    <h2>{selectedTeam && selectedTeam.name}</h2>
-                    <hr/>
-                    {React.cloneElement(children, {
-                        teams,
-                    })}
+                    {children}
                 </Panel>
             </div>
         );
     }
 }
 
-export default ClubsLayout;
+export default connect(mapStateToProps, null)(ClubsLayout);

@@ -1,0 +1,29 @@
+@import "../variables";
+
+.btn-glyph-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
+  padding: 1+@padding-vertical 2+@padding-horizontal;
+  margin: -2-@padding-vertical -@padding-horizontal;
+  margin-right: @padding-horizontal;
+  font-size: @font-size;
+  line-height: @line-height;
+  border-radius: @border-radius 0 0 @border-radius;
+}
+
+.btn-glyph {
+  outline: 0 !important;
+  & > .glyphicon {
+    background-color: rgba(64, 64, 64, 0.15);
+    .btn-glyph-size(1+@padding-base-vertical; 2+@padding-base-horizontal; @font-size-base; @line-height-base; @btn-border-radius-base);
+  }
+  &.btn-lg > .glyphicon {
+    // line-height: ensure even-numbered height of button next to large input
+    .btn-glyph-size(1+@padding-large-vertical; 2+@padding-large-horizontal; @font-size-large; @line-height-large; @btn-border-radius-large);
+  }
+  &.btn-sm > .glyphicon  {
+    // line-height: ensure proper height of button next to small input
+    .btn-glyph-size(1+@padding-small-vertical; 2+@padding-small-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small);
+  }
+  &.btn-xs > .glyphicon  {
+    .btn-glyph-size(1+@padding-xs-vertical; 2+@padding-xs-horizontal; @font-size-small; @line-height-small; @btn-border-radius-small);
+  }
+}

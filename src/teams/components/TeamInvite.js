@@ -1,23 +1,28 @@
 import React from 'react';
-import {Form, FormGroup, Row, Col, Button} from 'react-bootstrap';
-import {reduxForm, Field} from 'redux-form';
-import {ValidatedAsyncInput} from '../../shared/components/ValidatedInput';
-import {isEmail} from '../../validators';
+import { Form, FormGroup, Col, Button, ControlLabel } from 'react-bootstrap';
+import { reduxForm, Field } from 'redux-form';
+import { ValidatedAsyncInput } from '../../shared/components/ValidatedInput';
+import { isEmail } from '../../validators';
 import { getAutocompletionState } from "../../users/users.reducer";
 import { connect } from "react-redux";
 import { fetchEmailAutocompletion, inviteUser } from "../../users/users.actions";
+import PanelHeader from "../../shared/components/PanelHeader";
+import { getSelectedTeam } from "../teams.reducer";
+
 
 const mapStateToProps = (state) => ({
-    teams: state.teams,
+    selectedTeam: getSelectedTeam(state) || {},
     autocompletion: getAutocompletionState(state),
 });
+
 const mapDispatchToProps = (dispatch) => ({
-    fetchEmailAutocompletion: (input) => dispatch(fetchEmailAutocompletion(input)),
+    fetchEmailAutocompletion: (input) => {
+        dispatch(fetchEmailAutocompletion(input));
+        return input;
+    },
     submitInvitation: ({email}) => dispatch(inviteUser(email.value)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-@reduxForm({form: 'teamInvite'})
 class TeamInvite extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -32,37 +37,41 @@ class TeamInvite extends React.PureComponent {
             autocompletion: {loading, emails},
             submitInvitation,
             handleSubmit,
+            selectedTeam
         } = this.props;
         const isEmailWrapped = (value, allValues, props) => isEmail(value ? value.value : '', allValues, props);
         return (
-            <Row>
-                <Col xs={12} sm={8}>
-                    <Form onSubmit={handleSubmit(submitInvitation)} horizontal>
+            <React.Fragment>
+                <PanelHeader title={`Invite to ${selectedTeam.name}`} glyph="id-badge" isAwesome/>
+                <Form onSubmit={handleSubmit(submitInvitation)} horizontal>
+                    <Col sm={2}>
+                        <ControlLabel>Email</ControlLabel>
+                    </Col>
+                    <Col xs={12} sm={8}>
                         <Field
+                            autoFocus
                             name='email'
-                            label="Email"
                             component={ValidatedAsyncInput}
                             validate={isEmailWrapped}
                             options={emails}
                             onInputChange={fetchEmailAutocompletion}
                             isLoading={loading}
-                            smLabel={3}
                             placeholder="Friend's email"
-                            promptTextCreator={label => `Send invitation to ${label}`}
+                            promptTextCreator={input => `Send invitation to ${input}`}
                         />
-                        <FormGroup>
-                            <Col smOffset={3} sm={9}>
-                                <Button type="submit" bsStyle={pristine || invalid ? 'default' : 'success'} block
-                                        disabled={pristine || invalid}>
-                                    Invite
-                                </Button>
-                            </Col>
-                        </FormGroup>
-                    </Form>
-                </Col>
-            </Row>
+                    </Col>
+                    <FormGroup>
+                        <Col xs={12} sm={2}>
+                            <Button type="submit" bsStyle={pristine || invalid ? 'default' : 'success'} block
+                                    disabled={pristine || invalid}>
+                                Invite
+                            </Button>
+                        </Col>
+                    </FormGroup>
+                </Form>
+            </React.Fragment>
         );
     }
 }
 
-export default TeamInvite;
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({form: 'teamInvite'})(TeamInvite));

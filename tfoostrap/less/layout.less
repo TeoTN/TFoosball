@@ -1,0 +1,18 @@
+@import "../variables";
+@import "../node_modules/bootstrap/less/mixins/grid";
+
+.container-responsive {
+  .container-fixed();
+  width: 100vw;
+  height: 100vh;
+
+  @media (min-width: @screen-sm-min) {
+    width: @container-sm;
+  }
+  @media (min-width: @screen-md-min) {
+    width: @container-md;
+  }
+  @media (min-width: @screen-lg-min) {
+    width: @container-lg;
+  }
+}

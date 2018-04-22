@@ -5,14 +5,14 @@ import api from '../api';
 import { removed } from './match.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { fetchUpdateUsers } from '../users/users.sagas';
+import { getSelectedTeamId } from "../teams/teams.reducer";
 
-export const stateTeamsSelectedSelector = state => state.teams.selected;
-
+// TODO Use takeEvery & consider moving to play sagas
 export function* publish() {
     const success_msg = points => `Match successfully saved. Red: ${points}, Blue: ${-points}`;
     while (true) {
         const action = yield take(PUBLISH);
-        const currentTeamId = yield select(stateTeamsSelectedSelector);
+        const currentTeamId = yield select(getSelectedTeamId);
         const url = api.urls.teamMatchList(currentTeamId);
         try {
             const response = yield call(api.requests.post, url, action.match_data, 'Failed to send match to server');
@@ -29,7 +29,7 @@ export function* publish() {
 export function* removeMatch() {
     while (true) {
         const action = yield take(DELETE);
-        const currentTeamId = yield select(stateTeamsSelectedSelector);
+        const currentTeamId = yield select(getSelectedTeamId);
         const url = api.urls.teamMatchEntity(currentTeamId, action.id);
         try {
             yield call(api.requests['delete'], url);
@@ -41,7 +41,7 @@ export function* removeMatch() {
 }
 
 export function* listMatches({page}) {
-    const currentTeamId = yield select(stateTeamsSelectedSelector);
+    const currentTeamId = yield select(getSelectedTeamId);
     const url = api.urls.teamMatchList(currentTeamId);
     try {
         const matches = yield call(api.requests.get, url, { page }, 'Failed to retrieve a list of matches.');

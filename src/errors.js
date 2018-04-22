@@ -2,7 +2,7 @@ import ExtendableError from 'es6-error';
 
 export class APIError extends ExtendableError {
     constructor(message, response) {
-        const msg = response.hasOwnProperty('shouldDisplay') && response.shouldDisplay ? response.message : message;
+        const msg = response && response.shouldDisplay ? response.message : message;
         super(msg);
         this.serverResponse = response;
     }
@@ -27,7 +27,7 @@ export class APIForbiddenError extends APIError {
 
 export class APIValidationError extends ExtendableError {
     constructor(serverResponse) {
-        if (serverResponse.hasOwnProperty('non_field_errors')) {
+        if (serverResponse && serverResponse.hasOwnProperty('non_field_errors')) {
             super(serverResponse.non_field_errors.join(', '));
         } else {
             super('Failed to validate data');

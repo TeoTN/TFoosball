@@ -14,8 +14,7 @@ const mapDispatchToProps = (dispatch) => ({
     remove: (id) => dispatch(MatchActions.remove(id)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
-export default class ProfileMatches extends React.Component {
+class ProfileMatches extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -65,3 +64,5 @@ export default class ProfileMatches extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileMatches)

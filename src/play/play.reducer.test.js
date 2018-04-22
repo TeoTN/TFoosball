@@ -1,6 +1,6 @@
 import deepFreeze from 'deep-freeze';
-import reducer from '../play/play.reducer';
-import * as playActions from '../play/play.actions';
+import reducer from './play.reducer';
+import * as playActions from './play.actions';
 
 describe('Play reducer', function() {
     it('should handle game stats fetched', () => {

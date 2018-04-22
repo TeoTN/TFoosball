@@ -7,12 +7,19 @@ class PlayResult extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            blue: 0,
-            red: 0,
+            blue: '',
+            red: '',
         };
     }
 
     onInputChange = (team) => (event) => this.setState({[team]: event.target.value});
+
+    onInputBlur = (team) => () => {
+        const otherTeam = team === 'red' ? 'blue' : 'red';
+        if (!this.state[otherTeam]) {
+            this.setState({[otherTeam]: 10});
+        }
+    };
 
     handleFinish = () => {
         const {players, onPublish} = this.props;
@@ -38,8 +45,9 @@ class PlayResult extends React.Component {
                         <FormControl
                             style={{borderColor: '#3498db'}}
                             type="number"
-                            placeholder="Blue"
+                            placeholder="Blue score"
                             onChange={this.onInputChange('blue')}
+                            onBlur={this.onInputBlur('blue')}
                             value={this.state.blue}
                         />
                     </Col>
@@ -50,13 +58,18 @@ class PlayResult extends React.Component {
                         <FormControl
                             style={{borderColor: '#e74c3c'}}
                             type="number"
-                            placeholder="Red"
+                            placeholder="Red score"
                             onChange={this.onInputChange('red')}
+                            onBlur={this.onInputBlur('red')}
                             value={this.state.red}
                         />
                     </Col>
                     <Col xs={12} sm={3}>
-                        <Button onClick={this.handleFinish} bsStyle={'success'} block disabled={!arePositionsSet}>
+                        <Button
+                            onClick={this.handleFinish}
+                            bsStyle={'success'}
+                            disabled={!arePositionsSet}
+                            block>
                             Send
                         </Button>
                     </Col>

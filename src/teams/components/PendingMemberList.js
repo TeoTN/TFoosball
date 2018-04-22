@@ -2,6 +2,9 @@ import React from 'react'
 import { ListGroupItem, ListGroup, Row, Col, Button, ButtonGroup, Glyphicon } from 'react-bootstrap';
 import { memberAcceptance } from "../teams.actions";
 import { connect } from "react-redux";
+import PanelHeader from "../../shared/components/PanelHeader";
+import { getSelectedTeam, getTeamPending } from "../teams.reducer";
+
 
 const PendingMemberItem = ({user, onAccept, onReject}) => (
     <ListGroupItem key={`${user.username}.${user.id}`}>
@@ -23,26 +26,39 @@ const PendingMemberItem = ({user, onAccept, onReject}) => (
     </ListGroupItem>
 );
 
+const mapStateToProps = (state) => ({
+    pending: getTeamPending(state),
+    selectedTeam: getSelectedTeam(state) || {},
+});
+
 const mapDispatchToProps = (dispatch) => ({
     acceptMember: (id) => dispatch(memberAcceptance(id, true)),
     rejectMember: (id) => dispatch(memberAcceptance(id, false)),
 });
 
-@connect(null, mapDispatchToProps)
-export default class PendingMemberList extends React.PureComponent {
+class PendingMemberList extends React.PureComponent {
     render() {
-        const {teams: {pending = []}, acceptMember, rejectMember} = this.props;
-        return pending.length > 0 ?
-            <ListGroup>
-                {
-                    pending.map(user => <PendingMemberItem
-                        key={user.username}
-                        user={user}
-                        onAccept={acceptMember}
-                        onReject={rejectMember}
-                    />)
-                }
-            </ListGroup> :
-            <h6 className="text-muted">There are no pending club members</h6>
+        const {pending, acceptMember, rejectMember, selectedTeam} = this.props;
+        return <React.Fragment>
+            <PanelHeader title="Awaiting members" glyph="inbox" isAwesome/>
+            {
+                pending.length > 0 ?
+                    <ListGroup>
+                        {
+                            pending.map(user => <PendingMemberItem
+                                key={user.username}
+                                user={user}
+                                onAccept={acceptMember}
+                                onReject={rejectMember}
+                            />)
+                        }
+                    </ListGroup> :
+                    <h6 className="text-muted">
+                        There are no pending members awaiting to join {selectedTeam.name} club.
+                    </h6>
+            }
+        </React.Fragment>
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(PendingMemberList)

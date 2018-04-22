@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest, fork } from 'redux-saga/effects';
 import api from '../api';
 import { getSelectedTeam } from '../teams/teams.reducer';
 import { CHOOSE, SWAP_SIDES, SWAP_POSITIONS, ASSIGN } from '../users/users.actions';
@@ -6,6 +6,7 @@ import { raiseError } from '../shared/notifier.actions';
 import { requestStatsDone } from './play.actions';
 import { getUsersPlayingById, arePositionsSet } from "../users/users.reducer";
 import * as fromMatch from "../matches/match.types";
+import { fetchUsers } from "../users/users.sagas";
 
 
 export function* fetchPlayScore() {
@@ -28,4 +29,9 @@ export function* playScore() {
     yield takeLatest(SWAP_SIDES, fetchPlayScore);
     yield takeLatest(ASSIGN, fetchPlayScore);
     yield takeLatest(fromMatch.SENT, fetchPlayScore);
+}
+
+
+export function* playRoute() {
+    yield fork(fetchUsers);
 }
