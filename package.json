@@ -31,6 +31,7 @@
     "deep-freeze": "0.0.1",
     "enzyme": "3.3.0",
     "enzyme-adapter-react-16": "1.1.1",
+    "husky": "0.14.3",
     "npm-run-all": "4.0.2",
     "npm-watch": "0.3.0",
     "whatwg-fetch": "1.0.0"
@@ -40,6 +41,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "heroku-prebuild": "cd tfoostrap && npm i && npm run build && npm link && cd .. && npm link @tfoosball/tfoostrap",
+    "precommit": "CI=true npm test",
     "start": "npm-run-all --parallel start:tfoostrap start:webserver",
     "start:webserver": "react-scripts start",
     "start:tfoostrap": "cd tfoostrap && npm start"
