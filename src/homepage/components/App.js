@@ -26,7 +26,7 @@ class App extends React.Component {
                 <div className="filler"/>
                 <footer className="footer-app">
                     Carefully crafted by <a href="http://www.piotrstaniow.pl/">Piotr Staniów</a>.
-                    [v2.4.1 - <a onClick={showWhatsNew}>Release notes</a>]
+                    [v2.5.0 - <a onClick={showWhatsNew}>Release notes</a>]
                 </footer>
             </div>
         );
