@@ -119,7 +119,7 @@ export function* acceptInvitation({activation_code}) {
     const token = yield select(getToken);
 
     if (!token) {
-        yield call(authenticate, false);
+        yield call(authenticate, false); // TODO Trigger react-google-login (?!)
     }
     const url = api.urls.teamAccept();
     yield put(authActions.activateRequest());

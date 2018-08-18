@@ -10,7 +10,6 @@ import { getSelectedTeamId } from "../teams/teams.reducer";
 
 describe('Publish match saga', () => {
     describe('Scenario 1: Success', () => {
-        const iterator = publish();
         const matchData = {
             red_def: 'agappe1',
             red_att: 'barthy2',
@@ -30,14 +29,10 @@ describe('Publish match saga', () => {
             points: -22,
         };
         const callback = () => {};
-
-        it('should wait for PUBLISH action to be dispatched', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(take(MatchTypes.PUBLISH));
-        });
+        const iterator = publish(MatchActions.publish(matchData, callback));
 
         it('should select team id', () => {
-            const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
+            const iter = iterator.next().value;
             expect(iter).toEqual(select(getSelectedTeamId));
         });
 
@@ -65,13 +60,12 @@ describe('Publish match saga', () => {
             expect(iterator.next().value).toEqual(call(callback));
         });
 
-        it('should not return from saga', () => {
-            expect(iterator.next().done).toBe(false);
+        it('should return from saga', () => {
+            expect(iterator.next().done).toBe(true);
         });
     });
 
     describe('Scenario 2: API failure', () => {
-        const iterator = publish();
         const matchData = {
             red_def: 'agappe1',
             red_att: 'barthy2',
@@ -82,14 +76,10 @@ describe('Publish match saga', () => {
         };
         const currentTeamId = 1;
         const callback = () => {};
-
-        it('should wait for PUBLISH action to be dispatched', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(take(MatchTypes.PUBLISH));
-        });
+        const iterator = publish(MatchActions.publish(matchData, callback));
 
         it('should select team id', () => {
-            const iter = iterator.next(MatchActions.publish(matchData, callback)).value;
+            const iter = iterator.next().value;
             expect(iter).toEqual(select(getSelectedTeamId));
         });
 
@@ -103,6 +93,10 @@ describe('Publish match saga', () => {
         it('should put ERROR when API fails', () => {
             const error_msg = 'Failed to send match to server';
             expect(iterator.throw(error_msg).value).toEqual(put(raiseError(error_msg)));
+        });
+
+        it('should return from saga', () => {
+            expect(iterator.next().done).toBe(true);
         });
     });
 });
