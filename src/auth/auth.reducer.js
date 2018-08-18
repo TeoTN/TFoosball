@@ -1,7 +1,7 @@
 import * as types from './auth.types';
-import { SETTINGS_SAVED } from '../../settings/settings.actions';
+import { SETTINGS_SAVED } from '../settings/settings.actions';
 import { createSelector } from "reselect";
-import { CHANGE_DEFAULT } from "../../teams/teams.actions";
+import { CHANGE_DEFAULT } from "../teams/teams.actions";
 
 export const profile = (state = {}, action) => {
     switch (action.type) {

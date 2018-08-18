@@ -1,13 +1,13 @@
 import { call, put, take, select, fork, cancel } from 'redux-saga/effects';
 import { createMockTask } from 'redux-saga/utils';
-import { prepareWindow } from '../../api/oauth';
-import api from '../../api/index';
+import { prepareWindow } from '../api/oauth';
+import api from '../api/index';
 import * as AuthActions from './auth.actions';
-import { clean, raiseError } from '../notifier.actions';
+import { clean, raiseError } from '../shared/notifier.actions';
 import { authenticate, onSignIn, fetchProfile } from './auth.sagas';
 import { getOAuthErrorMsg } from './auth.utils';
-import { fetchTeams, initTeam } from '../../teams/teams.sagas';
-import { removeState } from '../../persistence';
+import { fetchTeams, initTeam } from '../teams/teams.sagas';
+import { removeState } from '../persistence';
 import { browserHistory } from 'react-router'
 
 

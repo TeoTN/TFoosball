@@ -2,12 +2,12 @@ import { call, put, take, select, throttle, fork, takeEvery, takeLatest } from '
 import { browserHistory } from 'react-router';
 import * as teamSagas from './teams.sagas';
 import * as teamActions from './teams.actions.js';
-import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
+import { authenticate, fetchProfile } from '../auth/auth.sagas';
 import api from '../api/index';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { showQuestionModal } from '../shared/modal.actions';
 import { getMyRequestsPending, getSelectedTeam, getTeamBasics, getTeamsState, teams } from "./teams.reducer";
-import { getToken } from "../shared/auth/auth.reducer";
+import { getToken } from "../auth/auth.reducer";
 import { FETCH_AUTOCOMPLETION, INVITE, inviteUser, receivedEmailAutocompletion } from "../users/users.actions";
 import { fetchUsers } from "../users/users.sagas";
 import { initTeam } from "./teams.sagas";

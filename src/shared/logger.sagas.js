@@ -1,8 +1,11 @@
-import { take, select } from 'redux-saga/effects';
+import { take, select, actionChannel } from 'redux-saga/effects';
+import { buffers } from 'redux-saga';
 
 export function* logger() {
+    const queuedActions = yield actionChannel('*', buffers.sliding(10));
+
     while (true) {
-        const action = yield take('*');
+        const action = yield take(queuedActions);
         const state = yield select();
 
         console.group(action.type);

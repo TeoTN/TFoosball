@@ -3,8 +3,8 @@ import { clean, raiseError } from './notifier.actions';
 import { WHATS_NEW_VERSION } from "../api/config";
 import { ACCEPT, REJECT, showModalInfo } from "./modal.actions";
 import api from "../api/index";
-import { whatsNewShown } from "./auth/auth.actions";
-import { getAuthProfile } from "./auth/auth.reducer";
+import { whatsNewShown } from "../auth/auth.actions";
+import { getAuthProfile } from "../auth/auth.reducer";
 import { SHOW_WHATS_NEW } from "./shared.actions";
 
 export function* cleanNotifications() {
@@ -22,7 +22,6 @@ export function* updateWhatsNewVersion(profile) {
 
 export function* showWhatsNewModal(localWhatsNewVersion) {
     const whatsNewUrl = api.urls.whatsNew(WHATS_NEW_VERSION);
-    try {
         const {content} = yield call(api.requests.get, whatsNewUrl);
         const info = {
             title: `What's new (${WHATS_NEW_VERSION})`,
@@ -34,10 +33,6 @@ export function* showWhatsNewModal(localWhatsNewVersion) {
             global: WHATS_NEW_VERSION,
         };
         yield put(showModalInfo(info));
-    } catch (error) {
-        yield put(raiseError('Failed to get latest What\'s New information'));
-        return;
-    }
 }
 
 export function* checkWhatsNew() {
@@ -49,7 +44,12 @@ export function* checkWhatsNew() {
     if (localWhatsNewVersion && WHATS_NEW_VERSION <= localWhatsNewVersion) {
         return;
     }
-    yield call(showWhatsNewModal, localWhatsNewVersion);
+    try {
+        yield call(showWhatsNewModal, localWhatsNewVersion);
+    } catch (error) {
+        yield put(raiseError('Failed to get latest What\'s New information'));
+        return;
+    }
     yield race({
         accept: take(ACCEPT),
         reject: take(REJECT),

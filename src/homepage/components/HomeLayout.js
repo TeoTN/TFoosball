@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from "react-redux";
-import {signIn} from "../../shared/auth/auth.actions";
+import {signIn} from "../../auth/auth.actions";
 import HomeJumbotron from "./HomeJumbotron";
 import MobileHomepage from "./MobileHomepage";
 import PromoBar from "./PromoBar";

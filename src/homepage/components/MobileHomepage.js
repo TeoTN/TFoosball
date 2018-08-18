@@ -1,7 +1,7 @@
 import React from 'react'
 import TeamCreationForm from "./TeamCreationForm";
 import OrBall from "../../shared/components/OrBall";
-import SignInButton from "../../shared/components/SignInButton";
+import SignInButton from "../../auth/components/SignInButton";
 
 const MobileHomepage = ({onSignIn, onCreateTeam}) => {
     return (

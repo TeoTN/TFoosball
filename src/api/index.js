@@ -1,4 +1,4 @@
-import { API_ROOT } from './config';
+import { API_ROOT, API_SERVER } from './config';
 import { loadState } from '../persistence';
 import { ensureJSON, ensureSuccessOr } from './helpers';
 import { APIError } from "../errors";
@@ -8,14 +8,27 @@ const getDefaultHeaders = () => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
     if (persistedState && persistedState.hasOwnProperty('auth')) {
-        headers.append('Authorization', `Token ${persistedState.auth.token}`);
+        headers.append('Authorization', `Bearer ${persistedState.auth.token}`);
     }
     return headers;
 };
 
+const getAuthHeaders = () => {
+    const headers = new Headers();
+    headers.append('Accept', 'application/json');
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    return headers;
+};
+
+const bodyToParams = (body) => {
+    const searchParams = new URLSearchParams();
+    Object.entries(body).forEach(([key, value]) => searchParams.append(key, value));
+    return searchParams;
+};
+
 const api = {
     requests: {
-        get(url, params, error_msg='Failed to retrieve data from server') {
+        get(url, params, errorMsg='Failed to retrieve data from server') {
             let target = url;
             if (params && Object.keys(params).length > 0) {
                 const queryParams = Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&');
@@ -26,39 +39,49 @@ const api = {
                 headers: getDefaultHeaders(),
             });
             return fetch(request)
-                .then(ensureSuccessOr(error_msg))
+                .then(ensureSuccessOr(errorMsg))
                 .then(ensureJSON);
         },
-        post(url, body, error_msg='Failed to send data to server') {
+        post(url, body, errorMsg='Failed to send data to server') {
             const request = new Request(url, {
                 method: 'POST',
                 headers: getDefaultHeaders(),
                 body: JSON.stringify(body),
             });
             return fetch(request)
-                .then(ensureSuccessOr(error_msg))
+                .then(ensureSuccessOr(errorMsg))
                 .then(ensureJSON);
         },
-        patch(url, body, error_msg='Failed to send data to server') {
+        patch(url, body, errorMsg='Failed to send data to server') {
             const request = new Request(url, {
                 method: 'PATCH',
                 headers: getDefaultHeaders(),
                 body: JSON.stringify(body),
             });
             return fetch(request)
-                .then(ensureSuccessOr(error_msg))
+                .then(ensureSuccessOr(errorMsg))
                 .then(ensureJSON);
         },
-        ['delete'](url, error_msg='Failed to delete data on server') {  // eslint-disable-line no-useless-computed-key
+        ['delete'](url, errorMsg='Failed to delete data on server') {  // eslint-disable-line no-useless-computed-key
             const request = new Request(url, {
                 method: 'DELETE',
                 headers: getDefaultHeaders(),
             });
             return fetch(request)
-                .then(ensureSuccessOr(error_msg));
+                .then(ensureSuccessOr(errorMsg));
         },
+        exchangeToken(url, body, errorMsg='Failed to authenticate') {
+            const request = new Request(url, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: bodyToParams(body),
+            });
+            return fetch(request)
+                .then(ensureSuccessOr(errorMsg))
+                .then(ensureJSON)
+        }
     },
-    urls: {
+    urls: { // TODO Proxy that adds API_ROOT
         root: () => API_ROOT,
         playerList: () => `${API_ROOT}/players/`,
         playerEntity: (player_id) => {
@@ -92,7 +115,8 @@ const api = {
         teamMatchPoints: (team_id) => `${API_ROOT}/teams/${team_id}/matches/points/`,
         whatsNew: (version) => `${API_ROOT}/whatsnew/${version}/`,
         profile: () => `${API_ROOT}/rest-auth/user/`,
-        logout: () => `${API_ROOT}/rest-auth/logout/`
+        logout: () => `${API_SERVER}auth/revoke-token/`,
+        convertToken: () => `${API_SERVER}auth/convert-token/`,
     }
 };
 

@@ -5,7 +5,7 @@ export { default as NaivePager } from './NaivePager';
 export { default as Navigation } from './Navigation';
 export { default as Notifications } from './Notifications';
 export { default as ModalMessage } from './ModalMessage';
-export { default as SignInButton } from './SignInButton';
+export { default as SignInButton } from '../../auth/components/SignInButton';
 export { default as Switch } from './Switch';
 export * from './ValidatedInput';
 export { default as Widget } from './Widget';

@@ -2,15 +2,16 @@ import { take, call, put, select, takeLatest, race } from 'redux-saga/effects';
 import { browserHistory } from 'react-router'
 import { SIGN_IN, SIGN_OUT } from './auth.types';
 import * as authActions from './auth.actions';
-import { raiseError, clean, showInfo, RAISE_UNAUTHORIZED } from '../notifier.actions';
-import { initTeam, fetchTeams } from '../../teams/teams.sagas';
-import { prepareWindow } from '../../api/oauth';
-import api from '../../api';
-import { removeState } from '../../persistence';
+import { raiseError, clean, showInfo, RAISE_UNAUTHORIZED } from '../shared/notifier.actions';
+import { initTeam, fetchTeams } from '../teams/teams.sagas';
+import { prepareWindow } from '../api/oauth';
+import api from '../api/index';
+import { removeState } from '../persistence';
 import { getOAuthErrorMsg } from './auth.utils';
-import { showModalInfo, ACCEPT, REJECT } from '../modal.actions';
+import { showModalInfo, ACCEPT, REJECT } from '../shared/modal.actions';
 import { getToken } from "./auth.reducer";
-import { APIUnauthorizedError } from "../../errors";
+import { APIUnauthorizedError } from "../errors";
+import { BACKEND_CLIENT_ID, BACKEND_CLIENT_SECRET } from "../api/config";
 
 export function* authenticate(reauthenticate = false) {
     const token = yield select(getToken);
@@ -42,8 +43,13 @@ export function* fetchProfile(team_id, member_id) {
 
 export function* onSignOut() {
     const logout_url = api.urls.logout();
+    const token = yield select(getToken);
+    const body = {
+        token,
+        client_id: BACKEND_CLIENT_ID,
+    };
     try {
-        yield call(api.requests.get, logout_url, null, 'Failed to sign out. Please try again.');
+        yield call(api.requests.post, logout_url, body, 'Failed to sign out. Please try again.');
     } catch (error) {
         if (!error instanceof APIUnauthorizedError) {
             yield put(raiseError(error));
@@ -55,11 +61,33 @@ export function* onSignOut() {
     yield call([browserHistory, browserHistory.push], '/');
 }
 
-export function* onSignIn() {
-    const token = yield call(authenticate);
-    if (!token) {
-        return;
+export function* exchangeToken(googleToken, email) {
+    const url = api.urls.convertToken();
+    const body = {
+        grant_type: 'convert_token',
+        client_id: BACKEND_CLIENT_ID,
+        client_secret: BACKEND_CLIENT_SECRET,
+        backend: 'google-oauth2',
+        token: googleToken,
+    };
+
+    try {
+        const { expires_in, access_token } = yield call(api.requests.exchangeToken, url, body);
+        const expiresAt = Math.round(new Date().getTime() / 1000) + expires_in;
+        yield put(authActions.setToken(access_token, expiresAt)); // TODO Store refresh_token
+    } catch (error) {
+        yield raiseError(`Failed to authenticate user ${email}`);
     }
+}
+
+export function* onSignIn({ payload }) {
+    const { name, email, imageUrl, Zi: { access_token: googleToken }} = payload;
+    localStorage.setItem('name', name);
+    localStorage.setItem('imageUrl', imageUrl);
+    if (!googleToken) {
+        yield put(raiseError('Failed to authenticate with Google'));
+    }
+    yield call(exchangeToken, googleToken, email);
     yield call(fetchTeams);
     const currentTeam = yield call(initTeam);
     if (!currentTeam) {

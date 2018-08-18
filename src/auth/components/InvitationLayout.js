@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Panel} from "react-bootstrap";
 import {connect} from "react-redux";
-import Loading from "../../components/Loading";
+import Loading from "../../shared/components/Loading";
 
 const mapStateToProps = ({auth}) => ({auth});
 

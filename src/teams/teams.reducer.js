@@ -2,7 +2,7 @@ import * as fromTeams from './teams.actions';
 import { UPDATE_PROFILE } from '../profile/profile.types';
 import { createSelector } from "reselect";
 import { combineReducers } from "redux";
-import { SIGNED_OUT } from "../shared/auth/auth.types";
+import { SIGNED_OUT } from "../auth/auth.types";
 
 const defaultAutocompletion = {
     loading: false,

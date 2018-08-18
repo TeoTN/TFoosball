@@ -4,12 +4,12 @@ import { call, put, select, takeEvery, takeLatest, throttle, fork } from 'redux-
 import * as teamActions from './teams.actions.js';
 import * as fromUsers from '../users/users.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
-import { authenticate, fetchProfile } from '../shared/auth/auth.sagas';
+import { authenticate, fetchProfile } from '../auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
 import { getSelectedTeam, getMyRequestsPending, getTeamBasics} from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
-import { getAuthProfile, getToken } from "../shared/auth/auth.reducer";
+import { getAuthProfile, getToken } from "../auth/auth.reducer";
 import { fetchUsers } from "../users/users.sagas";
 import { erroredEvents, fetchedEvents } from "./teams.actions";
 

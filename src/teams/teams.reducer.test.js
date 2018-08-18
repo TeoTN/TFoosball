@@ -1,5 +1,5 @@
 import * as actions from './teams.actions';
-import { signedOut } from '../shared/auth/auth.actions';
+import { signedOut } from '../auth/auth.actions';
 import { profileUpdate } from '../profile/profile.actions';
 import {
     teams, getSelectedTeam, getTeamsState, getJoinedTeams, getTeamsMetadata,

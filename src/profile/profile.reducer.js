@@ -1,5 +1,5 @@
 import * as types from './profile.types';
-import * as authTypes from '../shared/auth/auth.types';
+import * as authTypes from '../auth/auth.types';
 import * as MatchTypes from '../matches/match.types';
 import {defaultData} from '../matches/matches.reducer';
 
