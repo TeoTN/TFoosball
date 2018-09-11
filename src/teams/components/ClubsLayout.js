@@ -4,12 +4,12 @@ import { Panel, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from "react-router-bootstrap";
 import Icon from 'react-fontawesome';
 import { getSelectedTeam } from '../../teams/teams.reducer';
-import { isTeamAdmin } from "../../auth/auth.reducer";
+import { selectIsTeamAdmin } from "../../auth/auth.selectors";
 
 
 const mapStateToProps = (state) => ({
     teams: state.teams,
-    isTeamAdmin: isTeamAdmin(state),
+    isTeamAdmin: selectIsTeamAdmin(state),
     selectedTeam: getSelectedTeam(state),
 });
 

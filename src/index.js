@@ -12,6 +12,7 @@ import './utils/object';
 import './utils/doughnutText';
 import { loadState } from './persistence';
 import {ClubsLayout, PendingMemberList, TeamInvite, TeamList, TeamAdmin} from './teams/components';
+import { ActivationFailure, ActivationSuccess, Crunching, VerifyIdentity } from "./auth/components";
 
 
 export const hasToken = (state) => state &&
@@ -79,7 +80,12 @@ ReactDOM.render(
                 </Route>
                 <Route path="ranking" component={RankingLayout} onEnter={requireAuth}/>
                 <Route path="matches/(:page)" component={MatchesLayout} onEnter={requireAuth}/>
-                <Route path="accept/(:activation_code)" component={InvitationLayout}/>
+                <Route path="invitation" component={InvitationLayout}>
+                    <Route path="crunching" component={Crunching} />
+                    <Route path="success" component={ActivationSuccess} />
+                    <Route path="failure" component={ActivationFailure} />
+                    <Route path="accept/(:activation_code)" component={VerifyIdentity} />
+                </Route>
                 <Route path="clubs" component={ClubsLayout} onEnter={requireAuth}>
                     <Route path='joined' component={TeamList}/>
                     <Route path='pending' component={PendingMemberList}/>

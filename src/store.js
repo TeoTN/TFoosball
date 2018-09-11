@@ -27,7 +27,8 @@ const createLoggingDispatch = (store) => {
 
 const sagaMiddleware = createSagaMiddleware();
 
-const preloadedState = loadState();
+const initialState = reducer(undefined, {});
+const preloadedState = {...initialState, ...loadState()};
 const store = createStore(reducer, preloadedState, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);

@@ -1,4 +1,5 @@
 import { SHOW_INFO, RAISE_ERROR, HANDLE, CLEAN } from './notifier.actions';
+import { SIGNED_OUT } from "../auth/auth.types";
 
 let lastNotifId = 0;
 export default (state = [], {type, id, msg, style}) => {
@@ -9,6 +10,7 @@ export default (state = [], {type, id, msg, style}) => {
         case HANDLE:
             return state.filter(notif => notif.id !== id );
         case CLEAN:
+        case SIGNED_OUT:
             return [];
         default:
             return state;

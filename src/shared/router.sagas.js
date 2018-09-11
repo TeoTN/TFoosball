@@ -6,8 +6,9 @@ import { fetchUsers } from '../users/users.sagas';
 import { listMatches } from '../matches/matches.sagas';
 import { teamAdmin, teamInvite, teamList, teamPending } from '../teams/teams.sagas';
 import { checkWhatsNew, cleanNotifications } from './shared.sagas';
-import { acceptInvitation } from "../auth/auth.sagas";
+import { invitationSuccess } from "../auth/invitation.sagas";
 import { playRoute } from "../play/play.sagas";
+import { acceptInvitation, crunchInvitation } from "../auth/invitation.sagas";
 
 const options = {
     matchAll: true,
@@ -18,7 +19,9 @@ const options = {
 };
 
 const routes = {
-    '/accept/:activation_code': acceptInvitation,
+    '/invitation/accept/:activationCode': acceptInvitation,
+    '/invitation/crunching': crunchInvitation,
+    '/invitation/success': invitationSuccess,
     '/match': playRoute,
     '/profile/:username/*': profileStats,
     '/profile/:username/matches/:page?': profileMatches,

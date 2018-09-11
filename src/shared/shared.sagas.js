@@ -4,7 +4,7 @@ import { WHATS_NEW_VERSION } from "../api/config";
 import { ACCEPT, REJECT, showModalInfo } from "./modal.actions";
 import api from "../api/index";
 import { whatsNewShown } from "../auth/auth.actions";
-import { getAuthProfile } from "../auth/auth.reducer";
+import { selectAuthProfile } from "../auth/auth.selectors";
 import { SHOW_WHATS_NEW } from "./shared.actions";
 
 export function* cleanNotifications() {
@@ -36,7 +36,7 @@ export function* showWhatsNewModal(localWhatsNewVersion) {
 }
 
 export function* checkWhatsNew() {
-    let profile = yield select(getAuthProfile);
+    let profile = yield select(selectAuthProfile);
     if (!profile || !profile.user_id) {
         return;
     }

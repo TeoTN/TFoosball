@@ -2,7 +2,7 @@ import React from 'react';
 import { GoogleLogin } from "react-google-login";
 import { OAUTH_CLIENT_ID } from "../../api/config";
 
-const SignInButton = ({onSuccess, onFailure}) => (
+export const SignInButton = ({onSuccess, onFailure}) => (
     <GoogleLogin
         clientId={OAUTH_CLIENT_ID}
         buttonText="Let me in with Google"

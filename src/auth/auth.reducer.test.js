@@ -4,7 +4,8 @@ import {
     setProfile,
     signedOut,
 } from './auth.actions';
-import { profile, auth, getToken, defaultAuthState } from './auth.reducer';
+import { profile, auth, defaultAuthState } from './auth.reducer';
+import { selectToken } from "./auth.selectors";
 
 describe('Profile reducer', () => {
     it('should not change profile state on default', () => {
@@ -107,16 +108,16 @@ describe('Auth reducer', () => {
 describe('Token selector', () => {
     it('should return token when token is present', () => {
         const state = { auth: {token: 'abc123'}};
-        expect(getToken(state)).toBe('abc123');
+        expect(selectToken(state)).toBe('abc123');
     });
 
     it('should return undefined when token is not present', () => {
         const state = { auth: {}};
-        expect(getToken(state)).toBeUndefined();
+        expect(selectToken(state)).toBeUndefined();
     });
 
     it('should return undefined when auth is not present', () => {
         const state = {};
-        expect(getToken(state)).toBeUndefined();
+        expect(selectToken(state)).toBeUndefined();
     });
 });

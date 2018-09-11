@@ -70,7 +70,7 @@ const api = {
             return fetch(request)
                 .then(ensureSuccessOr(errorMsg));
         },
-        exchangeToken(url, body, errorMsg='Failed to authenticate') {
+        obtainToken(url, body, errorMsg='Failed to authenticate') {
             const request = new Request(url, {
                 method: 'POST',
                 headers: getAuthHeaders(),
@@ -117,6 +117,7 @@ const api = {
         profile: () => `${API_ROOT}/rest-auth/user/`,
         logout: () => `${API_SERVER}auth/revoke-token/`,
         convertToken: () => `${API_SERVER}auth/convert-token/`,
+        refreshToken: () => `${API_SERVER}auth/token/`,
     }
 };
 

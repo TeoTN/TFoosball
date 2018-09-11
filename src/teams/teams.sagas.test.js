@@ -2,12 +2,12 @@ import { call, put, take, select, throttle, fork, takeEvery, takeLatest } from '
 import { browserHistory } from 'react-router';
 import * as teamSagas from './teams.sagas';
 import * as teamActions from './teams.actions.js';
-import { authenticate, fetchProfile } from '../auth/auth.sagas';
+import { fetchProfile } from '../auth/auth.sagas';
 import api from '../api/index';
 import { showInfo, raiseError } from '../shared/notifier.actions';
 import { showQuestionModal } from '../shared/modal.actions';
-import { getMyRequestsPending, getSelectedTeam, getTeamBasics, getTeamsState, teams } from "./teams.reducer";
-import { getToken } from "../auth/auth.reducer";
+import { getMyRequestsPending, getSelectedTeam, getTeamBasics } from "./teams.reducer";
+import { selectToken } from "../auth/auth.selectors";
 import { FETCH_AUTOCOMPLETION, INVITE, inviteUser, receivedEmailAutocompletion } from "../users/users.actions";
 import { fetchUsers } from "../users/users.sagas";
 import { initTeam } from "./teams.sagas";
@@ -18,11 +18,6 @@ describe('TeamCreationFlow saga', () => {
         const action = teamActions.requestCreateTeam('Team', 'Username');
         const iterator = teamSagas.onTeamCreate(action);
         const team = { id: 1, name: 'Team', member_id: 7 };
-
-        it('should attempt authenticating user', () => {
-            const iter = iterator.next().value;
-            expect(iter).toEqual(call(authenticate));
-        });
 
         it('should invoke createTeam saga', () => {
             expect(iterator.next().value).toEqual(call(teamSagas.createTeam, action));
@@ -125,7 +120,7 @@ describe('FetchTeams saga', () => {
 
         it('should check whether token is present in store', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(getToken));
+            expect(iter).toEqual(select(selectToken));
         });
 
         it('should call API to fetch user teams', () => {
@@ -149,7 +144,7 @@ describe('FetchTeams saga', () => {
 
         it('should check whether token is present in store', () => {
             const iter = iterator.next(unauthenticatedStoreMock).value;
-            expect(iter).toEqual(select(getToken));
+            expect(iter).toEqual(select(selectToken));
         });
 
         it('should call API to fetch user teams', () => {
@@ -164,7 +159,7 @@ describe('FetchTeams saga', () => {
 
         it('should check whether token is present in store', () => {
             const iter = iterator.next().value;
-            expect(iter).toEqual(select(getToken));
+            expect(iter).toEqual(select(selectToken));
         });
 
         it('should call API to fetch user teams', () => {
@@ -407,7 +402,7 @@ describe('FetchPendingMembers saga', () => {
 
 
 describe('Team invite saga', function() {
-    describe('Scenario 1: Handled invitation', function() {
+    describe('Scenario 1: Handled acceptInvitation', function() {
         const email = 'a@b.co';
         const action = inviteUser(email);
         const iterator = teamSagas.onTeamInvite(action);
@@ -419,7 +414,7 @@ describe('Team invite saga', function() {
             expect(iter.value).toEqual(select(getSelectedTeam));
         });
 
-        it('should send invitation request', function() {
+        it('should send acceptInvitation request', function() {
             const iter = iterator.next({id: 5});
             expect(iter.value).toEqual(call(api.requests.post, url, {email}, errorMsg));
         });
@@ -447,7 +442,7 @@ describe('Team invite saga', function() {
             expect(iter.value).toEqual(select(getSelectedTeam));
         });
 
-        it('should send invitation request', function() {
+        it('should send acceptInvitation request', function() {
             const iter = iterator.next({id: 5});
             expect(iter.value).toEqual(call(api.requests.post, url, {email}, errorMsg));
         });

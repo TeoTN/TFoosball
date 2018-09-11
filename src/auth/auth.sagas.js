@@ -1,32 +1,17 @@
-import { take, call, put, select, takeLatest, race } from 'redux-saga/effects';
-import { browserHistory } from 'react-router'
-import { SIGN_IN, SIGN_OUT } from './auth.types';
+import { all, call, put, race, select, take, takeLatest, fork } from 'redux-saga/effects';
+import { delay } from "../utils/delay";
 import * as authActions from './auth.actions';
-import { raiseError, clean, showInfo, RAISE_UNAUTHORIZED } from '../shared/notifier.actions';
-import { initTeam, fetchTeams } from '../teams/teams.sagas';
-import { prepareWindow } from '../api/oauth';
+import { RAISE_UNAUTHORIZED, raiseError, showInfo } from '../shared/notifier.actions';
+import { fetchTeams, initTeam } from '../teams/teams.sagas';
 import api from '../api/index';
 import { removeState } from '../persistence';
-import { getOAuthErrorMsg } from './auth.utils';
-import { showModalInfo, ACCEPT, REJECT } from '../shared/modal.actions';
-import { getToken } from "./auth.reducer";
+import { ACCEPT, REJECT, showModalInfo } from '../shared/modal.actions';
+import { selectAuthState, selectToken } from "./auth.selectors";
 import { APIUnauthorizedError } from "../errors";
-import { BACKEND_CLIENT_ID, BACKEND_CLIENT_SECRET } from "../api/config";
+import { SIGN_IN, SIGN_OUT } from "./auth.types";
+import { redir } from "../utils/redir.effect";
+import { exchangeTokenRequestBody, signOutRequestBody } from "./auth.constants";
 
-export function* authenticate(reauthenticate = false) {
-    const token = yield select(getToken);
-    if (token && !reauthenticate) return {token};
-    const promptWindow = prepareWindow();
-    try {
-        const {token, expires_at} = yield call([promptWindow, promptWindow.open]);
-        yield put(authActions.setToken(token, expires_at));
-        return token;
-    } catch (error) {
-        const errorMsg = getOAuthErrorMsg(error);
-        yield put(raiseError(errorMsg));
-    }
-    return '';
-}
 
 export function* fetchProfile(team_id, member_id) {
     const profile_url = api.urls.teamMemberEntity(team_id, member_id);
@@ -43,11 +28,8 @@ export function* fetchProfile(team_id, member_id) {
 
 export function* onSignOut() {
     const logout_url = api.urls.logout();
-    const token = yield select(getToken);
-    const body = {
-        token,
-        client_id: BACKEND_CLIENT_ID,
-    };
+    const token = yield select(selectToken);
+    const body = { ...signOutRequestBody, token };
     try {
         yield call(api.requests.post, logout_url, body, 'Failed to sign out. Please try again.');
     } catch (error) {
@@ -56,38 +38,37 @@ export function* onSignOut() {
         }
     }
     yield put(authActions.signedOut());
-    yield put(clean());
     yield call(removeState);
-    yield call([browserHistory, browserHistory.push], '/');
+    yield redir('/');
 }
 
-export function* exchangeToken(googleToken, email) {
-    const url = api.urls.convertToken();
-    const body = {
-        grant_type: 'convert_token',
-        client_id: BACKEND_CLIENT_ID,
-        client_secret: BACKEND_CLIENT_SECRET,
-        backend: 'google-oauth2',
-        token: googleToken,
-    };
-
-    try {
-        const { expires_in, access_token } = yield call(api.requests.exchangeToken, url, body);
-        const expiresAt = Math.round(new Date().getTime() / 1000) + expires_in;
-        yield put(authActions.setToken(access_token, expiresAt)); // TODO Store refresh_token
-    } catch (error) {
-        yield raiseError(`Failed to authenticate user ${email}`);
-    }
+export function* obtainToken(url, body) {
+    const response = yield call(api.requests.obtainToken, url, body);
+    console.log('%cObtain', 'color: red', response);
+    const { expires_in, access_token, refresh_token } = response;
+    const expiresAt = Math.round(Date.now() / 1000) + expires_in;
+    yield put(authActions.setToken(access_token, expiresAt, refresh_token));
 }
 
-export function* onSignIn({ payload }) {
-    const { name, email, imageUrl, Zi: { access_token: googleToken }} = payload;
+export function* onGoogleAuthenticated({ payload }) {
+    const { name, email, imageUrl, Zi: { access_token: googleToken } } = payload;
     localStorage.setItem('name', name);
     localStorage.setItem('imageUrl', imageUrl);
     if (!googleToken) {
         yield put(raiseError('Failed to authenticate with Google'));
     }
-    yield call(exchangeToken, googleToken, email);
+    // Exchange token
+    const url = api.urls.convertToken();
+    const body = { ...exchangeTokenRequestBody, token: googleToken };
+    try {
+        yield call(obtainToken, url, body)
+    } catch (error) {
+        yield put(raiseError(`Failed to authenticate user ${email}`));
+    }
+}
+
+export function* onSignIn(action) {
+    yield call(onGoogleAuthenticated, action);
     yield call(fetchTeams);
     const currentTeam = yield call(initTeam);
     if (!currentTeam) {
@@ -95,66 +76,61 @@ export function* onSignIn({ payload }) {
         return;
     }
     yield call(fetchProfile, currentTeam.id, currentTeam.member_id);
-    yield call([browserHistory, browserHistory.push], `/match`);
+    yield redir(`/match`);
 }
 
-export function* onSessionExpired() {
-    // TODO replay
-    const info = {
-        title: 'Unauthenticated',
-        text: 'Your session has expired, please log in again.',
-        onAccept: () => {
-        },
-    };
-    yield put(showModalInfo(info));
-    yield race({
-        accept: take(ACCEPT),
-        reject: take(REJECT),
-    });
-    yield call(removeState);
-    yield put(authActions.signOut());
-}
-
-export function* acceptInvitation({activation_code}) {
-    const token = yield select(getToken);
-
-    if (!token) {
-        yield call(authenticate, false); // TODO Trigger react-google-login (?!)
-    }
-    const url = api.urls.teamAccept();
-    yield put(authActions.activateRequest());
-    try {
-        yield call(api.requests.post, url, {activation_code}, 'Failed to activate with given code.');
-    } catch (error) {
-        yield put(raiseError(error));
-        yield put(authActions.activateFailure());
-        return;
-    }
-    yield put(authActions.activateSuccess());
-    yield call(fetchTeams);
-    const currentTeam = yield call(initTeam);
-    yield call(fetchProfile, currentTeam.id, currentTeam.member_id);
-    yield call([browserHistory, browserHistory.push], '/');
-}
-
-export function* checkSessionExpired() {
-    const token = yield select(getToken);
+export function* refreshToken() {
+    const { refreshToken, expires_at, token } = yield select(selectAuthState);
     if (!token) {
         return;
     }
-    const url = api.urls.root();
+    if (!refreshToken) {
+        throw new Error('Missing refresh token');
+    }
+    const currentTime = Math.round(Date.now() / 1000);
+    if (expires_at && expires_at - currentTime <= 0) {
+        throw new Error('Token expired');
+    }
+    if (expires_at && expires_at - currentTime <= 36000) {
+        const url = api.urls.refreshToken();
+        const body = {
+            ...exchangeTokenRequestBody,
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken
+        };
+        yield call(obtainToken, url, body);
+    }
+}
+
+export function* invalidateSession() {
+    // TODO replay latest request - `call()` can be stored
     try {
-        yield call(api.requests.get, url);
-    } catch (error) {
-        yield put(raiseError(error));
+        yield call(refreshToken);
+    } catch (e) {
+        const info = {
+            title: 'Unauthenticated',
+            text: 'Your session has expired, please log in again.',
+            onAccept: () => {},
+        };
+        yield put(showModalInfo(info));
+        yield race({ accept: take(ACCEPT), reject: take(REJECT) });
+        yield call(removeState);
+        yield put(authActions.signOut());
+    }
+}
+
+export function* shouldRefreshToken() {
+    while (true) {
+        yield call(delay, 60 * 1000); // Debounce for 15 min
+        yield call(invalidateSession);
     }
 }
 
 export function* authSaga() {
-    yield [
-        checkSessionExpired(),
-        takeLatest(RAISE_UNAUTHORIZED, onSessionExpired),
+    yield all([
+        fork(shouldRefreshToken),
+        takeLatest(RAISE_UNAUTHORIZED, invalidateSession),
         takeLatest(SIGN_IN, onSignIn),
         takeLatest(SIGN_OUT, onSignOut),
-    ];
+    ]);
 }

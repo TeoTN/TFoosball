@@ -1,88 +1,9 @@
-import { call, put, take, select, fork, cancel } from 'redux-saga/effects';
-import { createMockTask } from 'redux-saga/utils';
-import { prepareWindow } from '../api/oauth';
+import { call, put } from 'redux-saga/effects';
 import api from '../api/index';
 import * as AuthActions from './auth.actions';
-import { clean, raiseError } from '../shared/notifier.actions';
-import { authenticate, onSignIn, fetchProfile } from './auth.sagas';
-import { getOAuthErrorMsg } from './auth.utils';
+import { onSignIn, fetchProfile } from './auth.sagas';
 import { fetchTeams, initTeam } from '../teams/teams.sagas';
-import { removeState } from '../persistence';
 import { browserHistory } from 'react-router'
-
-
-describe('Authenticate saga', () => {
-    describe('Scenario 1: OAuth window - success', () => {
-        const iterator = authenticate();
-        const fixture = { token: 'some_token_value' };
-
-        it('should check if token exists', () => {
-            const iter = iterator.next().value;
-            expect(JSON.stringify(iter)).toEqual(JSON.stringify(select()))
-        });
-
-        it('should yield an effect call([promptWindow, open])', () => {
-            const promptWindow = prepareWindow();
-            const iter1 = iterator.next().value;
-            const call1 = call([promptWindow, promptWindow.open]);
-            expect(JSON.stringify(iter1)).toEqual(JSON.stringify(call1));
-        });
-
-        it('should yield an effect put(setToken(token))', () => {
-            expect(iterator.next(fixture).value).toEqual(put(AuthActions.setToken(fixture.token)));
-        });
-
-        it('should return token and complete', () => {
-            const iter = iterator.next(fixture.token).value;
-            expect(iter).toEqual(fixture.token);
-            expect(iterator.next().done).toEqual(true);
-        });
-    });
-
-    describe('Scenario 2: OAuth window - already authenticated', () => {
-        const iterator = authenticate();
-        const fixture = { token: 'some_token_value' };
-
-        it('should check if token exists', () => {
-            const iter = iterator.next(fixture).value;
-            expect(JSON.stringify(iter)).toEqual(JSON.stringify(select()))
-        });
-
-        it('should return token and complete', () => {
-            const iter = iterator.next(fixture.token).value;
-            expect(iter).toEqual(fixture);
-            expect(iterator.next().done).toEqual(true);
-        });
-    });
-
-    describe('Scenario 3: OAuth window - failure scenario', () => {
-        const iterator = authenticate();
-        const fixture = { error: 'failure' };
-
-        it('should check if token exists', () => {
-            const iter = iterator.next(fixture).value;
-            expect(JSON.stringify(iter)).toEqual(JSON.stringify(select()))
-        });
-
-        it('should yield an effect call([promptWindow, open])', () => {
-            const promptWindow = prepareWindow();
-            const iter = iterator.next().value;
-            const called = call([promptWindow, promptWindow.open]);
-            expect(JSON.stringify(iter)).toEqual(JSON.stringify(called));
-        });
-
-        it('should yield an effect put(raiseError(errorMsg))', () => {
-            const errorMsg = getOAuthErrorMsg(fixture);
-            expect(iterator.throw(fixture).value).toEqual(put(raiseError(errorMsg)));
-        });
-
-        it('should complete', () => {
-            const iter = iterator.next('some-token').value;
-            expect(iter).toEqual('');
-            expect(iterator.next().done).toEqual(true);
-        });
-    });
-});
 
 
 describe('SignIn saga', () => {
@@ -92,10 +13,6 @@ describe('SignIn saga', () => {
             id: 1,
             member_id: 7,
         };
-
-        it('should call Authenticate saga', () => {
-            expect(iterator.next().value).toEqual(call(authenticate));
-        });
 
         it('should call FetchTeams saga', () => {
             expect(iterator.next('token').value).toEqual(call(fetchTeams));
@@ -117,10 +34,6 @@ describe('SignIn saga', () => {
 
     describe('Scenario 2: User not assigned to any team', () => {
         const iterator = onSignIn();
-
-        it('should call Authenticate saga', () => {
-            expect(iterator.next().value).toEqual(call(authenticate));
-        });
 
         it('should call FetchTeams saga', () => {
             expect(iterator.next('token').value).toEqual(call(fetchTeams));

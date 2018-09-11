@@ -1,37 +1,22 @@
 import React from 'react';
-import {Grid, Panel} from "react-bootstrap";
-import {connect} from "react-redux";
-import Loading from "../../shared/components/Loading";
+import { Row, Col, Grid, Panel } from "react-bootstrap";
 
-const mapStateToProps = ({auth}) => ({auth});
 
-class InvitationLayout extends React.PureComponent {
+export class InvitationLayout extends React.PureComponent {
     render() {
-        const {auth: {activate}} = this.props;
+        const {children} = this.props;
         return (
             <Grid>
                 <Panel>
-                <h1>Welcome to TFoosball</h1>
-                {
-                    activate.pending ?
-                        <Loading/> :
-                        activate.success ?
-                            <p>All good</p> :
-                            <p>
-                                Failed to activate user. Please ensure that:
-                                <ul>
-                                    <li>Activation code was sent no longer than 48 hours ago</li>
-                                    <li>The code was sent by TFoosball</li>
-                                    <li>You've logged in with the same email as the invited one</li>
-                                    <li>You are using an email in Google services</li>
-                                    <li>You haven't already used that invitation link</li>
-                                </ul>
-                            </p>
-                }
+                    <Row>
+                        <Col xs={8} xsOffset={2} style={{textAlign: 'center'}}>
+                            {children}
+                        </Col>
+                    </Row>
                 </Panel>
             </Grid>
         );
     }
 }
 
-export default connect(mapStateToProps, null)(InvitationLayout);
+export default InvitationLayout;

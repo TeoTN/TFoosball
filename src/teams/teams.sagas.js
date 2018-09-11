@@ -4,14 +4,16 @@ import { call, put, select, takeEvery, takeLatest, throttle, fork } from 'redux-
 import * as teamActions from './teams.actions.js';
 import * as fromUsers from '../users/users.actions';
 import { showInfo, raiseError } from '../shared/notifier.actions';
-import { authenticate, fetchProfile } from '../auth/auth.sagas';
+import { fetchProfile } from '../auth/auth.sagas';
 import { validateMember } from '../settings/settings.sagas';
 import { getSelectedTeam, getMyRequestsPending, getTeamBasics} from './teams.reducer';
 import { showQuestionModal } from '../shared/modal.actions';
 import { profileUpdate } from "../profile/profile.actions";
-import { getAuthProfile, getToken } from "../auth/auth.reducer";
+import { selectToken } from "../auth/auth.selectors";
 import { fetchUsers } from "../users/users.sagas";
 import { erroredEvents, fetchedEvents } from "./teams.actions";
+import { selectAuthProfile } from "../auth/auth.selectors";
+import { redir } from "../utils/redir.effect";
 
 
 export function* onTeamSelect({team}) {
@@ -44,11 +46,7 @@ export function* onTeamLeave({team}) {
 }
 
 export function* onTeamCreate(action) {
-    try {
-        yield call(authenticate);
-    } catch (error) {
-        yield put(raiseError(error));
-    }
+    // TODO Show authentication modal if not logged in
     try {
         const team = yield call(createTeam, action);
         yield call(fetchTeams);
@@ -60,8 +58,8 @@ export function* onTeamCreate(action) {
 }
 
 export function* fetchTeams() {
-    const token = yield select(getToken);
-    if (token === undefined) return;
+    const token = yield select(selectToken);
+    if (!token) return;
     const url = api.urls.teamListJoined();
     try {
         const response = yield call(api.requests.get, url, {}, 'Failed to fetch user clubs');
@@ -75,7 +73,7 @@ export function* initTeam() {
     const {joinedTeams, defaultTeamId, selectedTeam} = yield select(getTeamBasics);
     let currentTeam = selectedTeam;
     if (joinedTeams.length === 0) {
-        yield call([browserHistory, browserHistory.push], '/welcome');
+        yield redir('/welcome');
         return;
     }
     if (!currentTeam || !currentTeam.id) {
@@ -148,7 +146,7 @@ export function* onManageUser({updatedProfile: {id, username, is_team_admin, hid
 }
 
 export function* onChangeDefault({id}) {
-    const player = yield select(getAuthProfile);
+    const player = yield select(selectAuthProfile);
     const url = api.urls.playerEntity(player.user_id);
     try {
         yield call(api.requests.patch, url, {default_team: id}, 'Failed to set default club.');
